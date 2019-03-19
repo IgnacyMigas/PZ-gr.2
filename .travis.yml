@@ -1,0 +1,13 @@
+language: python
+python:
+  - "3.6"
+install:
+  - python -m pip install --upgrade pip
+  - pip install -r requirements.txt
+# command to run tests
+script: 
+  - python folder_name/test_file_name.py
+
+
+notifications:
+  email: false
