@@ -43,6 +43,7 @@
 
 <script>
 import NavButton from '@/components/elements/NavButton'
+import Vuex from 'vuex'
 
 /**
  * Pasek nawigacji aplikacji. Łączy kilka funkcjonalności:
@@ -67,19 +68,11 @@ export default {
   components: {
     'nav-button': NavButton
   },
-  data () {
-    return {
-      isLoggedIn: true,
-      user: {
-        username: 'someuser',
-        password: 'somepass'
-      }
-    }
+  computed: {
+    ...Vuex.mapGetters(['isLoggedIn', 'user'])
   },
   methods: {
-    logout() {
-      this.isLoggedIn = false
-    }
+    ...Vuex.mapActions(['logout'])
   }
 }
 </script>

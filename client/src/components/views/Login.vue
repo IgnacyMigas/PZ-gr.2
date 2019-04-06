@@ -4,6 +4,7 @@
 
     <v-layout justify-center>
       <v-card-actions>
+        <v-btn @click='login'>Zaloguj się</v-btn>
         <v-btn to='registration'>Zarejestruj się</v-btn>
       </v-card-actions>
     </v-layout>
@@ -12,6 +13,7 @@
 
 <script>
 import Page from '@/components/templates/Page'
+import Vuex from 'vuex'
 
 /**
  * Strona logowania.
@@ -24,6 +26,9 @@ export default {
   name: 'login',
   components: {
     'page': Page
+  },
+  methods: {
+    ...Vuex.mapActions(['login'])
   }
 }
 </script>
