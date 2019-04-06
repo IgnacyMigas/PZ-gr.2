@@ -8,7 +8,7 @@
 import Page from '@/components/templates/Page'
 
 /**
- * Strong główna serwisu.
+ * Strona główna serwisu.
  *
  * Używana bezpośrednio przez router.
  *
