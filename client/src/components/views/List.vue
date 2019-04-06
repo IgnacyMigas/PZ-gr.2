@@ -1,6 +1,6 @@
 <template>
-  <page title="Strona Główna">
-    Witamy na stronie głównej.
+  <page title="Lista">
+    Tu będzie lista wyszukiwania.
   </page>
 </template>
 
@@ -8,14 +8,14 @@
 import Page from '@/components/templates/Page'
 
 /**
- * Strong główna serwisu.
+ * Strona listy zasobów.
  *
  * Używana bezpośrednio przez router.
  *
- * @module components/views/Home
+ * @module components/views/List
  */
 export default {
-  name: 'home',
+  name: 'list',
   components: {
     'page': Page
   }

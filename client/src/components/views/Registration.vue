@@ -1,6 +1,6 @@
 <template>
-  <page title="Strona Główna">
-    Witamy na stronie głównej.
+  <page title='Rejestracja'>
+    Tu będzie rejestracja.
   </page>
 </template>
 
@@ -8,14 +8,14 @@
 import Page from '@/components/templates/Page'
 
 /**
- * Strong główna serwisu.
+ * Strona formularza rejestracji.
  *
  * Używana bezpośrednio przez router.
  *
- * @module components/views/Home
+ * @module components/views/Registration
  */
 export default {
-  name: 'home',
+  name: 'registration',
   components: {
     'page': Page
   }
