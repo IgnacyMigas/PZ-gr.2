@@ -1,6 +1,6 @@
 <template>
-  <page title="Strona Główna">
-    Witamy na stronie głównej.
+  <page title="Wykresy">
+    Tu będą prezentowane wykresy.
   </page>
 </template>
 
@@ -8,14 +8,14 @@
 import Page from '@/components/templates/Page'
 
 /**
- * Strong główna serwisu.
+ * Strona prezentacji wykresów.
  *
  * Używana bezpośrednio przez router.
  *
- * @module components/views/Home
+ * @module components/views/Charts
  */
 export default {
-  name: 'home',
+  name: 'charts',
   components: {
     'page': Page
   }
