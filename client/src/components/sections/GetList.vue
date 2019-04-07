@@ -1,21 +1,14 @@
 <template>
-  <v-container fluid fill-height>
-    <v-layout justify-center>
-      <v-flex xs18 sm12 md6>
-        <v-card class="elevation-12">
-          <v-card-text v-if="log || error">
-            <p class='log'>{{ log }}</p>
-            <p class='error' v-for="err in error" :key="err">
-              {{ err }}
-            </p>
-          </v-card-text>
-
-          <slot :items="items"></slot>
-
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
+  <div>
+    <v-card-text v-if="log || error">
+      <p class='log'>{{ log }}</p>
+      <p class='error' v-for="err in error" :key="err">
+        {{ err }}
+      </p>
+    </v-card-text>
+  
+    <slot :items="items"></slot>
+  </div>
 </template>
 
 <script>
