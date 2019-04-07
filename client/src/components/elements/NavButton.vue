@@ -15,10 +15,16 @@ export default {
   name: 'nav-button',
   props: {
     /** Ikona do wyświetlenia. */
-    icon: String,
+    icon: {
+      type: String,
+      required: true
+    },
 
     /** Odnośnik routera do odesłania przy kliknięciu. */
-    to: String
+    to: {
+      type: String,
+      required: false
+    }
   }
 }
 </script>
