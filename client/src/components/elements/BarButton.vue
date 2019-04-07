@@ -16,10 +16,16 @@ export default {
   name: 'bar-button',
   props: {
     /** Ikona do wyświetlenia. */
-    icon: String,
+    icon: {
+      type: String,
+      required: true
+    },
 
     /** Funkcja obsługująca kliknięcie */
-    handler: Function
+    handler: {
+      type: Function,
+      required: true
+    }
   }
 }
 </script>
