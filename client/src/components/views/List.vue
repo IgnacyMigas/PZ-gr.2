@@ -14,20 +14,20 @@
               <span v-if="searched">
                 Szukano: ,,{{ searched }}''
               </span>
+              <v-radio-group v-model="searchFor" @change="reloadList">
+                <v-radio label="Metryk" value='metrics'></v-radio>
+                <v-radio label="Hostów" value='hosts'></v-radio>
+              </v-radio-group>
             </v-card-text>
           </v-card>
           <v-card class="elevation-12">
             <get-list
+              v-if="isSearchingForMetrics()"
               title='Metryki'
               :tryGet="tryListMetrics">
 
-              <p class='log'>{{ log }}</p>
-              <p class='error' v-for="err in error" :key="err">
-                {{ err }}
-              </p>
-
               <v-data-table
-                :headers="headers"
+                :headers="metricsHeaders"
                 :items="metrics"
                 hide-actions
                 class="elevation-1"
@@ -50,6 +50,30 @@
                     <bar-button
                      icon="show_chart"
                      :handler="() => addToChart(item)" />
+                  </td>
+                </template>
+              </v-data-table>
+            </get-list>
+            <get-list
+              v-if="isSearchingForHosts()"
+              title='Hosty'
+              :tryGet="tryListHosts">
+
+              <v-data-table
+                :headers="hostsHeaders"
+                :items="hosts"
+                hide-actions
+                class="elevation-1"
+                no-data-text='Brak hostów do wyświetlenia'
+              >
+                <template slot="items" slot-scope="{ item }">
+                  <td align="left">
+                    {{ item.name }}
+                  </td>
+                  <td>
+                    <bar-button
+                     icon="list"
+                     :handler="() => showMetrics(item)" />
                   </td>
                 </template>
               </v-data-table>
@@ -86,7 +110,7 @@ export default {
     return {
       searched: '',
       metrics: [],
-      headers: [
+      metricsHeaders: [
         {
           text: 'Nazwa',
           value: 'name',
@@ -106,8 +130,22 @@ export default {
           sortable: false
         }
       ],
-      error: '',
-      log: ''
+      hosts: [],
+      hostsHeaders: [
+        {
+          text: 'Nazwa',
+          value: 'name',
+          align: 'left',
+          sortable: true
+        },
+        {
+          text: 'Akcje',
+          value: 'actions',
+          align: 'center',
+          sortable: false
+        }
+      ],
+      searchFor: 'metrics'
     }
   },
   methods: {
@@ -116,8 +154,19 @@ export default {
       this.searched = text
     },
 
+    /** Sprawdź, czy szukane są metryki. */
+    isSearchingForMetrics () {
+      return (this.searchFor === 'metrics')
+    },
+
+    /** Sprawdź, czy szukane są hosts. */
+    isSearchingForHosts () {
+      return (this.searchFor === 'hosts')
+    },
+
     /** Pobiera dane do wylistowania metryk. */
     tryListMetrics: async function () {
+      // (mock)
       const data = [
         {
           name: 'Temperatura (D10, 205, stanowisko 1)',
@@ -144,9 +193,36 @@ export default {
       return data
     },
 
+    /** Pobiera dane do wylistowania hostów. */
+    tryListHosts: async function () {
+      // (mock)
+      const data = [
+        {
+          name: 'D10, 205, stanowisko 1'
+        },
+        {
+          name: 'D10, 205, stanowisko 2'
+        },
+        {
+          name: 'Cyfronet, 402, stanowisko 4'
+        },
+      ]
+      this.hosts = data
+      return data
+    },
+
+    /** Przeładowuje listę. */
+    reloadList () {
+      if (this.isSearchingForMetrics()) {
+        this.tryListMetrics()
+      } else {  // hosts
+        this.tryListHosts()
+      }
+    },
+
     /** Uruchamiana przy autopreładowywaniu */
     reload () {
-      this.tryListMetrics()
+      this.reloadList()
     },
 
     /** Pokazuje pomiary danej metryki */
@@ -163,6 +239,12 @@ export default {
 
     /** Dodaje do wykresu */
     addToChart (item) {
+      item
+      //TODO
+    },
+
+    /** Pokazuje metryki dostępne dla danego hosta */
+    showMetrics (item) {
       item
       //TODO
     },
