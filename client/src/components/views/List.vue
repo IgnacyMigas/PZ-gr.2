@@ -12,7 +12,7 @@
                 :category="listOfSearchFors[0]"
                 :categories="listOfSearchFors"
                 :onChangeCategory="changeCategory"
-                :onSearch="saySearch"
+                :onSearch="doSearch"
               />
               <span v-if="searched">
                 Szukano: ,,{{ searched }}''
@@ -158,9 +158,12 @@ export default {
     }
   },
   methods: {
-
-    saySearch (text) {
-      this.searched = text
+    /** Jeśli zmieniono kryteria wyszukiwania, aktualizuje listę. */
+    doSearch (text) {
+      if (text !== this.searched) {
+        this.searched = text
+        this.reloadList()
+      }
     },
 
     /** Sprawdź, czy szukane są metryki. */
@@ -176,7 +179,7 @@ export default {
     /** Pobiera dane do wylistowania metryk. */
     tryListMetrics: async function () {
       // (mock)
-      const data = [
+      let data = [
         {
           name: 'Temperatura (D10, 205, stanowisko 1)',
           type: 'temperatura'
@@ -198,6 +201,13 @@ export default {
           type: 'zużycie GPU'
         }
       ]
+
+      if (this.searched) {
+        data = data.filter(el =>
+          el.name.search(this.searched) != -1
+        )
+      }
+
       this.metrics = data
       return data
     },
@@ -205,7 +215,7 @@ export default {
     /** Pobiera dane do wylistowania hostów. */
     tryListHosts: async function () {
       // (mock)
-      const data = [
+      let data = [
         {
           name: 'D10, 205, stanowisko 1'
         },
@@ -216,6 +226,13 @@ export default {
           name: 'Cyfronet, 402, stanowisko 4'
         },
       ]
+
+      if (this.searched) {
+        data = data.filter(el =>
+          el.name.search(this.searched) != -1
+        )
+      }
+
       this.hosts = data
       return data
     },
