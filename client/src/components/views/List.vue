@@ -9,15 +9,14 @@
             <v-card-text>
               <search-bar
                 @click:append="toggleMenu"
-                :handler="saySearch"
+                :category="listOfSearchFors[0]"
+                :categories="listOfSearchFors"
+                :onChangeCategory="changeCategory"
+                :onSearch="saySearch"
               />
               <span v-if="searched">
                 Szukano: ,,{{ searched }}''
               </span>
-              <v-radio-group v-model="searchFor" @change="reloadList">
-                <v-radio label="Metryk" value='metrics'></v-radio>
-                <v-radio label="Hostów" value='hosts'></v-radio>
-              </v-radio-group>
             </v-card-text>
           </v-card>
           <v-card class="elevation-12">
@@ -145,6 +144,16 @@ export default {
           sortable: false
         }
       ],
+      listOfSearchFors: [
+        {
+          text: 'Metryki',
+          value: 'metrics'
+        },
+        {
+          text: 'Hosty',
+          value: 'hosts'
+        }
+      ],
       searchFor: 'metrics'
     }
   },
@@ -211,6 +220,12 @@ export default {
       return data
     },
 
+    /** Zmienia kategorię i przeładowuje listę. */
+    changeCategory(category) {
+      this.searchFor = category
+      this.reloadList()
+    },
+
     /** Przeładowuje listę. */
     reloadList () {
       if (this.isSearchingForMetrics()) {
@@ -256,3 +271,4 @@ export default {
   }
 }
 </script>
+
