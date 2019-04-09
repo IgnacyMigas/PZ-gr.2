@@ -6,16 +6,19 @@
 CXX=g++
 RM=rm
 
+APPNAME = sensor
+
 SRCDIR=source
 BUILDDIR=build/obj
-TARGET=build/bin/sensor
+TARGETDIR=build/bin
 SOURCE=main.cpp
 
 runSensor: 
-	./$(TARGET)
+	./$(TARGETDIR)/$(APPNAME)
 
 sensor: 
-	$(CXX) $(SRCDIR)/$(SOURCE) -o $(TARGET) 
+	mkdir -p $(TARGETDIR)
+	$(CXX) $(SRCDIR)/$(SOURCE) -o $(TARGETDIR)/$(APPNAME)
 
 clean:
-	$(RM) $(TARGET)
+	$(RM) $(TARGETDIR)/$(APPNAME)
