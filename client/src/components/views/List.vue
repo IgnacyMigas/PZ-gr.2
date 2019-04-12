@@ -19,6 +19,7 @@
               <options-metrics
                 v-if="showOptions && isSearchingForMetrics"
                 v-model="options['metrics']"
+                :types="types"
               />
             </v-card-text>
           </v-card>
@@ -85,7 +86,26 @@ export default {
           quick_access: true
         },
         hosts: {}
-      }
+      },
+      //TODO: unmock
+      types: [
+        {
+          name: 'temperatura',
+          unit: '°C'
+        },
+        {
+          name: 'zużycie pamięci',
+          unit: 'MB'
+        },
+        {
+          name: 'zużycie pamięci GPU',
+          unit: 'MB'
+        },
+        {
+          name: 'zużycie GPU',
+          unit: 'flops'
+        }
+      ]
     }
   },
   computed: {
