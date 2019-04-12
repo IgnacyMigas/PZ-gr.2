@@ -27,8 +27,9 @@
  *   </div>
  * </get-list>
  *
- * @param {String} title - tytuł
+ * @param {String} title - (required) tytuł
  * @param {Function} tryGet - (required) Funkcja pobierająca dane
+ * @param {Object} getOptions - Parametry dla funkcji pobierającej
  * @module components/sections/GetList
  */
 export default {
@@ -42,19 +43,40 @@ export default {
   },
   props: {
     /** Tytuł listy. */
-    title: String,
+    title: {
+      type: String,
+      required: true
+    },
 
     /** Funkcja pobierająca dane do wylistowania. */
-    tryGet: Function
+    tryGet: {
+      type: Function,
+      required: true
+    },
+
+    /** Opcje do przekazania funkcji przeładowującej. */
+    getOptions: {
+      type: Object,
+      required: false,
+      default: undefined
+    }
   },
   methods: {
-    reload: async function () {
-      const data = await this.tryGet()
-      return data
+    /** Przeładuj listę. */
+    reload: async function (options = this.getOptions) {
+      const data = await this.tryGet(options)
+      this.items = data
     }
   },
   mounted () {
     this.reload()
+  },
+  watch: {
+    /** Kiedy opcje się zmieniają, przeładuj listę. */
+    getOptions (newVal) {  // newVal, oldVal
+      this.getOptions = newVal
+      this.reload(newVal)
+    }
   }
 }
 </script>

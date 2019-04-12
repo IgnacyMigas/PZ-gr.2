@@ -1,31 +1,27 @@
 <template>
-  <get-list
+  <get-table
+    ref='table'
     title='Hosty'
-    :tryGet="reloadList">
-
-    <v-data-table
-      :headers="headers"
-      :items="data"
-      hide-actions
-      class="elevation-1"
-      no-data-text='Brak hostów do wyświetlenia'
-    >
-      <template slot="items" slot-scope="{ item }">
-        <td align="left">
-          {{ item.name }}
-        </td>
-        <td>
-          <bar-button
-           icon="list"
-           :handler="() => showMetrics(item)" />
-        </td>
-      </template>
-    </v-data-table>
-  </get-list>
+    id='hosts'
+    :headers="headers"
+    no_data_text='Brak hostów do wyświetlenia'
+    :tryGet="reloadList"
+    :getOptions="all_options"
+    v-slot="items"
+  >
+    <td align="left">
+      {{ items.item.name }}
+    </td>
+    <td>
+      <bar-button
+       icon="list"
+       :handler="() => showMetrics(item)" />
+    </td>
+  </get-table>
 </template>
 
 <script>
-import GetList from '@/components/sections/GetList'
+import GetTable from '@/components/sections/GetTable'
 import BarButton from '@/components/elements/BarButton'
 
 /**
@@ -37,7 +33,7 @@ import BarButton from '@/components/elements/BarButton'
 export default {
   name: 'list-hosts',
   components: {
-    'get-list': GetList,
+    'get-table': GetTable,
     'bar-button': BarButton
   },
   props: {
@@ -66,6 +62,13 @@ export default {
       ],
     }
   },
+  computed: {
+    all_options () {
+      let value = {...this.options}
+      value.searched = this.searched
+      return value
+    }
+  },
   methods: {
     /** Pokazuje metryki dostępne dla danego hosta */
     showMetrics (item) {
@@ -74,11 +77,7 @@ export default {
     },
 
     /** Pobiera dane do wylistowania metryk. */
-    reloadList: async function (searched) {
-      if (searched === undefined) {
-        searched = this.searched
-      }
-
+    reloadList: async function (options = {}) {
       // (mock)
       let data = [
         {
@@ -92,19 +91,14 @@ export default {
         },
       ]
 
-      if (searched) {
+      if (options.searched) {
         data = data.filter(el =>
-          el.name.search(searched) != -1
+          el.name.search(options.searched) != -1
         )
       }
 
       this.data = data
       return data
-    }
-  },
-  watch: {
-    searched (newVal) {  // newVal, oldVal
-      this.reloadList(newVal)
     }
   }
 }
