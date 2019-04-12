@@ -14,10 +14,14 @@ e   :tryGet="reloadList">
         <td align="left">
           {{ item.name }}
         </td>
-        <td align="right" class="caption">
+        <td
+          v-if="show_type"
+          align="right"
+          class="caption"
+        >
           ( {{ item.type }} )
         </td>
-        <td>
+        <td v-if="quick_access">
           <bar-button
            icon="list"
            :handler="() => showRecords(item)" />
@@ -54,31 +58,58 @@ export default {
     searched: {
       type: String,
       required: false
+    },
+
+    /** Dodatkowe opcje listowania. */
+    options: {
+      type: Object,
+      required: false
     }
   },
   data () {
     return {
       data: [],
-      headers: [
-        {
+      all_headers: {
+        name: {
           text: 'Nazwa',
           value: 'name',
           align: 'left',
           sortable: true
         },
-        {
+        type: {
           text: 'Typ',
           value: 'type',
           align: 'right',
           sortable: true
         },
-        {
+        quick_access: {
           text: 'Akcje',
           value: 'actions',
           align: 'center',
           sortable: false
         }
-      ]
+      }
+    }
+  },
+  computed: {
+    show_type () {
+      return (this.options && this.options.show_type) || false
+    },
+
+    quick_access () {
+      return (this.options && this.options.quick_access) || false
+    },
+
+    headers () {
+      let value = []
+      value.push(this.all_headers.name)
+      if (this.show_type) {
+        value.push(this.all_headers.type)
+      }
+      if (this.quick_access) {
+        value.push(this.all_headers.quick_access)
+      }
+      return value
     }
   },
   methods: {
