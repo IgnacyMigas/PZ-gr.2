@@ -11,24 +11,25 @@
                 @click:append="toggleMenu"
                 :category="listOfSearchFors[0]"
                 :categories="listOfSearchFors"
+                :onChangeShowOptions="changeShowOptions"
                 :onChangeCategory="changeCategory"
                 :onSearch="doSearch"
               />
 
+              <options-metrics
+                v-if="showOptions && isSearchingForMetrics"
+                v-model="options['metrics']"
+              />
             </v-card-text>
-            <options-metrics
-              v-if="isSearchingForMetrics()"
-              v-model="options['metrics']"
-            />
           </v-card>
           <v-card class="elevation-12">
             <list-metrics
-              v-if="isSearchingForMetrics()"
+              v-if="isSearchingForMetrics"
               :options="options['metrics']"
               :searched="searched"
             />
             <list-hosts
-              v-if="isSearchingForHosts()"
+              v-if="isSearchingForHosts"
               :searched="searched"
             />
           </v-card>
@@ -77,6 +78,7 @@ export default {
         }
       ],
       searchFor: 'metrics',
+      showOptions: false,
       options: {
         metrics: {
           show_type: true,
@@ -84,6 +86,17 @@ export default {
         },
         hosts: {}
       }
+    }
+  },
+  computed: {
+    /** Sprawdź, czy szukane są metryki. */
+    isSearchingForMetrics () {
+      return (this.searchFor === 'metrics')
+    },
+
+    /** Sprawdź, czy szukane są hosts. */
+    isSearchingForHosts () {
+      return (this.searchFor === 'hosts')
     }
   },
   methods: {
@@ -94,21 +107,18 @@ export default {
       }
     },
 
+    /** Zmienia opcje. */
+    changeShowOptions(value) {
+      if (value !== this.showOptions) {
+        this.showOptions = value
+      }
+    },
+
     /** Zmienia kategorię i przeładowuje listę. */
     changeCategory(category) {
       if (category !== this.searchFor) {
         this.searchFor = category
       }
-    },
-
-    /** Sprawdź, czy szukane są metryki. */
-    isSearchingForMetrics () {
-      return (this.searchFor === 'metrics')
-    },
-
-    /** Sprawdź, czy szukane są hosts. */
-    isSearchingForHosts () {
-      return (this.searchFor === 'hosts')
     },
 
     /** Pokazuje lub ukrywa menu wyszukiwania */

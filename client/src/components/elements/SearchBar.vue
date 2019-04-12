@@ -14,12 +14,21 @@
     </v-flex>
     <v-flex grow>
       <v-text-field
+        v-if="onChangeShowOptions !== undefined"
         class="search-bar-text"
         placeholder="Szukaj..."
         :clearable=true
         append-icon="menu"
-        @change="onSearch($event)">
-      </v-text-field>
+        @click:append="changeShowOptions"
+        @change="onSearch($event)"
+      />
+      <v-text-field
+        v-if="onChangeShowOptions === undefined"
+        class="search-bar-text"
+        placeholder="Szukaj..."
+        :clearable=true
+        @change="onSearch($event)"
+      />
     </v-flex>
   </v-layout>
 </template>
@@ -37,6 +46,16 @@ export default {
     onSearch: {
       type: Function,
       required: true
+    },
+
+    /**
+     * Funkcja wywoływania przy żądaniu pokazania/schowania opcji.
+     * 
+     * Jeśli nie zostanie podana, ikona opcji nie będzie wyświetlana.
+     */
+    onChangeShowOptions: {
+      type: Function,
+      required: false
     },
 
     /** Funkcja wywoływana przy zmianie kategorii. */
@@ -58,6 +77,17 @@ export default {
     categories: {
       type: Array,
       required: true
+    }
+  },
+  data () {
+    return {
+      showOptions: false
+    }
+  },
+  methods: {
+    changeShowOptions () {
+      this.showOptions = !this.showOptions
+      this.onChangeShowOptions(this.showOptions)
     }
   }
 }
