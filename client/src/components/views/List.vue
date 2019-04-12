@@ -14,11 +14,17 @@
                 :onChangeCategory="changeCategory"
                 :onSearch="doSearch"
               />
+
             </v-card-text>
+            <options-metrics
+              v-if="isSearchingForMetrics()"
+              v-model="options['metrics']"
+            />
           </v-card>
           <v-card class="elevation-12">
             <list-metrics
               v-if="isSearchingForMetrics()"
+              :options="options['metrics']"
               :searched="searched"
             />
             <list-hosts
@@ -34,9 +40,10 @@
 
 <script>
 import Page from '@/components/templates/Page'
+import OptionsMetrics from '@/components/sections/OptionsMetrics'
 import ListMetrics from '@/components/sections/ListMetrics'
 import ListHosts from '@/components/sections/ListHosts'
-import BarButton from '@/components/elements/BarButton'
+// import BarButton from '@/components/elements/BarButton'
 import SearchBar from '@/components/elements/SearchBar'
 
 /**
@@ -50,9 +57,10 @@ export default {
   name: 'list',
   components: {
     'page': Page,
+    'options-metrics': OptionsMetrics,
     'list-metrics': ListMetrics,
     'list-hosts': ListHosts,
-    'bar-button': BarButton,
+    // 'bar-button': BarButton,
     'search-bar': SearchBar
   },
   data () {
@@ -68,7 +76,14 @@ export default {
           value: 'hosts'
         }
       ],
-      searchFor: 'metrics'
+      searchFor: 'metrics',
+      options: {
+        metrics: {
+          show_type: true,
+          quick_access: true
+        },
+        hosts: {}
+      }
     }
   },
   methods: {
