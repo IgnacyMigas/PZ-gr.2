@@ -40,7 +40,13 @@ Available endpoints:
 	http://localhost:8080/v1/metrics (GET)
 	http://localhost:8080/v1/metrics/{id} (GET/DELETE)
 	http://localhost:8080/v1/metrics/{id}/measurements (GET/POST)
+
+Date format:
+
+	"dd/MM/yyyy HH:mm:ss"
 	
 Parameters and status codes handling not yet implemented!
+
+
 	
 	

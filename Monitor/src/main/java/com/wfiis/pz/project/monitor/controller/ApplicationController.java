@@ -66,7 +66,7 @@ public class ApplicationController {
 		List<Metric> metrics = hd.extractMetricList();
 		hostService.insertHost(h);
 		for(Metric m : metrics) {
-			m.setHostId(env.getProperty("MONITORID"));
+			m.setMonitorId(env.getProperty("MONITORID"));
 			metricService.insertMetric(m);
 		}
 	}
