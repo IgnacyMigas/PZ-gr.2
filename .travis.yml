@@ -1,12 +1,15 @@
-language: python
-python:
-  - "3.6"
-install:
-  - python -m pip install --upgrade pip
-  - pip install -r requirements.txt
-# command to run tests
-script: 
-  - python folder_name/test_file_name.py
+matrix:
+  include:
+    - language: python
+      python: 3.7
+      before_script:
+        - cd APIGateway
+      install:
+        - python -m pip install --upgrade pip
+        - pip install -r requirements.txt
+      script:
+        - python APIGateway/test.py
+
 
 
 notifications:
