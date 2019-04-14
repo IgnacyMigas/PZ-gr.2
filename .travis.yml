@@ -6,7 +6,7 @@ matrix:
         - python -m pip install --upgrade pip
         - pip install -r APIGateway/requirements.txt
       script:
-        - python APIGateway/APIGateway/test.py
+        - python APIGateway/APIGateway/tests.py
 
 
 
