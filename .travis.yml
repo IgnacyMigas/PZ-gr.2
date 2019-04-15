@@ -1,12 +1,13 @@
 matrix:
   include:
     - language: python
-      python: 3.6
+      python: 3.7
+      dist: xenial
       install:
         - python -m pip install --upgrade pip
         - pip install -r APIGateway/requirements.txt
       script:
-        - python APIGateway/APIGateway/tests.py
+        - python APIGateway/gateway/tests.py
 
 
 
