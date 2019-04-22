@@ -11,6 +11,6 @@ Usage: ./client.sh [-m <metric_type>] [-l] [-h]
 
 ## Information
 
-For now it is only skatch with example url and no parser.
+For now it is only sketch with example url and no parser.
 It will be added soon.
 Also upgrade from console app to windows app is under consideration.
