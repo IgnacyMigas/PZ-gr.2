@@ -10,6 +10,9 @@ public interface HostService {
 	List<Host> findAllDemo();
 	void insertHost(Host host);
 	Host findHostById(String id);
+	List<Host> findAllByName(String name);
+	List<Host> findAllByNameLike(String name_like);
+	List<Host> findTopByMetricType(Integer top, String metric_type);
 	
 }
 

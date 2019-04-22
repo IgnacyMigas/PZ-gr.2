@@ -67,6 +67,34 @@ public class HostDaoImpl implements HostDao{
 		List<Host> list = template.query(sql, param, new HostRowMapper());
 		return list.get(0);
 	}
+
+	@Override
+	public List<Host> findHostByName(String name) {
+		final String sql = "select * from hosts where hostId = :id";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("id", name);
+		List<Host> list = template.query(sql, param, new HostRowMapper());
+		return list;
+	}
+
+	@Override
+	public List<Host> findHostByNameLike(String name_like) {
+		final String sql = "select * from hosts where hostId like '%'||:id||'%'";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("id", name_like);
+		List<Host> list = template.query(sql, param, new HostRowMapper());
+		return list;
+	}
+
+	@Override
+	public List<Host> findTopByMetricType(Integer top, String metric_type) {
+		final String sql = "select * from hosts where hostId in (select hostId from metrics where type = :metric_type) limit :top";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("metric_type", metric_type)
+				.addValue("top", top);
+		List<Host> list = template.query(sql, param, new HostRowMapper());
+		return list;
+	}
 	
 	
 	

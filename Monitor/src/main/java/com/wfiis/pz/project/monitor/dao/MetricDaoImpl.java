@@ -90,6 +90,26 @@ public class MetricDaoImpl implements MetricDao{
 			    }  
 			});  
 	}
+
+
+	@Override
+	public List<Metric> findAllByNameLike(String name_like) {
+		final String sql = "select * from metrics where metricId like '%' || :name_like || '%'";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("name_like", name_like);
+		List<Metric> list = template.query(sql, param, new MetricRowMapper());
+		return list;
+	}
+
+
+	@Override
+	public List<Metric> findAllByType(String type) {
+		final String sql = "select * from metrics where type = :type";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("type", type);
+		List<Metric> list = template.query(sql, param, new MetricRowMapper());
+		return list;
+	}
 	
 	
 	

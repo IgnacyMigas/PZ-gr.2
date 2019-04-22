@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.wfiis.pz.project.monitor.entity.Metric;
 
-public class MetricPresenter {
+public class MetricPresenter extends MetricAbstractPresenter {
 	List<MetricPreview> metrics;
 	MetaDataForMetric meta;
 	

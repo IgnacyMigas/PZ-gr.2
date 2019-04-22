@@ -15,6 +15,10 @@ public interface MetricService {
 	Metric findMetricById(String id);
 
 	void deleteMetricById(String id);
+
+	List<Metric> findAllByNameLike(String name_like);
+
+	List<Metric> findAllByType(String type);
 	
 }
 

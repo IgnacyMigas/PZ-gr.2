@@ -58,6 +58,36 @@ public class MeasurementDaoImpl implements MeasurementDao{
 		return template.query("select * from measurements where metricId = :id", param, new MeasurementRowMapper());
 		
 	}
+
+
+	@Override
+	public List<Measurement> findTopByMetricId(String id, Integer n) {
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("id", id)
+				.addValue("n", n);
+	return template.query("select * from measurements where metricId = :id limit :n", param, new MeasurementRowMapper());
+	}
+
+
+	@Override
+	public List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to) {
+		
+		String sql = "select * from measurements where ts > :from and ts < :to";
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("from", Util.convertStringToTimestamp(from))
+				.addValue("to", Util.convertStringToTimestamp(to));
+		
+		
+		if (from == null || !from.isEmpty())
+			from = "01/01/1999 00:00:00";
+		
+		if (to == null || !to.isEmpty()){
+			sql = "select * from measurements where ts > :from";
+			param = new MapSqlParameterSource()
+					.addValue("from", Util.convertStringToTimestamp(from));
+		}
+	return template.query(sql, param, new MeasurementRowMapper());
+	}
 	
 	
 	

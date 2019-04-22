@@ -16,5 +16,9 @@ public interface MetricDao {
 
 	void deleteMetric(String id);
 
+	List<Metric> findAllByNameLike(String name_like);
+
+	List<Metric> findAllByType(String type);
+
 	
 }

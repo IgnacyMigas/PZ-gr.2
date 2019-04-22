@@ -34,5 +34,20 @@ public class HostServiceImpl implements HostService{
 	public Host findHostById(String id) {
 		return hostDao.findHostById(id);
 	}
+
+	@Override
+	public List<Host> findAllByName(String name) {
+		return hostDao.findHostByName(name);
+	}
+
+	@Override
+	public List<Host> findAllByNameLike(String name_like) {
+		return hostDao.findHostByNameLike(name_like);
+	}
+
+	@Override
+	public List<Host> findTopByMetricType(Integer top, String metric_type) {
+		return hostDao.findTopByMetricType(top, metric_type);
+	}
 	
 }

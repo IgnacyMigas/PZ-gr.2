@@ -40,5 +40,15 @@ public class MetricServiceImpl implements MetricService{
 	public void deleteMetricById(String id) {
 		metricDao.deleteMetric(id);
 	}
+
+	@Override
+	public List<Metric> findAllByNameLike(String name_like) {
+		return metricDao.findAllByNameLike(name_like);
+	}
+
+	@Override
+	public List<Metric> findAllByType(String type) {
+		return metricDao.findAllByType(type);
+	}
 	
 }

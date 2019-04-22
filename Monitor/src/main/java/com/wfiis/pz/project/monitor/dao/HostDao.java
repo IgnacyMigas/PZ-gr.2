@@ -11,6 +11,9 @@ public interface HostDao {
 
 	void insertHost(Host host);
 	Host findHostById(String id);
+	List<Host> findHostByName(String name);
+	List<Host> findHostByNameLike(String name_like);
+	List<Host> findTopByMetricType(Integer top, String metric_type);
 
 	
 }

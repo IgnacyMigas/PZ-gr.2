@@ -27,5 +27,13 @@ public class MeasurementServiceImpl implements MeasurementService{
 		measurementDao.insertMeasurement(m);
 		
 	}
+	@Override
+	public List<Measurement> findTopMeasurementByMetricId(String id, Integer n) {
+		return measurementDao.findTopByMetricId(id,n);
+	}
+	@Override
+	public List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to) {
+		return measurementDao.findByDateMeasurementByMetricId(id, from, to);
+	}
 	
 }
