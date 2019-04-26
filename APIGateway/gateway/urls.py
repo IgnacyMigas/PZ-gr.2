@@ -18,11 +18,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('metrics', views.metrics, name='results'),
-    path('metrics/<str:metrics_id>', views.metrics, name='results'),
-    path('metrics/<str:metrics_id>/measurements', views.metrics_measurements, name='results'),
-    path('hosts', views.hosts, name='results'),
-    path('hosts/<str:hosts_id>', views.hosts, name='results'),
-    path('monitors', views.monitors, name='results'),
+    path('v1/admin/', admin.site.urls),
+    path('v1/metrics', views.metrics, name='results'),
+    path('v1/metrics/<str:metrics_id>', views.metrics, name='results'),
+    path('v1/metrics/<str:metrics_id>/measurements', views.metrics_measurements, name='results'),
+    path('v1/hosts', views.hosts, name='results'),
+    path('v1/hosts/<str:hosts_id>', views.hosts, name='results'),
+    path('v1/monitors', views.monitors, name='results'),
 ]
