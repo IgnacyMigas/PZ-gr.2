@@ -20,9 +20,9 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('metrics', views.metrics, name='results'),
-    path('metrics/<int:metrics_id>', views.metrics, name='results'),
-    path('metrics/<int:metrics_id>/measurements', views.metrics_measurements, name='results'),
+    path('metrics/<str:metrics_id>', views.metrics, name='results'),
+    path('metrics/<str:metrics_id>/measurements', views.metrics_measurements, name='results'),
     path('hosts', views.hosts, name='results'),
-    path('hosts/<int:hosts_id>', views.hosts, name='results'),
+    path('hosts/<str:hosts_id>', views.hosts, name='results'),
     path('monitors', views.monitors, name='results'),
 ]
