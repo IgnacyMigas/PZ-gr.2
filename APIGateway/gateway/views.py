@@ -6,6 +6,7 @@ import json
 import requests
 
 
+@csrf_exempt
 def metrics(request, metrics_id=None):
     if not request.headers['access-token']:
         return HttpResponse(status=401)
@@ -14,7 +15,7 @@ def metrics(request, metrics_id=None):
     if metrics_id is None:
         if request.method == 'GET':
             for m in models.Monitor.objects.all():
-                monitor_response = requests.get(str(m.endpoint) + '/metrics')
+                monitor_response = requests.get(str(m.endpoint) + '/metrics', headers=request.headers)
                 if monitor_response.status_code == 200:
                     body = monitor_response.content
                     if isinstance(body, bytes):
@@ -26,7 +27,7 @@ def metrics(request, metrics_id=None):
         elif request.method == 'POST':
             status = 201
             for m in models.Monitor.objects.all():
-                monitor_response = requests.post(str(m.endpoint) + '/metrics')
+                monitor_response = requests.post(str(m.endpoint) + '/metrics', data=request.body, headers=request.headers)
                 if monitor_response.status_code != 201:
                     status = monitor_response.status_code
             return HttpResponse(status=status)
@@ -35,7 +36,7 @@ def metrics(request, metrics_id=None):
             return HttpResponse(status=501)
         elif request.method == 'DELETE':
             for m in models.Monitor.objects.all():
-                requests.post(str(m.endpoint) + '/metrics/' + str(metrics_id))
+                requests.delete(str(m.endpoint) + '/metrics/' + metrics_id, data=request.body, headers=request.headers)
             return HttpResponse(status=200)
     return HttpResponse(status=404)
 
@@ -47,7 +48,7 @@ def metrics_measurements(request, metrics_id):
     if request.method == 'GET':
         measurements_list = []
         for m in models.Monitor.objects.all():
-            monitor_response = requests.get(str(m.endpoint) + '/metrics/' + str(metrics_id) + '/measurements')
+            monitor_response = requests.get(str(m.endpoint) + '/metrics/' + metrics_id + '/measurements', headers=request.headers)
             if monitor_response.status_code == 200:
                 body = monitor_response.content
                 if isinstance(body, bytes):
@@ -65,7 +66,7 @@ def hosts(request, hosts_id=None):
         monitors_list = []
         if hosts_id is None:
             for m in models.Monitor.objects.all():
-                monitor_response = requests.get(str(m.endpoint) + '/hosts')
+                monitor_response = requests.get(str(m.endpoint) + '/hosts', headers=request.headers)
                 if monitor_response.status_code == 200:
                     body = monitor_response.content
                     if isinstance(body, bytes):
@@ -73,7 +74,7 @@ def hosts(request, hosts_id=None):
                     monitors_list.extend(body)
         else:
             for m in models.Monitor.objects.all():
-                monitor_response = requests.get(str(m.endpoint) + '/hosts/' + str(hosts_id))
+                monitor_response = requests.get(str(m.endpoint) + '/hosts/' + hosts_id, headers=request.headers)
                 if monitor_response.status_code == 200:
                     body = monitor_response.content
                     if isinstance(body, bytes):
