@@ -20,8 +20,9 @@ def metrics(request, metrics_id=None):
                     if isinstance(body, bytes):
                         body = json.loads(body)
                     metrics_dict['metrics'].extend(body['metrics'])
-                    metrics_dict['meta']['types'].extend(body['meta']['types'])
-            return HttpResponse(metrics_dict)
+                    if body['meta'] is not None:
+                        metrics_dict['meta']['types'].extend(body['meta']['types'])
+            return HttpResponse(json.dumps(metrics_dict))
         elif request.method == 'POST':
             status = 201
             for m in models.Monitor.objects.all():
@@ -52,7 +53,7 @@ def metrics_measurements(request, metrics_id):
                 if isinstance(body, bytes):
                     body = json.loads(body)
                 measurements_list.extend(body)
-        return HttpResponse(measurements_list)
+        return HttpResponse(json.dumps(measurements_list))
     return HttpResponse(status=404)
 
 
@@ -70,7 +71,6 @@ def hosts(request, hosts_id=None):
                     if isinstance(body, bytes):
                         body = json.loads(body)
                     monitors_list.extend(body)
-            # return HttpResponse(monitors_list)
         else:
             for m in models.Monitor.objects.all():
                 monitor_response = requests.get(str(m.endpoint) + '/hosts/' + str(hosts_id))
@@ -78,7 +78,7 @@ def hosts(request, hosts_id=None):
                     body = monitor_response.content
                     if isinstance(body, bytes):
                         body = json.loads(body)
-                    monitors_list.extend(body)
+                    monitors_list.append(body)
         return HttpResponse(json.dumps(monitors_list))
     return HttpResponse(status=404)
 
