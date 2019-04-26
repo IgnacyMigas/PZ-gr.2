@@ -1,6 +1,8 @@
+from django.db import IntegrityError
 from django.http import HttpResponse
-from django.shortcuts import render
 from . import models
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
@@ -87,20 +89,39 @@ def hosts(request, hosts_id=None):
     return HttpResponse(output)
 
 
+@csrf_exempt
 def monitors(request):
+
     if not request.headers['access-token']:
         return HttpResponse(status=401)
+
+    # if not request.body:
+    #     return HttpResponse(status=406)
+
     if request.method == 'POST':
         try:
-            monitor = models.Monitor.objects.create(id=request.POST['monitor-id'], endpoint=request.POST['api-endpoint'])
+            body = json.loads(request.body)
+            monitor = models.Monitor.objects.create(id=body["monitor-id"], endpoint=body['api-endpoint'])
             monitor.save()
-        except:
+        except IntegrityError:
+            return HttpResponse(status=409)
+        except Exception as e:
+            print("exeption")
+            print(e)
             return HttpResponse(status=400)
         return HttpResponse(status=201)
+
     elif request.method == 'DELETE':
-        monitor = models.Monitor.objects.get(id=request.POST['monitor-id'])
-        monitor.save()
-        output = '''{  
-   "monitor-id":"unique_name_of_the_monitor"
-}'''
-    return HttpResponse(output)
+        try:
+            body = json.loads(request.body)
+            monitor = models.Monitor.objects.get(id=body['monitor-id'])
+            monitor.delete()
+        except IntegrityError:
+            return HttpResponse(status=409)
+        except Exception as e:
+            print("exeption")
+            print(e)
+            return HttpResponse(status=400)
+        return HttpResponse(status=200)
+
+    return HttpResponse(status=404)
