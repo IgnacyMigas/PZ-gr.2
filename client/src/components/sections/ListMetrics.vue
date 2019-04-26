@@ -3,38 +3,63 @@
     ref='table'
     title='Metryki'
     :headers="headers"
+    :actions="actions"
+    :quick_access="quick_access"
     no_data_text='Brak metryk do wyświetlenia'
     :tryGet="reloadList"
     :getOptions="all_options"
-    v-slot="items"
   >
-    <td align="left">
-      {{ items.item.name }}
-    </td>
-    <td
-      v-if="show_type"
-      align="right"
-      class="caption"
-    >
-      ( {{ items.item.type }} )
-    </td>
-    <td v-if="quick_access">
-      <bar-button
-       icon="list"
-       :handler="() => showRecords(items.item)" />
-      <bar-button
-       icon="add_circle"
-       :handler="() => addMetricBy(items.item)" />
-      <bar-button
-       icon="show_chart"
-       :handler="() => addToChart(items.item)" />
-    </td>
+    <template v-slot="props">
+      <td align="left">
+        {{ props.item.name }}
+      </td>
+      <td
+        v-if="show_type"
+        align="right"
+        class="caption"
+      >
+        ( {{ props.item.type }} )
+      </td>
+    </template>
+    <template v-slot:text="props">
+      <v-list two-line>
+        <v-list-tile>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ props.item.type }} [{{ props.item.unit }}]
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              typ
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ props.item['host-id'] }}
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              host
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile>
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ props.item['user-id'] || '(publiczna)' }}
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              właściciel
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </template>
   </get-table>
 </template>
 
 <script>
 import GetTable from '@/components/sections/GetTable'
-import BarButton from '@/components/elements/BarButton'
 
 /**
  * Sekcja pobierająca dane metryk.
@@ -45,8 +70,7 @@ import BarButton from '@/components/elements/BarButton'
 export default {
   name: 'list-metrics',
   components: {
-    'get-table': GetTable,
-    'bar-button': BarButton
+    'get-table': GetTable
   },
   props: {
     /** Funkcja pobierająca dane do wylistowania. */
@@ -76,14 +100,25 @@ export default {
           value: 'type',
           align: 'right',
           sortable: true
-        },
-        quick_access: {
-          text: 'Akcje',
-          value: 'actions',
-          align: 'center',
-          sortable: false
         }
-      }
+      },
+      actions: [
+        {
+          text: 'Lista pomiarów',
+          icon: 'list',
+          handler: this.showRecords
+        },
+        {
+          text: 'Utwórz metrykę złożoną',
+          icon: 'add_circle',
+          handler: this.addMetricBy
+        },
+        {
+          text: 'Dodaj do wykresu',
+          icon: 'show_chart',
+          handler: this.addToChart
+        }
+      ]
     }
   },
   computed: {
@@ -106,9 +141,6 @@ export default {
       value.push(this.all_headers.name)
       if (this.show_type) {
         value.push(this.all_headers.type)
-      }
-      if (this.quick_access) {
-        value.push(this.all_headers.quick_access)
       }
       return value
     }
@@ -138,23 +170,38 @@ export default {
       let data = [
         {
           name: 'Temperatura (D10, 205, stanowisko 1)',
-          type: 'temperatura'
+          type: 'temperatura',
+          unit: '°C',
+          'host-id': 'D10, 205, stanowisko 1',
+          'user-id': null
         },
         {
           name: 'Zużycie pamięci (D10, 205, stanowisko 1)',
-          type: 'zużycie pamięci'
+          type: 'zużycie pamięci',
+          unit: 'MB',
+          'host-id': 'D10, 205, stanowisko 1',
+          'user-id': null
         },
         {
           name: 'Temperatura (D10, 205, stanowisko 2)',
-          type: 'temperatura'
+          type: 'temperatura',
+          unit: '°C',
+          'host-id': 'D10, 205, stanowisko 2',
+          'user-id': null
         },
         {
           name: 'Zużycie pamięci (D10, 205, stanowisko 2)',
-          type: 'zużycie pamięci'
+          type: 'zużycie pamięci',
+          unit: 'MB',
+          'host-id': 'D10, 205, stanowisko 2',
+          'user-id': null
         },
         {
           name: 'Zużycie GPU (Cyfronet, 402, stanowisko 4)',
-          type: 'zużycie GPU'
+          type: 'zużycie GPU',
+          unit: 'flops',
+          'host-id': 'Cyfronet, 402, stanowisko 4',
+          'user-id': 'K. Noga'
         }
       ]
 
@@ -164,7 +211,6 @@ export default {
           options.types.includes(el.type)
         )
       }
-
 
       this.data = data
       return data

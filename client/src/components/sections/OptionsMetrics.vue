@@ -6,13 +6,13 @@
           <v-card-text>
             Ogólne
             <v-checkbox
-              v-model="options.show_type"
-              label="wyświetlaj typ"
+              v-model="options.quick_access"
+              label="szybki dostęp"
               hide-details
             />
             <v-checkbox
-              v-model="options.quick_access"
-              label="szybki dostęp"
+              v-model="options.show_type"
+              label="wyświetlaj typ"
               hide-details
             />
           </v-card-text>
@@ -58,8 +58,8 @@ export default {
       required: true,
       default () {
         return {
-          show_type: true,
           quick_access: true,
+          show_type: true,
           types: []
         }
       }

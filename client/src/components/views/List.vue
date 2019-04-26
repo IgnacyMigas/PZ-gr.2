@@ -92,11 +92,12 @@ export default {
       showOptions: false,
       options: {
         metrics: {
-          show_type: true,
           quick_access: true,
+          show_type: true,
           types: []
         },
         hosts: {
+          quick_access: true,
           metric_types: [],
           top: 0
         }

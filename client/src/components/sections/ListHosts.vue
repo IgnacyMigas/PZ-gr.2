@@ -4,25 +4,38 @@
     title='Hosty'
     id='hosts'
     :headers="headers"
+    :actions="actions"
     no_data_text='Brak hostów do wyświetlenia'
     :tryGet="reloadList"
     :getOptions="all_options"
-    v-slot="items"
   >
-    <td align="left">
-      {{ items.item.name }}
-    </td>
-    <td>
-      <bar-button
-       icon="list"
-       :handler="() => showMetrics(item)" />
-    </td>
+    <template v-slot="props">
+      <td align="left">
+        {{ props.item.name }}
+      </td>
+    </template>
+    <template v-slot:text="props">
+      <v-list two-line>
+        <v-list-tile
+         v-for="metric in props.item.metrics"
+         :key="metric.name"
+        >
+          <v-list-tile-content>
+            <v-list-tile-title>
+              {{ metric.name }}
+            </v-list-tile-title>
+            <v-list-tile-sub-title>
+              {{ metric.type }} [{{ metric.unit }}]
+            </v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+      </v-list>
+    </template>
   </get-table>
 </template>
 
 <script>
 import GetTable from '@/components/sections/GetTable'
-import BarButton from '@/components/elements/BarButton'
 
 /**
  * Sekcja pobierająca dane hostów.
@@ -33,13 +46,18 @@ import BarButton from '@/components/elements/BarButton'
 export default {
   name: 'list-hosts',
   components: {
-    'get-table': GetTable,
-    'bar-button': BarButton
+    'get-table': GetTable
   },
   props: {
     /** Funkcja pobierająca dane do wylistowania. */
     searched: {
       type: String,
+      required: false
+    },
+
+    /** Dodatkowe opcje listowania. */
+    options: {
+      type: Object,
       required: false
     }
   },
@@ -52,14 +70,9 @@ export default {
           value: 'name',
           align: 'left',
           sortable: true
-        },
-        {
-          text: 'Akcje',
-          value: 'actions',
-          align: 'center',
-          sortable: false
         }
       ],
+      actions: []
     }
   },
   computed: {
@@ -82,24 +95,60 @@ export default {
       let data = [
         {
           name: 'D10, 205, stanowisko 1',
-          metric_types: [ 'temperatura', 'zużycie pamięci' ]
+          metrics: [
+            {
+              name: 'Temperatura (D10, 205, stanowisko 1)',
+              type: 'temperatura',
+              unit: '°C',
+              'user-id': null
+            },
+            {
+              name: 'Zużycie pamięci (D10, 205, stanowisko 1)',
+              type: 'zużycie pamięci',
+              unit: 'MB',
+              'user-id': null
+            }
+          ]
         },
         {
           name: 'D10, 205, stanowisko 2',
-          metric_types: [ 'temperatura', 'zużycie pamięci' ]
+          metrics: [
+            {
+              name: 'Temperatura (D10, 205, stanowisko 2)',
+              type: 'temperatura',
+              unit: '°C',
+              'user-id': null
+            },
+            {
+              name: 'Zużycie pamięci (D10, 205, stanowisko 2)',
+              type: 'zużycie pamięci',
+              unit: 'MB',
+              'user-id': null
+            }
+          ]
         },
         {
           name: 'Cyfronet, 402, stanowisko 4',
-          metric_types: [ 'zużycie GPU' ]
+          metrics: [
+            {
+              name: 'Zużycie GPU (Cyfronet, 402, stanowisko 4)',
+              type: 'zużycie GPU',
+              unit: 'flops',
+              'user-id': 'K. Noga'
+            }
+          ]
         },
       ]
 
-      if (options.searched ||
-           (options.types && options.metric_types.length > 0)) {
-        data = data.filter(el =>
-          el.name.search(options.searched) != -1 &&
-          options.metric_types.all(t => el.metric_types.includes(t))
-        )
+      if (options.searched) {
+        data = data.filter(el => el.name.search(options.searched) != -1)
+      }
+      if (options.metric_types && options.metric_types.length > 0) {
+        const filter_fun = (el) => {
+          let types = el.metrics.map(m => m.type)
+          return options.metric_types.every(mt => types.includes(mt))
+        }
+        data = data.filter(filter_fun)
       }
 
       this.data = data
