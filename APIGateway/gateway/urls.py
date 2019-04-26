@@ -25,5 +25,4 @@ urlpatterns = [
     path('hosts', views.hosts, name='results'),
     path('hosts/<int:hosts_id>', views.hosts, name='results'),
     path('monitors', views.monitors, name='results'),
-    path('monitors/<int:monitors_id>', views.monitors, name='results'),
 ]
