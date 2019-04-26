@@ -5,14 +5,10 @@
         <v-card flat>
           <v-card-text>
             Ogólne
-            <v-checkbox
-              v-model="options.show_type"
-              label="wyświetlaj typ"
-              hide-details
-            />
-            <v-checkbox
-              v-model="options.quick_access"
-              label="szybki dostęp"
+            <v-text-field
+              type='number'
+              v-model="options.top"
+              label="n najlepszych"
               hide-details
             />
           </v-card-text>
@@ -24,7 +20,7 @@
             Tylko typy
             <v-checkbox
               v-for="type in types"
-              v-model="options.types"
+              v-model="options.metric_types"
               :value="type.name"
               :key="type.name"
               :label="type.name"
@@ -34,6 +30,7 @@
         </v-card>
       </v-flex>
     </v-layout>
+    options: `{{ JSON.stringify(options) }}`
   </v-container>
 </template>
 
@@ -41,26 +38,25 @@
 // import BarButton from '@/components/elements/BarButton'
 
 /**
- * Sekcja opcji wyszukiwania metryk.
+ * Sekcja opcji wyszukiwania hostów.
  *
- * @param {Object} options - obiekt opcji do przekazania do listy metryk
- * @module components/sections/OptionsMetrics
+ * @param {Object} options - obiekt opcji do przekazania do listy hostów
+ * @module components/sections/OptionsHosts
  */
 export default {
-  name: 'options-metrics',
+  name: 'options-hosts',
   components: {
     // 'bar-button': BarButton
   },
   props: {
-    /** Obiekt opcji do przekazania do listy metryk. */
+    /** Obiekt opcji do przekazania do listy hostów. */
     options: {
       type: Object,
       required: true,
       default () {
         return {
-          show_type: true,
-          quick_access: true,
-          types: []
+          metric_types: [],
+          top: 0
         }
       }
     },

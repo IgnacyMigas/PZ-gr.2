@@ -18,19 +18,27 @@
 
               <options-metrics
                 v-if="showOptions && isSearchingForMetrics"
-                v-model="options['metrics']"
+                v-model="options.metrics"
                 :types="types"
               />
+
+              <options-hosts
+                v-if="showOptions && isSearchingForHosts"
+                v-model="options.hosts"
+                :types="types"
+              />
+
             </v-card-text>
           </v-card>
           <v-card class="elevation-12">
             <list-metrics
               v-if="isSearchingForMetrics"
-              :options="options['metrics']"
+              :options="options.metrics"
               :searched="searched"
             />
             <list-hosts
               v-if="isSearchingForHosts"
+              :options="options.hosts"
               :searched="searched"
             />
           </v-card>
@@ -43,6 +51,7 @@
 <script>
 import Page from '@/components/templates/Page'
 import OptionsMetrics from '@/components/sections/OptionsMetrics'
+import OptionsHosts from '@/components/sections/OptionsHosts'
 import ListMetrics from '@/components/sections/ListMetrics'
 import ListHosts from '@/components/sections/ListHosts'
 // import BarButton from '@/components/elements/BarButton'
@@ -60,6 +69,7 @@ export default {
   components: {
     'page': Page,
     'options-metrics': OptionsMetrics,
+    'options-hosts': OptionsHosts,
     'list-metrics': ListMetrics,
     'list-hosts': ListHosts,
     // 'bar-button': BarButton,
@@ -83,9 +93,13 @@ export default {
       options: {
         metrics: {
           show_type: true,
-          quick_access: true
+          quick_access: true,
+          types: []
         },
-        hosts: {}
+        hosts: {
+          metric_types: [],
+          top: 0
+        }
       },
       //TODO: unmock
       types: [

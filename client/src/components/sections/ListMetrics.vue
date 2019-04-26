@@ -158,11 +158,13 @@ export default {
         }
       ]
 
-      if (options.searched) {
+      if (options.searched || (options.types && options.types.length > 0)) {
         data = data.filter(el =>
-          el.name.search(options.searched) != -1
+          (el.name.search(options.searched) != -1) &&
+          options.types.includes(el.type)
         )
       }
+
 
       this.data = data
       return data

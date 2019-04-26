@@ -81,19 +81,24 @@ export default {
       // (mock)
       let data = [
         {
-          name: 'D10, 205, stanowisko 1'
+          name: 'D10, 205, stanowisko 1',
+          metric_types: [ 'temperatura', 'zużycie pamięci' ]
         },
         {
-          name: 'D10, 205, stanowisko 2'
+          name: 'D10, 205, stanowisko 2',
+          metric_types: [ 'temperatura', 'zużycie pamięci' ]
         },
         {
-          name: 'Cyfronet, 402, stanowisko 4'
+          name: 'Cyfronet, 402, stanowisko 4',
+          metric_types: [ 'zużycie GPU' ]
         },
       ]
 
-      if (options.searched) {
+      if (options.searched ||
+           (options.types && options.metric_types.length > 0)) {
         data = data.filter(el =>
-          el.name.search(options.searched) != -1
+          el.name.search(options.searched) != -1 &&
+          options.metric_types.all(t => el.metric_types.includes(t))
         )
       }
 
