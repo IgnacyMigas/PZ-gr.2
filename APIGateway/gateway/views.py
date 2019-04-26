@@ -1,97 +1,90 @@
 from django.db import IntegrityError
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 from . import models
 import json
-from django.views.decorators.csrf import csrf_exempt
+import requests
 
-
-# Create your views here.
 
 def metrics(request, metrics_id=None):
-    # if request.GET
-    if metrics_id is None:
-        # get metrict from all monitors (loop over monitors
-        output = '''{
-   "metrics":[
-                {
-                   "metric-id": "id_of_metric",
-                   "monitor-id": "unique_name_of_monitor"
-                }
-             ],
-   "meta":{
-      "types":[
-        {
-          name: 'temperatura',
-          unit: '°C'
-        },
-        {
-          name: 'zużycie pamięci',
-          unit: 'MB'
-        },
-        {
-          name: 'zużycie pamięci GPU',
-          unit: 'MB'
-        },
-        {
-          name: 'zużycie GPU',
-          unit: 'flops'
-        }
-      ]
-   }
-}'''
-    else:
+    if not request.headers['access-token']:
+        return HttpResponse(status=401)
 
-        output = '''{
-   "type":"type_of_metric",
-   "id":"id",
-   "unit":"units_of_measurement",
-   "host-id":"host-id",
-   "user-id":"user-id",
-   "monitor-id":"unique_name_of_monitor"
-}'''
-    return HttpResponse(output)
+    metrics_dict = {"metrics": [], "meta": {"types": []}}
+    if metrics_id is None:
+        if request.method == 'GET':
+            for m in models.Monitor.objects.all():
+                monitor_response = requests.get(str(m.endpoint) + '/metrics')
+                if monitor_response.status_code == 200:
+                    body = monitor_response.content
+                    if isinstance(body, bytes):
+                        body = json.loads(body)
+                    metrics_dict['metrics'].extend(body['metrics'])
+                    metrics_dict['meta']['types'].extend(body['meta']['types'])
+            return HttpResponse(metrics_dict)
+        elif request.method == 'POST':
+            status = 201
+            for m in models.Monitor.objects.all():
+                monitor_response = requests.post(str(m.endpoint) + '/metrics')
+                if monitor_response.status_code != 201:
+                    status = monitor_response.status_code
+            return HttpResponse(status=status)
+    else:
+        if request.method == 'GET':
+            return HttpResponse(status=501)
+        elif request.method == 'DELETE':
+            for m in models.Monitor.objects.all():
+                requests.post(str(m.endpoint) + '/metrics/' + str(metrics_id))
+            return HttpResponse(status=200)
+    return HttpResponse(status=404)
 
 
 def metrics_measurements(request, metrics_id):
-    output = '''[
-   {
-      "val":"measurement_value",
-      "ts":"timestamp"
-   }
-]'''
-    return HttpResponse(output)
+    if not request.headers['access-token']:
+        return HttpResponse(status=401)
+
+    if request.method == 'GET':
+        measurements_list = []
+        for m in models.Monitor.objects.all():
+            monitor_response = requests.get(str(m.endpoint) + '/metrics/' + str(metrics_id) + '/measurements')
+            if monitor_response.status_code == 200:
+                body = monitor_response.content
+                if isinstance(body, bytes):
+                    body = json.loads(body)
+                measurements_list.extend(body)
+        return HttpResponse(measurements_list)
+    return HttpResponse(status=404)
 
 
 def hosts(request, hosts_id=None):
-    if hosts_id is None:
-        output = '''[
-   {
-      "host-id":"host id",
-      "monitor-id": "unique name of monitor"
-   }
-]'''
-    else:
-        output = '''[
-   {
-      "host-id":"host id",
-      "metrics": [
-                    {
-                        "type":"type of metric",
-                        "metric-id":"metric-id",
-                        "unit":"units of measurement",
-                        "host-id":"host-id",
-                        "user-id":"user-id",
-                        "monitor-id":"unique name of monitor"
-                    }
-                 ]
-   }
-]'''
-    return HttpResponse(output)
+    if not request.headers['access-token']:
+        return HttpResponse(status=401)
+
+    if request.method == 'GET':
+        monitors_list = []
+        if hosts_id is None:
+            for m in models.Monitor.objects.all():
+                monitor_response = requests.get(str(m.endpoint) + '/hosts')
+                if monitor_response.status_code == 200:
+                    body = monitor_response.content
+                    if isinstance(body, bytes):
+                        body = json.loads(body)
+                    monitors_list.extend(body)
+            # return HttpResponse(monitors_list)
+        else:
+            for m in models.Monitor.objects.all():
+                monitor_response = requests.get(str(m.endpoint) + '/hosts/' + str(hosts_id))
+                if monitor_response.status_code == 200:
+                    body = monitor_response.content
+                    if isinstance(body, bytes):
+                        body = json.loads(body)
+                    monitors_list.extend(body)
+        return HttpResponse(json.dumps(monitors_list))
+    return HttpResponse(status=404)
 
 
 @csrf_exempt
 def monitors(request):
-
     if not request.headers['access-token']:
         return HttpResponse(status=401)
 
@@ -113,6 +106,8 @@ def monitors(request):
 
     elif request.method == 'DELETE':
         try:
+            for m in models.Monitor.objects.all():
+                print(m.id)
             body = json.loads(request.body)
             monitor = models.Monitor.objects.get(id=body['monitor-id'])
             monitor.delete()
