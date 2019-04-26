@@ -30,7 +30,6 @@
         </v-card>
       </v-flex>
     </v-layout>
-    options: `{{ JSON.stringify(options) }}`
   </v-container>
 </template>
 
@@ -55,6 +54,7 @@ export default {
       required: true,
       default () {
         return {
+          quick_access: true,
           metric_types: [],
           top: 0
         }
