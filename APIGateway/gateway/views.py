@@ -71,9 +71,19 @@ def hosts(request, hosts_id=None):
                     body = monitor_response.content
                     if isinstance(body, bytes):
                         body = json.loads(body)
+                    if 'name' in request.GET:
+                        for h in body:
+                            if request.GET['name'] == h['host-id']:
+                                monitors_list.append(h)
+                    elif 'name_like' in request.GET:
+                        for h in body:
+                            if request.GET['name'] in h['host-id']:
+                                monitors_list.append(h)
                     monitors_list.extend(body)
         else:
             for m in models.Monitor.objects.all():
+                if 'monitor-id' in request.GET and request.GET['monitor-id'] != m.id:
+                    continue
                 monitor_response = requests.get(str(m.endpoint) + '/hosts/' + hosts_id, headers=request.headers)
                 if monitor_response.status_code == 200:
                     body = monitor_response.content
