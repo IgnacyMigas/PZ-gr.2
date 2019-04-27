@@ -3,23 +3,23 @@
 ###############################
 
 ######## Technologies: 
-- C++
+- Python (wersja 3.7.3)
 
 ######## Libraries:
-- (I will add it in the future)
+- psutil 
+- flask
+- unittest
 
 ######## Environment configuration: 
-- install g++ compiler:
-|-- linux (https://linuxconfig.org/how-to-install-g-the-c-compiler-on-ubuntu-18-04-bionic-beaver-linux)
-|-- windows (https://preshing.com/20141108/how-to-install-the-latest-gcc-on-windows/)
+- load enviroment from enviroment folder. 
 
 ######## Working with project:      
 
-#### To compile project type below command in console:
-- make sensor
+#### To start working with project run enviroment:
+- source environment/linuxEnv/bin/activate       (Linux) - to jeszcze do dodania bo na razie na windowsie robie 
+- .\environment\windowsEnv\Scripts\activate      (Windows)
 
-#### To run project typebelow command in console:
-- make runSensor
+#### To run project type below command in console:
+- python source\sensor.py
 
-#### To clean project typebelow command in console:
-- make clean
+Spróbuję ogarnąć jakiś skrypt odpalający to wszystko
