@@ -1,5 +1,7 @@
 # APIGateway
 
+[![Build Status](https://travis-ci.org/IgnacyMigas/PZ-gr.2.svg?branch=api-gateway)](https://travis-ci.org/IgnacyMigas/PZ-gr.2)
+
 ## Project setup
 ```
 python install
