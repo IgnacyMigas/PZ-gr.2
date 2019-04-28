@@ -14,15 +14,21 @@ def metrics(request, metrics_id=None):
     metrics_dict = {"metrics": [], "meta": {"types": []}}
     if metrics_id is None:
         if request.method == 'GET':
+            meta = 'false'
+            if 'meta' in request.GET:
+                meta = request.GET['meta']
             for m in models.Monitor.objects.all():
-                monitor_response = requests.get(str(m.endpoint) + '/metrics', headers=request.headers)
+                monitor_response = requests.get(str(m.endpoint) + '/metrics', headers=request.headers, params=request.GET)
                 if monitor_response.status_code == 200:
                     body = monitor_response.content
                     if isinstance(body, bytes):
                         body = json.loads(body)
-                    metrics_dict['metrics'].extend(body['metrics'])
-                    if body['meta'] is not None:
+                    if meta != 'only':
+                        metrics_dict['metrics'].extend(body['metrics'])
+                    if meta != 'false' and body['meta'] is not None:
                         metrics_dict['meta']['types'].extend(body['meta']['types'])
+            if meta == 'only':
+                metrics_dict.pop('metrics', None)
             return HttpResponse(json.dumps(metrics_dict))
         elif request.method == 'POST':
             status = 201
@@ -66,19 +72,19 @@ def hosts(request, hosts_id=None):
         monitors_list = []
         if hosts_id is None:
             for m in models.Monitor.objects.all():
-                monitor_response = requests.get(str(m.endpoint) + '/hosts', headers=request.headers)
+                monitor_response = requests.get(str(m.endpoint) + '/hosts', headers=request.headers, params=request.GET)
                 if monitor_response.status_code == 200:
                     body = monitor_response.content
                     if isinstance(body, bytes):
                         body = json.loads(body)
-                    if 'name' in request.GET:
-                        for h in body:
-                            if request.GET['name'] == h['host-id']:
-                                monitors_list.append(h)
-                    elif 'name_like' in request.GET:
-                        for h in body:
-                            if request.GET['name'] in h['host-id']:
-                                monitors_list.append(h)
+                    # if 'name' in request.GET:
+                    #     for h in body:
+                    #         if request.GET['name'] == h['host-id']:
+                    #             monitors_list.append(h)
+                    # elif 'name_like' in request.GET:
+                    #     for h in body:
+                    #         if request.GET['name'] in h['host-id']:
+                    #             monitors_list.append(h)
                     monitors_list.extend(body)
         else:
             for m in models.Monitor.objects.all():
