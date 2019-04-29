@@ -11,6 +11,8 @@ def metrics(request, metrics_id=None):
     if not request.headers['access-token']:
         return HttpResponse(status=401)
 
+    headers = {'Access-Token': request.headers['Access-Token']}
+
     metrics_dict = {"metrics": [], "meta": {"types": []}}
     if metrics_id is None:
         if request.method == 'GET':
@@ -18,8 +20,7 @@ def metrics(request, metrics_id=None):
             if 'meta' in request.GET:
                 meta = request.GET['meta']
             for m in models.Monitor.objects.all():
-                monitor_response = requests.get(str(m.endpoint) + '/metrics', headers=request.headers,
-                                                params=request.GET)
+                monitor_response = requests.get(str(m.endpoint) + '/metrics', headers=headers, params=request.GET)
                 if monitor_response.status_code == 200:
                     body = monitor_response.content
                     if isinstance(body, bytes):
@@ -36,8 +37,7 @@ def metrics(request, metrics_id=None):
             if 'monitor-id' in body:
                 for m in models.Monitor.objects.all():
                     if body['monitor-id'] == m.id:
-                        response = requests.post(str(m.endpoint) + '/metrics', data=request.body,
-                                                 headers=request.headers)
+                        response = requests.post(str(m.endpoint) + '/metrics', data=request.body, headers=headers)
                         return HttpResponse(response.content, status=response.status_code)
             return HttpResponse(status=400)
     else:
@@ -45,12 +45,12 @@ def metrics(request, metrics_id=None):
             for m in models.Monitor.objects.all():
                 if 'monitor-id' in request.GET and request.GET['monitor-id'] != m.id:
                     continue
-                monitor_response = requests.get(str(m.endpoint) + '/metrics/' + metrics_id, headers=request.headers)
+                monitor_response = requests.get(str(m.endpoint) + '/metrics/' + metrics_id, headers=headers)
                 if monitor_response.status_code == 200:
                     return HttpResponse(monitor_response.content, status=200)
         elif request.method == 'DELETE':
             for m in models.Monitor.objects.all():
-                response = requests.delete(str(m.endpoint) + '/metrics/' + metrics_id, headers=request.headers)
+                response = requests.delete(str(m.endpoint) + '/metrics/' + metrics_id, headers=headers)
                 if response.status_code == 200:
                     return HttpResponse(status=200)
     return HttpResponse(status=404)
@@ -60,15 +60,17 @@ def metrics_measurements(request, metrics_id):
     if not request.headers['access-token']:
         return HttpResponse(status=401)
 
+    headers = {'Access-Token': request.headers['Access-Token']}
+
     if request.method == 'GET':
         measurements_list = []
-        params = request.GET
+        params = request.GET.copy()
         params.pop('monitor-id', None)
         for m in models.Monitor.objects.all():
             if 'monitor-id' in request.GET and request.GET['monitor-id'] != m.id:
                 continue
             monitor_response = requests.get(str(m.endpoint) + '/metrics/' + metrics_id + '/measurements',
-                                            headers=request.headers, params=params)
+                                            headers=headers, params=params)
             if monitor_response.status_code == 200:
                 body = monitor_response.content
                 if isinstance(body, bytes):
@@ -82,11 +84,13 @@ def hosts(request, hosts_id=None):
     if not request.headers['access-token']:
         return HttpResponse(status=401)
 
+    headers = {'Access-Token': request.headers['Access-Token']}
+
     if request.method == 'GET':
         monitors_list = []
         if hosts_id is None:
             for m in models.Monitor.objects.all():
-                monitor_response = requests.get(str(m.endpoint) + '/hosts', headers=request.headers, params=request.GET)
+                monitor_response = requests.get(str(m.endpoint) + '/hosts', headers=headers, params=request.GET)
                 if monitor_response.status_code == 200:
                     body = monitor_response.content
                     if isinstance(body, bytes):
@@ -104,7 +108,7 @@ def hosts(request, hosts_id=None):
             for m in models.Monitor.objects.all():
                 if 'monitor-id' in request.GET and request.GET['monitor-id'] != m.id:
                     continue
-                monitor_response = requests.get(str(m.endpoint) + '/hosts/' + hosts_id, headers=request.headers)
+                monitor_response = requests.get(str(m.endpoint) + '/hosts/' + hosts_id, headers=headers)
                 if monitor_response.status_code == 200:
                     body = monitor_response.content
                     if isinstance(body, bytes):
