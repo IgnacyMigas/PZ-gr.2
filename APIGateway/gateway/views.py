@@ -13,46 +13,66 @@ def metrics(request, metrics_id=None):
 
     headers = {'Access-Token': request.headers['Access-Token']}
 
-    metrics_dict = {"metrics": [], "meta": {"types": []}}
+    metrics_dict = {"metrics": [], "meta": {"types": set()}}
     if metrics_id is None:
         if request.method == 'GET':
             meta = 'false'
             if 'meta' in request.GET:
                 meta = request.GET['meta']
             for m in models.Monitor.objects.all():
-                monitor_response = requests.get(m.endpoint + '/v1/metrics', headers=headers, params=request.GET)
-                if monitor_response.status_code == 200:
-                    body = monitor_response.content
-                    if isinstance(body, bytes):
-                        body = json.loads(body)
-                    if meta != 'only':
-                        metrics_dict['metrics'].extend(body['metrics'])
-                    if meta != 'false' and body['meta'] is not None:
-                        metrics_dict['meta']['types'].extend(body['meta']['types'])
+                try:
+                    monitor_response = requests.get(m.endpoint + '/v1/metrics', headers=headers, params=request.GET)
+                    if monitor_response.status_code == 200:
+                        body = monitor_response.content
+                        if isinstance(body, bytes):
+                            body = json.loads(body)
+                        if meta != 'only':
+                            metrics_dict['metrics'].extend(body['metrics'])
+                        if meta != 'false' and body['meta'] is not None:
+                            metrics_dict['meta']['types'].update(body['meta']['types'])
+                except requests.ConnectionError:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
+            metrics_dict['meta']['types'] = list(metrics_dict['meta']['types'])
             if meta == 'only':
                 metrics_dict.pop('metrics', None)
+            elif meta == 'false':
+                metrics_dict.pop('meta', None)
             return HttpResponse(json.dumps(metrics_dict))
         elif request.method == 'POST':
             body = json.loads(request.body)
             if 'monitor-id' in body:
                 for m in models.Monitor.objects.all():
                     if body['monitor-id'] == m.id:
-                        response = requests.post(m.endpoint + '/v1/metrics', data=request.body, headers=headers)
-                        return HttpResponse(response.content, status=response.status_code)
+                        try:
+                            response = requests.post(m.endpoint + '/v1/metrics', data=request.body, headers=headers)
+                            return HttpResponse(response.content, status=response.status_code)
+                        except requests.ConnectionError:
+                            print("Delete monitor %s" % m.id)
+                            m.delete()
             return HttpResponse(status=400)
     else:
         if request.method == 'GET':
             for m in models.Monitor.objects.all():
                 if 'monitor-id' in request.GET and request.GET['monitor-id'] != m.id:
                     continue
-                monitor_response = requests.get(m.endpoint + '/v1/metrics/' + metrics_id, headers=headers)
-                if monitor_response.status_code == 200:
-                    return HttpResponse(monitor_response.content, status=200)
+                try:
+                    monitor_response = requests.get(m.endpoint + '/v1/metrics/' + metrics_id, headers=headers)
+                    if monitor_response.status_code == 200:
+                        return HttpResponse(monitor_response.content, status=200)
+                except requests.ConnectionError:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
         elif request.method == 'DELETE':
             for m in models.Monitor.objects.all():
-                response = requests.delete(m.endpoint + '/v1/metrics/' + metrics_id, headers=headers)
-                if response.status_code == 200:
-                    return HttpResponse(status=200)
+                try:
+                    response = requests.delete(m.endpoint + '/v1/metrics/' + metrics_id, headers=headers)
+                    if response.status_code == 200:
+                        return HttpResponse(status=200)
+                except requests.ConnectionError:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
+            return HttpResponse(status=400)
     return HttpResponse(status=404)
 
 
@@ -69,13 +89,17 @@ def metrics_measurements(request, metrics_id):
         for m in models.Monitor.objects.all():
             if 'monitor-id' in request.GET and request.GET['monitor-id'] != m.id:
                 continue
-            monitor_response = requests.get(m.endpoint + '/v1/metrics/' + metrics_id + '/measurements',
-                                            headers=headers, params=params)
-            if monitor_response.status_code == 200:
-                body = monitor_response.content
-                if isinstance(body, bytes):
-                    body = json.loads(body)
-                measurements_list.extend(body)
+            try:
+                monitor_response = requests.get(m.endpoint + '/v1/metrics/' + metrics_id + '/measurements',
+                                                headers=headers, params=params)
+                if monitor_response.status_code == 200:
+                    body = monitor_response.content
+                    if isinstance(body, bytes):
+                        body = json.loads(body)
+                    measurements_list.extend(body)
+            except requests.ConnectionError:
+                print("Delete monitor %s" % m.id)
+                m.delete()
         return HttpResponse(json.dumps(measurements_list))
     return HttpResponse(status=404)
 
@@ -90,30 +114,30 @@ def hosts(request, hosts_id=None):
         monitors_list = []
         if hosts_id is None:
             for m in models.Monitor.objects.all():
-                monitor_response = requests.get(m.endpoint + '/v1/hosts', headers=headers, params=request.GET)
-                if monitor_response.status_code == 200:
-                    body = monitor_response.content
-                    if isinstance(body, bytes):
-                        body = json.loads(body)
-                    # if 'name' in request.GET:
-                    #     for h in body:
-                    #         if request.GET['name'] == h['host-id']:
-                    #             monitors_list.append(h)
-                    # elif 'name_like' in request.GET:
-                    #     for h in body:
-                    #         if request.GET['name'] in h['host-id']:
-                    #             monitors_list.append(h)
-                    monitors_list.extend(body)
+                try:
+                    monitor_response = requests.get(m.endpoint + '/v1/hosts', headers=headers, params=request.GET)
+                    if monitor_response.status_code == 200:
+                        body = monitor_response.content
+                        if isinstance(body, bytes):
+                            body = json.loads(body)
+                        monitors_list.extend(body)
+                except requests.ConnectionError:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
         else:
             for m in models.Monitor.objects.all():
                 if 'monitor-id' in request.GET and request.GET['monitor-id'] != m.id:
                     continue
-                monitor_response = requests.get(m.endpoint + '/v1/hosts/' + hosts_id, headers=headers)
-                if monitor_response.status_code == 200:
-                    body = monitor_response.content
-                    if isinstance(body, bytes):
-                        body = json.loads(body)
-                    monitors_list.append(body)
+                try:
+                    monitor_response = requests.get(m.endpoint + '/v1/hosts/' + hosts_id, headers=headers)
+                    if monitor_response.status_code == 200:
+                        body = monitor_response.content
+                        if isinstance(body, bytes):
+                            body = json.loads(body)
+                        monitors_list.append(body)
+                except requests.ConnectionError:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
         return HttpResponse(json.dumps(monitors_list))
     return HttpResponse(status=404)
 
@@ -148,6 +172,8 @@ def monitors(request):
             monitor.delete()
         except IntegrityError:
             return HttpResponse(status=409)
+        except models.Monitor.DoesNotExist:
+            return HttpResponse(status=400)
         except Exception as e:
             print("exeption")
             print(e)
