@@ -38,8 +38,8 @@ public class MetricDaoImpl implements MetricDao{
 	
 	@Override
 	public void insertMetric(Metric m) {
-		 final String sql = "insert into metrics(metricId, type, unit, hostId, userId, monitorId) "+
-				 			"values(:metricId, :type, :unit, :hostId, :userId, :monitorId)"; 
+		 final String sql = "insert into metrics(metricId, type, unit, hostId, userId, monitorId, kind, simpleMetricIds) "+
+				 			"values(:metricId, :type, :unit, :hostId, :userId, :monitorId, :kind, :simpleMetricIds)"; 
 		 
 	        KeyHolder holder = new GeneratedKeyHolder();
 	        SqlParameterSource param = new MapSqlParameterSource()
@@ -48,7 +48,9 @@ public class MetricDaoImpl implements MetricDao{
 					.addValue("unit", m.getUnit())
 					.addValue("hostId", m.getHostId())
 					.addValue("userId", m.getUserId())
-					.addValue("monitorId", m.getMonitorId());
+					.addValue("monitorId", m.getMonitorId())
+					.addValue("kind", m.getKind())
+					.addValue("simpleMetricIds", m.getSimpleMetricId());
 					
 	        template.update(sql,param, holder);
 	 

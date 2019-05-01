@@ -1,6 +1,8 @@
 package com.wfiis.pz.project.monitor.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -25,12 +27,15 @@ import com.wfiis.pz.project.monitor.entity.Metric;
 import com.wfiis.pz.project.monitor.service.HostService;
 import com.wfiis.pz.project.monitor.service.MeasurementService;
 import com.wfiis.pz.project.monitor.service.MetricService;
+import com.wfiis.pz.project.monitor.utils.CompoundMetric;
 import com.wfiis.pz.project.monitor.utils.HostDetails;
 import com.wfiis.pz.project.monitor.utils.HostDetailsView;
 import com.wfiis.pz.project.monitor.utils.HostView;
 import com.wfiis.pz.project.monitor.utils.MeasurementView;
 import com.wfiis.pz.project.monitor.utils.MetaDataForMetric;
+import com.wfiis.pz.project.monitor.utils.MetricAbstractPresenter;
 import com.wfiis.pz.project.monitor.utils.MetricPresenter;
+import com.wfiis.pz.project.monitor.utils.MetricPresenterReqursive;
 import com.wfiis.pz.project.monitor.utils.MetricPreview;
 
 
@@ -218,14 +223,100 @@ public class ApplicationController {
 	*/
 	
 	
+	@GetMapping(value = "/metrics", params = {"meta"})
+	@ResponseStatus(HttpStatus.OK)
+	public MetricPresenter getMetricsWithMetas(@RequestParam(value = "meta" , required = false, defaultValue = "false") String meta) {
+		MetricPresenter mp = new MetricPresenter();
+		
+		List<Metric> tempmetrics;
+		
+		tempmetrics = metricService.findAll();
+		
+		List<MetricPreview> metrics = new ArrayList<MetricPreview>();
+		List<String> types = new ArrayList<String>();
+		
+		for (Metric m : tempmetrics) {
+			metrics.add(new MetricPreview(m));
+			types.add(m.getType());
+		}
+		
+		mp.setMetrics(metrics);
+		
+		if (meta != null && meta == "true"){
+			MetaDataForMetric metas = new MetaDataForMetric();
+			metas.setTypes(types);
+			mp.setMeta(metas);
+		}
+		
+		return mp;
+	}
 	
+	
+	@GetMapping(value = "/metrics", params = {"recursive"})
+	@ResponseStatus(HttpStatus.OK)
+	public MetricAbstractPresenter getMetrics(@RequestParam(value = "recursive", required = false, defaultValue = "false") Boolean recursive) {
+		
+		List<Metric> tempmetrics;
+		tempmetrics = metricService.findAll();
+		
+		if(recursive != null && recursive.booleanValue() == true){
+			MetricPresenterReqursive mp = new MetricPresenterReqursive();
+			
+			List<Metric> metrics = new ArrayList<Metric>();
+			List<String> types = new ArrayList<String>();
+			
+			for (Metric m : tempmetrics) {
+				metrics.add(m);
+				types.add(m.getType());
+			}
+			mp.setMetrics(metrics);
+			
+			return mp;
+		}
+		else{
+			MetricPresenter mp = new MetricPresenter();
+			
+			List<MetricPreview> metricsPreview = new ArrayList<MetricPreview>();
+			List<String> types = new ArrayList<String>();
+			
+			for (Metric m : tempmetrics) {
+				metricsPreview.add(new MetricPreview(m));
+				types.add(m.getType());
+			}
+			mp.setMetrics(metricsPreview);
+			
+			return mp;
+			
+		}
+		
+	}
 	
 	
 	
 	@PostMapping(value = "/metrics")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void postMetric(@RequestBody HostDetails hd) {
-		// not yet implemented
+	public MetricPreview postMetric(@RequestBody CompoundMetric cm) {
+		
+		Metric simple = metricService.findAllByNameLike(cm.getMetricIds()).get(0);
+		
+		Metric m = new Metric();
+		Date date= new Date();
+		long time = date.getTime();
+		Timestamp tstp = new Timestamp(time);
+		m.setMetricId("CM " + tstp.toString());
+		m.setType(cm.getType());
+		m.setUnit(simple.getUnit());
+		m.setHostId(simple.getHostId());
+		m.setUserId(simple.getUserId());
+		
+		m.setMonitorId(env.getProperty("MONITORID"));
+
+		m.setKind(cm.getKind());
+		m.setSimpleMetricId(cm.getMetricIds());
+		
+		MetricPreview mp = new MetricPreview(m);
+		
+		return mp;
 	}
 	
 	@GetMapping(value = "/metrics/{id}")
@@ -241,22 +332,59 @@ public class ApplicationController {
 		metricService.deleteMetricById(id);
 		return;
 	}
-	/*
-	@GetMapping(value = "/metrics/{id}/measurements", params = {"n", "from", "to", "all"})
+	
+	
+	@GetMapping(value = "/metrics/{id}/measurements")
 	@ResponseStatus(HttpStatus.OK)
-	public List<MeasurementView> getMeasurementsForMetric(	@PathVariable String id,
-															@RequestParam(value = "n", required = false) Integer n, 
+	public List<MeasurementView> getMeasurementsForMetric(	@PathVariable String id) {
+		List<Measurement> measurements;
+		
+		measurements= measurementService.findTopMeasurementByMetricId(id, 25);
+			
+		List<MeasurementView> views = new ArrayList<MeasurementView>();
+		for (Measurement m : measurements){
+			views.add(new MeasurementView(m));
+		}
+		
+		return views;
+	}
+	
+	
+	
+	
+	@GetMapping(value = "/metrics/{id}/measurements", params = {"n"})
+	@ResponseStatus(HttpStatus.OK)
+	public List<MeasurementView> getNMeasurementsForMetric(	@PathVariable String id,
+															@RequestParam(value = "n", required = false) Integer n
+															) {
+		List<Measurement> measurements;
+		
+		if (n != null){
+			measurements= measurementService.findTopMeasurementByMetricId(id, n);
+		}else{
+			measurements= measurementService.findTopMeasurementByMetricId(id, 25);
+		}
+			
+			
+		List<MeasurementView> views = new ArrayList<MeasurementView>();
+		for (Measurement m : measurements){
+			views.add(new MeasurementView(m));
+		}
+		
+		return views;
+	}
+	
+	
+	
+	@GetMapping(value = "/metrics/{id}/measurements", params = { "from", "to"})
+	@ResponseStatus(HttpStatus.OK)
+	public List<MeasurementView> getMeasurementsFromRangeForMetric(	@PathVariable String id,
 															@RequestParam(value = "from", required = false) String from, 
-															@RequestParam(value = "to", required = false) String to, 
-															@RequestParam(value = "all", required = false) Boolean all
+															@RequestParam(value = "to", required = false) String to
 														) {
 		List<Measurement> measurements;
 		
-		if (all != null && all.booleanValue() == true){
-			measurements= measurementService.findMeasurementByMetricId(id);
-		}else if (n != null){
-			measurements= measurementService.findTopMeasurementByMetricId(id, n);
-		}else if ((from != null && !from.isEmpty()) || (to != null && !to.isEmpty()) ){
+		if ((from != null && !from.isEmpty()) || (to != null && !to.isEmpty()) ){
 			measurements= measurementService.findByDateMeasurementByMetricId(id, from, to);
 		}else{
 			measurements= measurementService.findTopMeasurementByMetricId(id, 25);
@@ -270,7 +398,35 @@ public class ApplicationController {
 		
 		return views;
 	}
-	*/
+	
+	
+	
+	@GetMapping(value = "/metrics/{id}/measurements", params = {"all"})
+	@ResponseStatus(HttpStatus.OK)
+	public List<MeasurementView> getMeasurementsForMetric(	@PathVariable String id,
+															@RequestParam(value = "all", required = false) Boolean all
+														) {
+		List<Measurement> measurements;
+		
+		if (all != null && all.booleanValue() == true){
+			measurements= measurementService.findMeasurementByMetricId(id);
+			
+		}else{
+			measurements= measurementService.findTopMeasurementByMetricId(id, 25);
+		}
+			
+			
+		List<MeasurementView> views = new ArrayList<MeasurementView>();
+		for (Measurement m : measurements){
+			views.add(new MeasurementView(m));
+		}
+		
+		return views;
+	}
+	
+	
+	
+	
 	@PostMapping(value = "/metrics/{id}/measurements")
 	@ResponseStatus(HttpStatus.CREATED)
 	public void postMeasurementsForMetric(@PathVariable String id, @RequestBody List<MeasurementView> views) {

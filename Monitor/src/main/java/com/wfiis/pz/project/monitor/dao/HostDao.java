@@ -14,6 +14,8 @@ public interface HostDao {
 	List<Host> findHostByName(String name);
 	List<Host> findHostByNameLike(String name_like);
 	List<Host> findTopByMetricType(Integer top, String metric_type);
+	
+	void deleteHostById(String hostId);
 
 	
 }

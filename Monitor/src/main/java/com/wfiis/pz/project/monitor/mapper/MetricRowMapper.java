@@ -21,6 +21,8 @@ public class MetricRowMapper implements RowMapper<Metric> {
 		m.setHostId(rs.getString("hostId"));
 		m.setUserId(rs.getString("userId"));
 		m.setMonitorId(rs.getString("monitorId"));
+		m.setKind(rs.getString("kind"));
+		m.setSimpleMetricId(rs.getString("simpleMetricIds"));
  
         return m;
 	}

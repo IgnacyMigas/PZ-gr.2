@@ -1,6 +1,6 @@
 package com.wfiis.pz.project.monitor.entity;
 
-public class Metric {
+public class Metric{
 	
 	String metricId;
 	String type;
@@ -8,6 +8,21 @@ public class Metric {
 	String hostId;
 	String userId;
 	String monitorId;
+	
+	String simpleMetricId;
+	public String getSimpleMetricId() {
+		return simpleMetricId;
+	}
+	public void setSimpleMetricId(String simpleMetricId) {
+		this.simpleMetricId = simpleMetricId;
+	}
+	public String getKind() {
+		return kind;
+	}
+	public void setKind(String kind) {
+		this.kind = kind;
+	}
+	String kind;
 	
 	
 	public String getMetricId() {

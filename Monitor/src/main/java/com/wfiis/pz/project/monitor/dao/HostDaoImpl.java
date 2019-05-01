@@ -17,7 +17,9 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import com.wfiis.pz.project.monitor.entity.Host;
+import com.wfiis.pz.project.monitor.entity.Metric;
 import com.wfiis.pz.project.monitor.mapper.HostRowMapper;
+import com.wfiis.pz.project.monitor.mapper.MetricRowMapper;
 
 
 @Repository
@@ -95,6 +97,67 @@ public class HostDaoImpl implements HostDao{
 		List<Host> list = template.query(sql, param, new HostRowMapper());
 		return list;
 	}
+
+	@Override
+	public void deleteHostById(String hostId) {
+		final String findAllMetrics = "select * from metrics where hostId = :hostId";
+		final String deleteAllMeasurements = "delete from measurements where metricId = :metricId";
+		final String deleteAllMetrics = "delete from metrics where hostId = :hostId";
+		final String deleteHost = "delete from hosts where hostId = :hostId";
+		
+		
+		SqlParameterSource param = new MapSqlParameterSource()
+				.addValue("id", hostId);
+		List<Metric> metrics = template.query(findAllMetrics, param, new MetricRowMapper());
+		 
+		for (Metric m : metrics){
+			Map<String,Object> map=new HashMap<String,Object>();  
+			 map.put("metricId", m.getMetricId());
+		
+			 template.execute(deleteAllMeasurements,map,new PreparedStatementCallback<Object>() {  
+				    @Override  
+				    public Object doInPreparedStatement(PreparedStatement ps)  
+				            throws SQLException, DataAccessException {  
+				        return ps.executeUpdate();  
+				    }  
+				});  
+		}
+		
+		Map<String,Object> map=new HashMap<String,Object>();  
+		map.put("hostId", hostId);
+	
+		 template.execute(deleteAllMetrics,map,new PreparedStatementCallback<Object>() {  
+			    @Override  
+			    public Object doInPreparedStatement(PreparedStatement ps)  
+			            throws SQLException, DataAccessException {  
+			        return ps.executeUpdate();  
+			    }  
+			});  
+		 template.execute(deleteHost,map,new PreparedStatementCallback<Object>() {  
+			    @Override  
+			    public Object doInPreparedStatement(PreparedStatement ps)  
+			            throws SQLException, DataAccessException {  
+			        return ps.executeUpdate();  
+			    }  
+			});  
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
