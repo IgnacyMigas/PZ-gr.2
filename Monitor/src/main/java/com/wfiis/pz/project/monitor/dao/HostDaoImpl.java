@@ -107,7 +107,7 @@ public class HostDaoImpl implements HostDao{
 		
 		
 		SqlParameterSource param = new MapSqlParameterSource()
-				.addValue("id", hostId);
+				.addValue("hostId", hostId);
 		List<Metric> metrics = template.query(findAllMetrics, param, new MetricRowMapper());
 		 
 		for (Metric m : metrics){
@@ -122,7 +122,7 @@ public class HostDaoImpl implements HostDao{
 				    }  
 				});  
 		}
-		
+		{
 		Map<String,Object> map=new HashMap<String,Object>();  
 		map.put("hostId", hostId);
 	
@@ -133,6 +133,10 @@ public class HostDaoImpl implements HostDao{
 			        return ps.executeUpdate();  
 			    }  
 			});  
+		}
+		Map<String,Object> map=new HashMap<String,Object>();  
+		map.put("hostId", hostId);
+			
 		 template.execute(deleteHost,map,new PreparedStatementCallback<Object>() {  
 			    @Override  
 			    public Object doInPreparedStatement(PreparedStatement ps)  

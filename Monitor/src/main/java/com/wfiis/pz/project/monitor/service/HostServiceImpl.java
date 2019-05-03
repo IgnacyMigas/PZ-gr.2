@@ -49,5 +49,11 @@ public class HostServiceImpl implements HostService{
 	public List<Host> findTopByMetricType(Integer top, String metric_type) {
 		return hostDao.findTopByMetricType(top, metric_type);
 	}
+
+	@Override
+	public void deleteHostById(String hostId) {
+		hostDao.deleteHostById(hostId);
+		
+	}
 	
 }
