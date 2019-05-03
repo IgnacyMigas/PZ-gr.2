@@ -80,33 +80,33 @@ Present configuration in file "application.properties" uses ElephantSQL database
 
 #Database1:
 
-spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/vegjsokh
-spring.datasource.username=vegjsokh
-spring.datasource.password=Zp9wCQA_wU5YNeR4LoGfF4N5903IzkC1
+	spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/vegjsokh
+	spring.datasource.username=vegjsokh
+	spring.datasource.password=Zp9wCQA_wU5YNeR4LoGfF4N5903IzkC1
 
 #Database2:
 
-spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/snpbibhg
-spring.datasource.username=snpbibhg
-spring.datasource.password=UVnMOFHZagzIBbl6ycGBxAAIDHpPRDfo
+	spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/snpbibhg
+	spring.datasource.username=snpbibhg
+	spring.datasource.password=UVnMOFHZagzIBbl6ycGBxAAIDHpPRDfo
 
 #Database3:
 
-spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/gnwawwon
-spring.datasource.username=gnwawwon
-spring.datasource.password=vFl82Hl7SZl05RnlRVN4G1PCGfarWi4L
+	spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/gnwawwon
+	spring.datasource.username=gnwawwon
+	spring.datasource.password=vFl82Hl7SZl05RnlRVN4G1PCGfarWi4L
 
 #Database4:
 
-spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/pimzarig
-spring.datasource.username=pimzarig
-spring.datasource.password=G25-WhwJTlFtq7r11Ddwmvp9yFsUgmTM
+	spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/pimzarig
+	spring.datasource.username=pimzarig
+	spring.datasource.password=G25-WhwJTlFtq7r11Ddwmvp9yFsUgmTM
 
 #Database5:
 
-spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/gspdqqfw
-spring.datasource.username=gspdqqfw
-spring.datasource.password=UuhpK-l_1OcsROonjavXSpfXvJTkKP5_
+	spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/gspdqqfw
+	spring.datasource.username=gspdqqfw
+	spring.datasource.password=UuhpK-l_1OcsROonjavXSpfXvJTkKP5_
 
 
 	
