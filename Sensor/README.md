@@ -7,7 +7,7 @@
 
 ######## Libraries:
 - psutil 
-- flask
+- requests
 - unittest
 
 ######## Requirements:
