@@ -7,7 +7,7 @@
 
 ######## Libraries:
 - psutil 
-- flask
+- requests
 - unittest
 
 ######## Requirements:
@@ -15,6 +15,9 @@
 
 ######## Environment configuration (need first time when start working with project): 
 - pip install -r requirements.txt 
+
+######## Tests: 
+- python tests.py
 
 ######## Working with project:      
 
