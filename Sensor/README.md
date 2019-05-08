@@ -14,7 +14,7 @@
 - Python3
 
 ######## Environment configuration (need first time when start working with project): 
-- pip install -r Sensor/requirements.txt 
+- pip install -r requirements.txt 
 
 ######## Working with project:      
 
