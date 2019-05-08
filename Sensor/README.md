@@ -16,6 +16,9 @@
 ######## Environment configuration (need first time when start working with project): 
 - pip install -r requirements.txt 
 
+######## Working with project: 
+- python test\tests.py
+
 ######## Working with project:      
 
 #### To run project type below command in console:
