@@ -16,9 +16,22 @@ Make sure that there is path to JDK set. (Window > Preferences > Java > Installe
 
 ######## Working with project (In Eclipse):
 
+Before you build your aplication set up monitorId, Api Gateway URL and Api endpoint for monitor:
+
+
 To set monitorId:
 
 	Modify variable MONITORID in file application.properties (src/main/resources)
+
+To set Api Gateway URL (url Api Gateway where the POST requests for registration monitor should be sent)
+	
+	Modify variable API_GATEWAY_URL in file application.properties (src/main/resources) 
+
+To set Api endpoint for monitor
+
+	Modify variable API_ENDPOINT in file application.properties (src/main/resources)
+
+
 
 To run project:
 
@@ -35,11 +48,32 @@ To run tests:
 	
 ######## Working with project (via console):
 
+Before you build your aplication set up monitorId, Api Gateway URL and Api endpoint for monitor:
+
+
 To set monitorId:
 
 	Modify variable MONITORID in file application.properties (src/main/resources)
 
-To be able to run your Spring Boot app you will need to first build it. To build and package a Spring Boot app into a single executable Jar file with a Maven, use the below command. You will need to run it from the project folder which contains the pom.xml file:
+To set Api Gateway URL (your url Api Gateway where the POST requests for registration monitor should be sent)
+	
+	Modify variable API_GATEWAY_URL in file application.properties (src/main/resources) 
+
+To set Api endpoint for monitor (default "http://localhost:8080/")
+
+	Modify variable API_ENDPOINT in file application.properties (src/main/resources) 
+
+
+
+
+To set monitorId:
+
+	Modify variable MONITORID in file application.properties (src/main/resources)
+
+
+
+To be able to run your Spring Boot app you will need to first build it. To build and package a Spring Boot app into a single executable Jar file with a Maven, 
+use the below command. You will need to run it from the project folder which contains the pom.xml file:
 
 	mvn install
 
@@ -65,7 +99,7 @@ URL for monitor with "v1" as MONITORID :
 Available endpoints:
 
 	http://localhost:8080/v1/hosts (GET/POST)
-	http://localhost:8080/v1/hosts/{id} (GET)
+	http://localhost:8080/v1/hosts/{id} (GET/DELETE)
 	http://localhost:8080/v1/metrics (GET/POST)
 	http://localhost:8080/v1/metrics/{id} (GET/DELETE)
 	http://localhost:8080/v1/metrics/{id}/measurements (GET/POST)
@@ -76,7 +110,8 @@ Date format (string):
 	
 Implemented application is able to work with the same database or different databases for each monitor instance.
 
-Present configuration in file "application.properties" uses ElephantSQL database which allows only one connection. To run aplication use your own Postgres database or one from five below:
+Present configuration in file "application.properties" uses ElephantSQL database which allows only one connection. 
+To run aplication use your own Postgres database or one from five below:
 
 #Database1:
 
@@ -107,6 +142,19 @@ Present configuration in file "application.properties" uses ElephantSQL database
 	spring.datasource.url=jdbc:postgresql://isilo.db.elephantsql.com:5432/gspdqqfw
 	spring.datasource.username=gspdqqfw
 	spring.datasource.password=UuhpK-l_1OcsROonjavXSpfXvJTkKP5_
+
+
+
+
+
+
+The limitations of data in database are visible in file:
+
+	src/main/resources/schema.sql
+
+
+The example contents of POST requests are visible in folder "examples"
+
 
 
 	

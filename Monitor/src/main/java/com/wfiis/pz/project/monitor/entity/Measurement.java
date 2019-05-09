@@ -1,14 +1,18 @@
 package com.wfiis.pz.project.monitor.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Measurement {
+	@JsonProperty("metric-id")
 	String metricId;
 	String val;
 	String ts;
 	
-	
+	@JsonProperty("metric-id")
 	public String getMetricId() {
 		return metricId;
 	}
+	@JsonProperty("metric-id")
 	public void setMetricId(String metricId) {
 		this.metricId = metricId;
 	}

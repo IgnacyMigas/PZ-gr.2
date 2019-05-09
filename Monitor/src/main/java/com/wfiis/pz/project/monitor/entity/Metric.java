@@ -1,15 +1,23 @@
 package com.wfiis.pz.project.monitor.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Metric{
 	
+	@JsonProperty("metric-id")
 	String metricId;
 	String type;
 	String unit;
+	@JsonProperty("host-id")
 	String hostId;
+	@JsonProperty("user-id")
 	String userId;
+	@JsonProperty("monitor-id")
 	String monitorId;
 	
 	String simpleMetricId;
+	String kind;
+	
 	public String getSimpleMetricId() {
 		return simpleMetricId;
 	}
@@ -22,9 +30,9 @@ public class Metric{
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
-	String kind;
 	
 	
+	@JsonProperty("metric-id")
 	public String getMetricId() {
 		return metricId;
 	}
@@ -43,18 +51,22 @@ public class Metric{
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
+	
+	@JsonProperty("host-id")
 	public String getHostId() {
 		return hostId;
 	}
 	public void setHostId(String hostId) {
 		this.hostId = hostId;
 	}
+	@JsonProperty("user-id")
 	public String getUserId() {
 		return userId;
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
 	}
+	@JsonProperty("monitor-id")
 	public String getMonitorId() {
 		return monitorId;
 	}

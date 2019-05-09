@@ -28,6 +28,7 @@ import com.wfiis.pz.project.monitor.service.HostService;
 import com.wfiis.pz.project.monitor.service.MeasurementService;
 import com.wfiis.pz.project.monitor.service.MetricService;
 import com.wfiis.pz.project.monitor.utils.CompoundMetric;
+import com.wfiis.pz.project.monitor.utils.HostAbstractView;
 import com.wfiis.pz.project.monitor.utils.HostDetails;
 import com.wfiis.pz.project.monitor.utils.HostDetailsView;
 import com.wfiis.pz.project.monitor.utils.HostView;
@@ -124,6 +125,25 @@ public class ApplicationController {
 		}
 	}
 	
+	@GetMapping(value = "/hosts", params = {"recursive"})
+	@ResponseStatus(HttpStatus.OK)
+	public List<HostAbstractView> getHostsReqursive(@RequestParam("recursive") Boolean recursive) {
+		List<Host> hosts;
+		hosts = hostService.findAll();
+		List<HostAbstractView> views = new ArrayList<HostAbstractView>();
+		
+		if (recursive.booleanValue()==false){
+			for (Host h : hosts) {
+				views.add(new HostView(h));
+			}
+			return views;
+		}else{
+			for (Host h : hosts) {
+				views.add(getHost(h.getHostId()));
+			}
+			return views;
+		}
+	}
 	
 	@GetMapping(value = "/hosts/{id}")
 	@ResponseStatus(HttpStatus.OK)
@@ -140,6 +160,13 @@ public class ApplicationController {
 		
 		return hdv;
 	}
+	
+	@DeleteMapping(value = "/hosts/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteHost(@PathVariable String id) {
+		hostService.deleteHostById(id);
+	}
+	
 	
 	@GetMapping(value = "/metrics")
 	@ResponseStatus(HttpStatus.OK)
