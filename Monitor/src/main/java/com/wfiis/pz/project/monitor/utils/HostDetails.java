@@ -3,16 +3,19 @@ package com.wfiis.pz.project.monitor.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wfiis.pz.project.monitor.entity.Host;
 import com.wfiis.pz.project.monitor.entity.Metric;
 
 
 // class of body object in host adding
 public class HostDetails {
+	@JsonProperty("host-id")
 	String hostId;
 	String os;
 	List<MetricView> metrics;
 	
+	@JsonProperty("host-id")
 	public String getHostId() {
 		return hostId;
 	}

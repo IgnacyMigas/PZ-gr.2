@@ -1,11 +1,16 @@
 package com.wfiis.pz.project.monitor.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CompoundMetric {
 	String kind;
+	@JsonProperty("metric-ids")
 	String metricIds;
+	@JsonProperty("monitor-id")
 	String monitorId;
 	String type;
 	
+	@JsonProperty("monitor-id")
 	public String getMonitorId() {
 		return monitorId;
 	}
@@ -24,6 +29,7 @@ public class CompoundMetric {
 	public void setKind(String kind) {
 		this.kind = kind;
 	}
+	@JsonProperty("metric-ids")
 	public String getMetricIds() {
 		return metricIds;
 	}

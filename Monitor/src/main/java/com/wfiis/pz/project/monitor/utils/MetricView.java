@@ -1,8 +1,11 @@
 package com.wfiis.pz.project.monitor.utils;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MetricView {
 	String type;
 	String unit;
+	@JsonProperty("metric-id")
 	String metricId;
 	
 	
@@ -18,6 +21,7 @@ public class MetricView {
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
+	@JsonProperty("metric-id")
 	public String getMetricId() {
 		return metricId;
 	}
