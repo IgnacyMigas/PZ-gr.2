@@ -36,3 +36,4 @@ python tests.py
 * Python 3.7
 * Django 2.2
 * requests 2.21
+* django-cors-headers 2.5.3
