@@ -14,10 +14,8 @@ matrix:
         - cd Monitor
       install:
         - mvn install
-      before_script:
-        - cd Monitor
       script:
-        - Monitor/mvn test
+        - mvn test
 
     - language: python
       python: 3.7
