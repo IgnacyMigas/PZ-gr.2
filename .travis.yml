@@ -10,8 +10,12 @@ matrix:
         - python APIGateway/gateway/tests.py
 
     - language: java
+      before_install:
+        - cd Monitor
       install:
-        - Monitor/mvn install
+        - mvn install
+      before_script:
+        - cd Monitor
       script:
         - Monitor/mvn test
 
