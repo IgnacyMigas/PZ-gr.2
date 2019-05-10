@@ -26,6 +26,13 @@ matrix:
       script:
         - python Sensor/test/tests.py
 
+    - language: node_js
+      before_install:
+        - cd client
+      install:
+        - npm install
+      script:
+        - npm run test
 
 
 notifications:
