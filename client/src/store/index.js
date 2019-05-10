@@ -7,6 +7,15 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
+const newAxios = (access_token) => {
+    const a = axios.create({
+      baseURL: process.env.VUE_APP_API_BASE_URL,
+    })
+    a.defaults.headers.common['Content-Type'] = 'application/json; charset=UTF-8'
+    a.defaults.headers.common['access-token'] = access_token
+    return a
+}
+
 const state = {
   /** If the user is authentified */
   isLoggedIn: true,
@@ -21,9 +30,7 @@ const state = {
   access_token: '<access-token>',
 
   /** Axios instance. */
-  axios: axios.create({
-    baseURL: process.env.VUE_APP_API_BASE_URL
-  })
+  axios: newAxios('<access-token>')
 }
 
 const options = {

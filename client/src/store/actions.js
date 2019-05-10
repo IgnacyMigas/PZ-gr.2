@@ -36,13 +36,31 @@ const actions = {
   },
 
   /** Pend list of hosts. */
-  listHosts: ({ state }) => {
-    return state.axios.get('/hosts')
+  listHosts: async function ({ state }) {
+    const res = await state.axios.get('/hosts', {
+      headers: {
+        recursive: true
+      }
+    })
+    res.data.forEach(el => {
+      el.name = el['host-id'] || el['hostId']
+    })
+    return res
   },
 
   /** Pend list of metrics. */
-  listMetrics: ({ state }) => {
-    return state.axios.get('/metrics')
+  listMetrics: async function ({ state }) {  // , options
+    const res = await state.axios.get('/metrics', {
+      headers: {
+        recursive: true
+      }
+    })
+    res.data = res.data.metrics
+    res.data.forEach(el => {
+      // alternative, for recoverability from a bug in Monitor
+      el.name = el['metric-id'] || el['metricId']
+    })
+    return res
   }
 
 }

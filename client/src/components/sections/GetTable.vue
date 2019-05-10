@@ -17,10 +17,6 @@
       <template v-slot:items="props">
         <tr @click="props.expanded = !props.expanded">
           <slot :item="props.item" :index="props.index">
-            <!-- Default is for arrays -->
-            <td v-for="value in props.item" :key="value">
-              {{ value }}
-            </td>
           </slot>
           <td v-if="quick_access && has_actions">
             <bar-button

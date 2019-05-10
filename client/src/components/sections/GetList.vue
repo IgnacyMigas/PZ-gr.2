@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import Vuex from 'vuex'
+
 /**
  * Szablon strony pobierającej dane.
  *
@@ -62,10 +64,14 @@ export default {
     }
   },
   methods: {
+    ...Vuex.mapActions(['request']),
+
     /** Przeładuj listę. */
     reload: async function (options = this.getOptions) {
-      const data = await this.tryGet(options)
-      this.items = data
+      const { log, error, data } = await this.request(() => this.tryGet(options))
+      this.items = data || [];
+      this.log = log
+      this.error = error ? error.split('\n') : ''
     }
   },
   mounted () {

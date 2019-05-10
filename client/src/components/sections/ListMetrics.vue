@@ -18,7 +18,7 @@
         align="right"
         class="caption"
       >
-        ( {{ props.item.type }} )
+        ( {{ props.item.type || "brak typu" }} )
       </td>
     </template>
     <template v-slot:text="props">
@@ -59,6 +59,7 @@
 </template>
 
 <script>
+import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
 
 /**
@@ -87,7 +88,6 @@ export default {
   },
   data () {
     return {
-      data: [],
       all_headers: {
         name: {
           text: 'Nazwa',
@@ -146,6 +146,8 @@ export default {
     }
   },
   methods: {
+    ...Vuex.mapActions(['listMetrics']),
+
     /** Pokazuje pomiary danej metryki */
     showRecords (item) {
       item
@@ -166,53 +168,13 @@ export default {
 
     /** Pobiera dane do wylistowania metryk. */
     reloadList: async function (options = {}) {
-      // (mock)
-      let data = [
-        {
-          name: 'Temperatura (D10, 205, stanowisko 1)',
-          type: 'temperatura',
-          unit: '°C',
-          'host-id': 'D10, 205, stanowisko 1',
-          'user-id': null
-        },
-        {
-          name: 'Zużycie pamięci (D10, 205, stanowisko 1)',
-          type: 'zużycie pamięci',
-          unit: 'MB',
-          'host-id': 'D10, 205, stanowisko 1',
-          'user-id': null
-        },
-        {
-          name: 'Temperatura (D10, 205, stanowisko 2)',
-          type: 'temperatura',
-          unit: '°C',
-          'host-id': 'D10, 205, stanowisko 2',
-          'user-id': null
-        },
-        {
-          name: 'Zużycie pamięci (D10, 205, stanowisko 2)',
-          type: 'zużycie pamięci',
-          unit: 'MB',
-          'host-id': 'D10, 205, stanowisko 2',
-          'user-id': null
-        },
-        {
-          name: 'Zużycie GPU (Cyfronet, 402, stanowisko 4)',
-          type: 'zużycie GPU',
-          unit: 'flops',
-          'host-id': 'Cyfronet, 402, stanowisko 4',
-          'user-id': 'K. Noga'
-        }
-      ]
-
+      let data = await this.listMetrics(options)
       if (options.searched || (options.types && options.types.length > 0)) {
         data = data.filter(el =>
           (el.name.search(options.searched) != -1) &&
           options.types.includes(el.type)
         )
       }
-
-      this.data = data
       return data
     }
   }

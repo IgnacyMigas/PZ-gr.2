@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
 
 /**
@@ -83,6 +84,8 @@ export default {
     }
   },
   methods: {
+    ...Vuex.mapActions(['listHosts']),
+
     /** Pokazuje metryki dostępne dla danego hosta */
     showMetrics (item) {
       item
@@ -91,54 +94,7 @@ export default {
 
     /** Pobiera dane do wylistowania metryk. */
     reloadList: async function (options = {}) {
-      // (mock)
-      let data = [
-        {
-          name: 'D10, 205, stanowisko 1',
-          metrics: [
-            {
-              name: 'Temperatura (D10, 205, stanowisko 1)',
-              type: 'temperatura',
-              unit: '°C',
-              'user-id': null
-            },
-            {
-              name: 'Zużycie pamięci (D10, 205, stanowisko 1)',
-              type: 'zużycie pamięci',
-              unit: 'MB',
-              'user-id': null
-            }
-          ]
-        },
-        {
-          name: 'D10, 205, stanowisko 2',
-          metrics: [
-            {
-              name: 'Temperatura (D10, 205, stanowisko 2)',
-              type: 'temperatura',
-              unit: '°C',
-              'user-id': null
-            },
-            {
-              name: 'Zużycie pamięci (D10, 205, stanowisko 2)',
-              type: 'zużycie pamięci',
-              unit: 'MB',
-              'user-id': null
-            }
-          ]
-        },
-        {
-          name: 'Cyfronet, 402, stanowisko 4',
-          metrics: [
-            {
-              name: 'Zużycie GPU (Cyfronet, 402, stanowisko 4)',
-              type: 'zużycie GPU',
-              unit: 'flops',
-              'user-id': 'K. Noga'
-            }
-          ]
-        },
-      ]
+      let data = await this.listHosts(options)
 
       if (options.searched) {
         data = data.filter(el => el.name.search(options.searched) != -1)
