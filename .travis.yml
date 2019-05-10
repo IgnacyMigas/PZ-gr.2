@@ -1,12 +1,30 @@
-language: python
-python:
-  - "3.6"
-install:
-  - python -m pip install --upgrade pip
-  - pip install -r Sensor/requirements.txt
-# command to run tests
-script: 
-  - python Sensor/test/tests.py
+matrix:
+  include:
+    - language: python
+      python: 3.7
+      dist: xenial
+      install:
+        - python -m pip install --upgrade pip
+        - pip install -r APIGateway/requirements.txt
+      script:
+        - python APIGateway/gateway/tests.py
+
+    - language: java
+      install:
+        - mvn clean
+        - mvn install
+      script:
+        - mvn test
+
+    - language: python
+      python: 3.7
+      dist: xenial
+      install:
+        - python -m pip install --upgrade pip
+        - pip install -r Sensor/requirements.txt
+      script:
+        - python Sensor/test/tests.py
+
 
 
 notifications:
