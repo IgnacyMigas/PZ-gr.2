@@ -11,7 +11,6 @@ matrix:
 
     - language: java
       install:
-        - mvn clean
         - mvn install
       script:
         - mvn test
