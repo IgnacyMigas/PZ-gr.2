@@ -11,9 +11,9 @@ matrix:
 
     - language: java
       install:
-        - mvn install
+        - Monitor/mvn install
       script:
-        - mvn test
+        - Monitor/mvn test
 
     - language: python
       python: 3.7
