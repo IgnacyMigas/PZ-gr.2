@@ -4,5 +4,4 @@ import java.util.List;
 
 public abstract class MetricAbstractPresenter {
 
-
 }
