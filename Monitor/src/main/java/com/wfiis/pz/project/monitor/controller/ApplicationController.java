@@ -3,19 +3,25 @@ package com.wfiis.pz.project.monitor.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -59,7 +65,14 @@ public class ApplicationController {
 	
 	
 	@GetMapping(value = "/hosts")
-	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<Object> getHostsWrapper(@RequestHeader(value="access-token", required = false, defaultValue = "") String header){
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getHosts(), responseHeaders, HttpStatus.OK);
+	}
+	
+	
 	public List<HostView> getHosts() {
 		List<Host> hosts;
 		hosts = hostService.findAll();
@@ -72,8 +85,19 @@ public class ApplicationController {
 	
 	
 	@GetMapping(value = "/hosts", params = {"name"})
-	@ResponseStatus(HttpStatus.OK)
-	public List<HostView> getHostsWithName(	@RequestParam("name") String name) {
+	public ResponseEntity<Object> getHostsWithNameWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+															@RequestParam("name") String name
+															) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getHostsWithName(name), responseHeaders, HttpStatus.OK);
+		
+	}
+	
+	
+	public List<HostView> getHostsWithName(String name) {
 		List<Host> hosts;
 		hosts = hostService.findAllByName(name);
 		List<HostView> views = new ArrayList<HostView>();
@@ -84,8 +108,20 @@ public class ApplicationController {
 	}
 	
 	@GetMapping(value = "/hosts", params = {"name_like"})
-	@ResponseStatus(HttpStatus.OK)
-	public List<HostView> getHostsWithNameLike(@RequestParam("name_like") String name_like) {
+	public ResponseEntity<Object> getHostsWithNameLikeWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+																@RequestParam("name_like") String name_like
+																) {
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getHostsWithNameLike(name_like), responseHeaders, HttpStatus.OK);
+
+	}
+	
+	
+	
+	public List<HostView> getHostsWithNameLike(String name_like) {
 		List<Host> hosts;
 		hosts = hostService.findAllByNameLike(name_like);
 		
@@ -97,9 +133,20 @@ public class ApplicationController {
 	}
 	
 	@GetMapping(value = "/hosts", params = {"top", "metric_type"})
-	@ResponseStatus(HttpStatus.OK)
-	public List<HostView> getHosts(	@RequestParam("top") Integer top, 
-									@RequestParam("metric_type") String metric_type
+	public ResponseEntity<Object> getHostsWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,	
+													@RequestParam("top") Integer top, 
+													@RequestParam("metric_type") String metric_type
+													) {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getHostsWithMetricType(top, metric_type), responseHeaders, HttpStatus.OK);
+		
+	}
+		
+		
+	public List<HostView> getHostsWithMetricType(	Integer top, 
+									String metric_type
 									) {
 		List<Host> hosts;
 		hosts = hostService.findTopByMetricType(top, metric_type);
@@ -111,10 +158,22 @@ public class ApplicationController {
 		return views;
 	}
 	
-	
+
 	@PostMapping(value = "/hosts")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void postHost(@RequestBody HostDetails hd) {
+	public ResponseEntity<Object> postHostWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+													@RequestBody HostDetails hd) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		postHost(hd);
+		
+		return new ResponseEntity<Object>(null, responseHeaders, HttpStatus.CREATED);
+		
+	}
+		
+		
+	public void postHost(HostDetails hd) {
 		Host h = hd.extractHost();
 		h.setMonitorId(env.getProperty("MONITORID"));
 		List<Metric> metrics = hd.extractMetricList();
@@ -126,8 +185,15 @@ public class ApplicationController {
 	}
 	
 	@GetMapping(value = "/hosts", params = {"recursive"})
-	@ResponseStatus(HttpStatus.OK)
-	public List<HostAbstractView> getHostsReqursive(@RequestParam("recursive") Boolean recursive) {
+	public ResponseEntity<Object> getHostsReqursiveWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+															@RequestParam("recursive") Boolean recursive) {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getHostsReqursive(recursive), responseHeaders, HttpStatus.OK);
+	}
+		
+	public List<HostAbstractView> getHostsReqursive(Boolean recursive) {
 		List<Host> hosts;
 		hosts = hostService.findAll();
 		List<HostAbstractView> views = new ArrayList<HostAbstractView>();
@@ -146,8 +212,17 @@ public class ApplicationController {
 	}
 	
 	@GetMapping(value = "/hosts/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public HostDetailsView getHost(@PathVariable String id) {
+	public ResponseEntity<Object> getHostWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+											@PathVariable String id) {
+	
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getHost(id), responseHeaders, HttpStatus.OK);
+	}
+		
+		
+	public HostDetailsView getHost(String id) {
 		HostDetailsView hdv = new HostDetailsView();
 		
 		Host h = hostService.findHostById(id);
@@ -161,168 +236,152 @@ public class ApplicationController {
 		return hdv;
 	}
 	
+
 	@DeleteMapping(value = "/hosts/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void deleteHost(@PathVariable String id) {
+	public ResponseEntity<Object> deleteHostWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+														@PathVariable String id) {
+		
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		deleteHost(id);
+		
+		return new ResponseEntity<Object>(null, responseHeaders, HttpStatus.OK);
+	}
+		
+	public void deleteHost(String id) {	
 		hostService.deleteHostById(id);
 	}
 	
-	
 	@GetMapping(value = "/metrics")
-	@ResponseStatus(HttpStatus.OK)
-	public MetricPresenter getMetrics() {
-		MetricPresenter mp = new MetricPresenter();
-		List<Metric> tempmetrics;
-		tempmetrics = metricService.findAll();
+	public ResponseEntity<Object> getMetricsWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+														@RequestParam(value = "name_like" , required = false, defaultValue = "") String name_like, 
+														@RequestParam(value = "type" , required = false, defaultValue = "") String type, 
+														@RequestParam(value = "meta" , required = false, defaultValue = "false") String meta, 
+														@RequestParam(value = "recursive", required = false, defaultValue = "false") Boolean recursive
+													) {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
 		
-		List<MetricPreview> metrics = new ArrayList<MetricPreview>();
-		List<String> types = new ArrayList<String>();
+		return new ResponseEntity<Object>(getMetrics( name_like, type, meta, recursive),responseHeaders, HttpStatus.OK);
 		
-		for (Metric m : tempmetrics) {
-			metrics.add(new MetricPreview(m));
-			types.add(m.getType());
-		}
-		
-		mp.setMetrics(metrics);
-		return mp;
-	}
-	
-	@GetMapping(value = "/metrics", params = {"name_like"})
-	@ResponseStatus(HttpStatus.OK)
-	public MetricPresenter getMetrics(	@RequestParam(value = "name_like") String name_like) {
-		MetricPresenter mp = new MetricPresenter();
-		
-		List<Metric> tempmetrics;
-		
-		tempmetrics = metricService.findAllByNameLike(name_like);
-		
-		List<MetricPreview> metrics = new ArrayList<MetricPreview>();
-		List<String> types = new ArrayList<String>();
-		
-		for (Metric m : tempmetrics) {
-			metrics.add(new MetricPreview(m));
-			types.add(m.getType());
-		}
-		
-		mp.setMetrics(metrics);
-		return mp;
 	}
 		
-	/*
-	@GetMapping(value = "/metrics", params = {"name_like", "type", "meta", "recursive"})
-	@ResponseStatus(HttpStatus.OK)
-	public MetricPresenter getMetrics(	@RequestParam(value = "name_like" , required = false, defaultValue = "") String name_like, 
-										@RequestParam(value = "type" , required = false, defaultValue = "") String type, 
-										@RequestParam(value = "meta" , required = false, defaultValue = "false") Boolean meta, 
-										@RequestParam(value = "recursive", required = false, defaultValue = "false") Boolean recursive // not yet implemented
-									) {
-		MetricPresenter mp = new MetricPresenter();
+	public MetricAbstractPresenter getMetrics(	String name_like, 
+												String type, 
+												String meta, 
+												Boolean recursive
+											) {
 		
-		List<Metric> tempmetrics;
 		
-		if(name_like != null && !name_like.isEmpty()){
-			tempmetrics = metricService.findAllByNameLike(name_like);
-		}else if (type != null && !type.isEmpty()){
-			tempmetrics = metricService.findAllByType(type);
-		}
+		List<Metric> metrics = new ArrayList<Metric>();
 		
-		tempmetrics = metricService.findAll();
-		
-		List<MetricPreview> metrics = new ArrayList<MetricPreview>();
-		List<String> types = new ArrayList<String>();
-		
-		for (Metric m : tempmetrics) {
-			metrics.add(new MetricPreview(m));
-			types.add(m.getType());
-		}
-		
-		mp.setMetrics(metrics);
-		
-		if (meta != null && meta.booleanValue() == true){
-			MetaDataForMetric metas = new MetaDataForMetric();
-			metas.setTypes(types);
-			mp.setMeta(metas);
-		}
-		
-		return mp;
-	}
-	
-	*/
-	
-	
-	@GetMapping(value = "/metrics", params = {"meta"})
-	@ResponseStatus(HttpStatus.OK)
-	public MetricPresenter getMetricsWithMetas(@RequestParam(value = "meta" , required = false, defaultValue = "false") String meta) {
-		MetricPresenter mp = new MetricPresenter();
-		
-		List<Metric> tempmetrics;
-		
-		tempmetrics = metricService.findAll();
-		
-		List<MetricPreview> metrics = new ArrayList<MetricPreview>();
-		List<String> types = new ArrayList<String>();
-		
-		for (Metric m : tempmetrics) {
-			metrics.add(new MetricPreview(m));
-			types.add(m.getType());
-		}
-		
-		mp.setMetrics(metrics);
-		
-		if (meta != null && meta == "true"){
-			MetaDataForMetric metas = new MetaDataForMetric();
-			metas.setTypes(types);
-			mp.setMeta(metas);
-		}
-		
-		return mp;
-	}
-	
-	
-	@GetMapping(value = "/metrics", params = {"recursive"})
-	@ResponseStatus(HttpStatus.OK)
-	public MetricAbstractPresenter getMetrics(@RequestParam(value = "recursive", required = false, defaultValue = "false") Boolean recursive) {
-		
-		List<Metric> tempmetrics;
-		tempmetrics = metricService.findAll();
-		
-		if(recursive != null && recursive.booleanValue() == true){
-			MetricPresenterReqursive mp = new MetricPresenterReqursive();
+		if(!name_like.isEmpty() && !type.isEmpty()){
+			List<Metric> metricsByNameLike= metricService.findAllByNameLike(name_like);
+			List<Metric> metricsByType= metricService.findAllByType(type);
 			
-			List<Metric> metrics = new ArrayList<Metric>();
+			HashSet<Metric> joinedLists = new HashSet<Metric>(metricsByNameLike);
+			joinedLists.addAll(metricsByType);
+			
+			metrics = new ArrayList<>(joinedLists);
+		}else if (!name_like.isEmpty()){
+			metrics = metricService.findAllByNameLike(name_like);
+		}else if (!type.isEmpty()){
+			metrics = metricService.findAllByType(type);
+		}else{
+			metrics = metricService.findAll();
+		}
+		
+		
+		if(recursive.booleanValue() == false){
+			MetricPresenter mp = new MetricPresenter();
+			List<MetricPreview> previews = new ArrayList<MetricPreview>();
 			List<String> types = new ArrayList<String>();
-			
-			for (Metric m : tempmetrics) {
-				metrics.add(m);
+			for (Metric m : metrics) {
+				previews.add(new MetricPreview(m));
 				types.add(m.getType());
+			}
+			
+			if (meta != null && meta.equals("true") ){
+				MetaDataForMetric metas = new MetaDataForMetric();
+				metas.setTypes(types);
+				mp.setMeta(metas);
+			}
+			mp.setMetrics(previews);
+			
+			return mp;
+			
+			
+		}else{
+			MetricPresenterReqursive mp = new MetricPresenterReqursive();
+			List<String> types = new ArrayList<String>();
+			for (Metric m : metrics) {
+				types.add(m.getType());
+			}
+			
+			if (meta != null && meta.equals("true") ){
+				MetaDataForMetric metas = new MetaDataForMetric();
+				metas.setTypes(types);
+				mp.setMeta(metas);
 			}
 			mp.setMetrics(metrics);
 			
 			return mp;
 		}
-		else{
-			MetricPresenter mp = new MetricPresenter();
-			
-			List<MetricPreview> metricsPreview = new ArrayList<MetricPreview>();
-			List<String> types = new ArrayList<String>();
-			
-			for (Metric m : tempmetrics) {
-				metricsPreview.add(new MetricPreview(m));
-				types.add(m.getType());
-			}
-			mp.setMetrics(metricsPreview);
-			
-			return mp;
-			
-		}
 		
 	}
 	
 	
+	public MetricPresenter getMetrics() {
+		try{
+			MetricPresenter mp = (MetricPresenter) getMetrics("", "", "", false);
+			return mp;
+		}catch(Exception e){
+			return new MetricPresenter();
+		}
+	}
+	
+	
+	public MetricPresenter getMetrics(String name_like) {
+		try{
+			MetricPresenter mp = (MetricPresenter) getMetrics(name_like, "", "", false);
+			return mp;
+		}catch(Exception e){
+			return new MetricPresenter();
+		}
+	}
+	
+	
+	public MetricPresenter getMetricsWithMetas(String meta) {
+		try{
+			MetricPresenter mp = (MetricPresenter) getMetrics("", "", "true", false);
+			return mp;
+		}catch(Exception e){
+			return new MetricPresenter();
+		}
+	}
+	
+	
+	public MetricAbstractPresenter getMetrics(Boolean recursive) {
+		return getMetrics("", "", "", recursive);
+	}
+	
 	
 	@PostMapping(value = "/metrics")
-	@ResponseStatus(HttpStatus.CREATED)
-	public MetricPreview postMetric(@RequestBody CompoundMetric cm) {
+	public ResponseEntity<Object> postMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+														@RequestBody CompoundMetric cm) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(postMetric(cm),responseHeaders, HttpStatus.CREATED);
+	}	
+	
+	
+	
+	
+	public MetricPreview postMetric(CompoundMetric cm) {	
 		
 		Metric simple = metricService.findAllByNameLike(cm.getMetricIds()).get(0);
 		
@@ -346,24 +405,54 @@ public class ApplicationController {
 		return mp;
 	}
 	
+	
 	@GetMapping(value = "/metrics/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public Metric getMetricDetails(@PathVariable String id) {
+	public ResponseEntity<Object> getMetricDetailsWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+															@PathVariable String id) {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getMetricDetails(id),responseHeaders, HttpStatus.OK);
+	}
+		
+		
+	public Metric getMetricDetails(String id) {	
 		Metric m = metricService.findMetricById(id);
 		return m;
 	}
 	
+	
+
 	@DeleteMapping(value = "/metrics/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public void deleteMetric(@PathVariable String id) {
+	public ResponseEntity<Object> deleteMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+														@PathVariable String id) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		deleteMetric(id);
+		
+		return new ResponseEntity<Object>(null,responseHeaders, HttpStatus.OK);
+		
+	}
+		
+	public void deleteMetric(String id) {	
 		metricService.deleteMetricById(id);
 		return;
 	}
 	
 	
 	@GetMapping(value = "/metrics/{id}/measurements")
-	@ResponseStatus(HttpStatus.OK)
-	public List<MeasurementView> getMeasurementsForMetric(	@PathVariable String id) {
+	public ResponseEntity<Object> getMeasurementsForMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+																	@PathVariable String id) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getMeasurementsForMetric(id),responseHeaders, HttpStatus.OK);
+	}
+		
+	public List<MeasurementView> getMeasurementsForMetric(String id) {	
 		List<Measurement> measurements;
 		
 		measurements= measurementService.findTopMeasurementByMetricId(id, 25);
@@ -380,9 +469,22 @@ public class ApplicationController {
 	
 	
 	@GetMapping(value = "/metrics/{id}/measurements", params = {"n"})
-	@ResponseStatus(HttpStatus.OK)
-	public List<MeasurementView> getNMeasurementsForMetric(	@PathVariable String id,
-															@RequestParam(value = "n", required = false) Integer n
+	public ResponseEntity<Object> getNMeasurementsForMetric(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+																@PathVariable String id,
+																@RequestParam(value = "n", required = false) Integer n
+																) {
+		
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getNMeasurementsForMetric(id,n),responseHeaders, HttpStatus.OK);
+		
+	}
+		
+		
+	public List<MeasurementView> getNMeasurementsForMetric(	String id,
+															Integer n
 															) {
 		List<Measurement> measurements;
 		
@@ -404,11 +506,23 @@ public class ApplicationController {
 	
 	
 	@GetMapping(value = "/metrics/{id}/measurements", params = { "from", "to"})
-	@ResponseStatus(HttpStatus.OK)
-	public List<MeasurementView> getMeasurementsFromRangeForMetric(	@PathVariable String id,
-															@RequestParam(value = "from", required = false) String from, 
-															@RequestParam(value = "to", required = false) String to
-														) {
+	public ResponseEntity<Object> getMeasurementsFromRangeForMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+																			@PathVariable String id,
+																			@RequestParam(value = "from", required = false) String from, 
+																			@RequestParam(value = "to", required = false) String to
+																		) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getMeasurementsFromRangeForMetric(id,from,to),responseHeaders, HttpStatus.OK);
+		
+	}
+		
+	public List<MeasurementView> getMeasurementsFromRangeForMetric(		String id,
+																		String from, 
+																		String to
+																	) {
 		List<Measurement> measurements;
 		
 		if ((from != null && !from.isEmpty()) || (to != null && !to.isEmpty()) ){
@@ -429,9 +543,20 @@ public class ApplicationController {
 	
 	
 	@GetMapping(value = "/metrics/{id}/measurements", params = {"all"})
-	@ResponseStatus(HttpStatus.OK)
-	public List<MeasurementView> getMeasurementsForMetric(	@PathVariable String id,
+	public ResponseEntity<Object> getMeasurementsForMetric(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+															@PathVariable String id,
 															@RequestParam(value = "all", required = false) Boolean all
+														) {
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		
+		return new ResponseEntity<Object>(getMeasurementsForMetric(id,all),responseHeaders, HttpStatus.OK);
+	}
+	
+		
+	public List<MeasurementView> getMeasurementsForMetric(	
+															String id,
+															Boolean all
 														) {
 		List<Measurement> measurements;
 		
@@ -453,10 +578,19 @@ public class ApplicationController {
 	
 	
 	
-	
 	@PostMapping(value = "/metrics/{id}/measurements")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void postMeasurementsForMetric(@PathVariable String id, @RequestBody List<MeasurementView> views) {
+	public ResponseEntity<Object> postMeasurementsForMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
+													@PathVariable String id, 
+													@RequestBody List<MeasurementView> views) {
+		
+		HttpHeaders responseHeaders = new HttpHeaders();
+		responseHeaders.set("access-token", header);
+		postMeasurementsForMetric(id,views);
+		return new ResponseEntity<Object>(null,responseHeaders, HttpStatus.CREATED);
+	}
+		
+	public void postMeasurementsForMetric(String id, List<MeasurementView> views) {	
+		
 		for (MeasurementView mv : views){
 			Measurement m = new Measurement();
 			m.setMetricId(id);

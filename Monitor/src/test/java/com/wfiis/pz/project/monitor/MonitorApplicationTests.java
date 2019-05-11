@@ -30,6 +30,7 @@ import com.wfiis.pz.project.monitor.utils.HostDetails;
 import com.wfiis.pz.project.monitor.utils.HostDetailsView;
 import com.wfiis.pz.project.monitor.utils.HostView;
 import com.wfiis.pz.project.monitor.utils.MeasurementView;
+import com.wfiis.pz.project.monitor.utils.MetricAbstractPresenter;
 import com.wfiis.pz.project.monitor.utils.MetricPresenter;
 import com.wfiis.pz.project.monitor.utils.MetricPreview;
 import com.wfiis.pz.project.monitor.utils.MetricView;
@@ -166,7 +167,7 @@ public class MonitorApplicationTests {
 	@Test
 	public void getHostsByMetricType(){
 		
-		List<HostView> hosts = app.getHosts(1, "CPU");
+		List<HostView> hosts = app.getHostsWithMetricType(1, "CPU");
 		assertEquals(1, hosts.size());
 	}
 	

@@ -151,6 +151,20 @@ To run aplication use your own Postgres database or one from five below:
 The limitations of data in database are visible in file:
 
 	src/main/resources/schema.sql
+	
+For now there limitations:
+
+	host-id: 40 chars
+	os: 255 chars
+	monitor-id: 40 chars 
+	metric-id: 40 chars
+	type: 40 chars 
+	unit: 40 chars 
+	user-id: 40 chars 
+	monitor-id: 40 chars 
+	kind: 40 chars 
+	val: 48 chars 
+	ts: string in date format
 
 
 The example contents of POST requests are visible in folder "examples"
