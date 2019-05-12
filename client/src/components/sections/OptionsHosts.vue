@@ -8,6 +8,7 @@
             <v-text-field
               type='number'
               v-model="options.top"
+              v-on:input="try_top($event)"
               label="n najlepszych"
               hide-details
             />
@@ -74,6 +75,12 @@ export default {
   model: {
     prop: 'options',
     event: 'change'
+  },
+  methods: {
+    /** Try to change top. Only positive values. */
+    try_top (value) {
+      this.options.top = value >=0 ? value : 0
+    }
   }
 }
 </script>
