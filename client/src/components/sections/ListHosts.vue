@@ -18,11 +18,11 @@
       <v-list two-line>
         <v-list-tile
          v-for="metric in props.item.metrics"
-         :key="metric.name"
+         :key="metric['metric-id']"
         >
           <v-list-tile-content>
             <v-list-tile-title>
-              {{ metric.name }}
+              {{ metric['metric-id'] }}
             </v-list-tile-title>
             <v-list-tile-sub-title>
               {{ metric.type }} [{{ metric.unit }}]

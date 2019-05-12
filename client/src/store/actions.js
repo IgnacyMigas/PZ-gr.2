@@ -38,12 +38,12 @@ const actions = {
   /** Pend list of hosts. */
   listHosts: async function ({ state }) {
     const res = await state.axios.get('/hosts', {
-      headers: {
+      params: {
         recursive: true
       }
     })
     res.data.forEach(el => {
-      el.name = el['host-id'] || el['hostId']
+      el.name = el['host-id']
     })
     return res
   },
@@ -51,14 +51,13 @@ const actions = {
   /** Pend list of metrics. */
   listMetrics: async function ({ state }) {  // , options
     const res = await state.axios.get('/metrics', {
-      headers: {
+      params: {
         recursive: true
       }
     })
     res.data = res.data.metrics
     res.data.forEach(el => {
-      // alternative, for recoverability from a bug in Monitor
-      el.name = el['metric-id'] || el['metricId']
+      el.name = el['metric-id']
     })
     return res
   }
