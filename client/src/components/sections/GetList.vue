@@ -74,6 +74,10 @@ export default {
       this.items = data || [];
       this.log = log
       this.error = error ? error.split('\n') : ''
+    },
+
+    get_items () {
+      return this.items
     }
   },
   mounted () {

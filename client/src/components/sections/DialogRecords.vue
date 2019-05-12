@@ -1,29 +1,50 @@
 <template>
   <v-dialog
     v-model="isActive"
+    width=500
   >
-    <v-card>
-      <v-card-title class="headline">
+    <v-toolbar dark>
+      <v-toolbar-title>
         Recordy dla: {{ metric_name }}
-      </v-card-title>
-      <v-card-text>
-        <get-list
-          ref='list'
-          :title='"Recordy dla: {{ metric_name }}"'
-          :tryGet="reloadRecords"
-          :getOptions="{ id: metric_id }"
-          v-slot="props"
-        >
-          <ul>
-            <li
-             v-for="prop in props.items"
-             :key="prop.ts"
-            >
-            {{ prop.ts }}: {{ prop.val }} {{ metric_unit }}
-            </li>
-          </ul>
-        </get-list>
-      </v-card-text>
+      </v-toolbar-title>
+
+      <v-spacer></v-spacer>
+
+      <v-toolbar-items>
+        <bar-button
+         icon = "show_chart"
+         :handler = "() => addToStaticChart()"
+        />
+        <bar-button
+         icon = "clear"
+         :handler = "() => isActive = false"
+        />
+      </v-toolbar-items>
+    </v-toolbar>
+    <v-card>
+      <get-list
+        ref='list'
+        :title='"Recordy dla: {{ metric_name }}"'
+        :tryGet="reloadRecords"
+        :getOptions="{ id: metric_id }"
+        v-slot="props"
+      >
+        <v-container>
+          <v-layout
+            row
+            justify-space-between
+            v-for="item in props.items"
+            :key="item.ts"
+          >
+            <v-flex xs4 class="text-xs-right">
+              {{ item.val }} {{ metric_unit }}
+            </v-flex>
+            <v-flex xs4 class="text-xs-left">
+              {{ item.ts }}
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </get-list>
     </v-card>
   </v-dialog>
 </template>
@@ -31,6 +52,7 @@
 <script>
 import Vuex from 'vuex'
 import GetList from '@/components/sections/GetList'
+import BarButton from '@/components/elements/BarButton'
 
 /**
  * Dialog recordów metryki.
@@ -42,7 +64,8 @@ import GetList from '@/components/sections/GetList'
 export default {
   name: 'dialog-records',
   components: {
-    'get-list': GetList
+    'get-list': GetList,
+    'bar-button': BarButton
   },
   props: {
     /** Czy dialog ma być aktywny.
@@ -118,6 +141,18 @@ export default {
       } else {
         this.mymetric = this.metric
       }
+    },
+    
+    /** Dodaje pomiary (nie metrykę) do statycznego wykresu. */
+    addToStaticChart () {
+      const records = this.get_records()
+      // eslint-disable-next-line
+      console.log("Records: " + JSON.stringify(records))
+      //TODO
+    },
+
+    get_records () {
+      return this.$refs.list.get_items()
     }
   },
   watch: {
