@@ -174,6 +174,8 @@ export default {
 
     /** Dodaje do wykresu */
     addToChart (item) {
+      // eslint-disable-next-line
+      console.log("item: " + json.stringify(item))
       item
       //TODO
     },

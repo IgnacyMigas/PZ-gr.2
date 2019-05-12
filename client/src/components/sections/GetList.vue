@@ -70,14 +70,16 @@ export default {
 
     /** Przeładuj listę. */
     reload: async function (options = this.getOptions) {
-      const { log, error, data } = await this.request(() => this.tryGet(options))
+      const { log, error, data } =
+        await this.request(() => this.tryGet(options))
       this.items = data || [];
       this.log = log
       this.error = error ? error.split('\n') : ''
     },
 
+    /** Udostępnij kopie danych listy. */
     get_items () {
-      return this.items
+      return [...this.items]
     }
   },
   mounted () {
