@@ -165,10 +165,15 @@ public class ApplicationController {
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
 		responseHeaders.set("access-token", header);
+		try{
+			postHost(hd);
+			return new ResponseEntity<Object>(null, responseHeaders, HttpStatus.CREATED);
+		}catch(Exception e){
+			deleteHost(hd.getHostId());
+			return new ResponseEntity<Object>(null, responseHeaders, HttpStatus.CONFLICT);
+		}
 		
-		postHost(hd);
 		
-		return new ResponseEntity<Object>(null, responseHeaders, HttpStatus.CREATED);
 		
 	}
 		
