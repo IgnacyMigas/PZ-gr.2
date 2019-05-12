@@ -4,47 +4,51 @@
     :title="title"
     :tryGet="tryGet"
     :getOptions="getOptions"
-    v-slot="prop"
   >
-    <v-data-table
-      :headers="real_headers"
-      :items="prop.items"
-      :expand="false"
-      :no-data-text="no_data_text"
-      item-key="name"
-      hide-actions
-    >
-      <template v-slot:items="props">
-        <tr @click="props.expanded = !props.expanded">
-          <slot :item="props.item" :index="props.index">
-          </slot>
-          <td v-if="quick_access && has_actions">
-            <bar-button
-             v-for='action in actions'
-             :key="action.text"
-             :icon="action.icon"
-             :handler="() => action.handler(props.item)" />
-          </td>
-        </tr>
-      </template>
-      <template v-slot:expand="props">
-        <v-card>
-          <slot name="text" :item="props.item" :index="props.index">
-          </slot>
-          <v-card-actions
-           class="justify-center"
-           v-if="!quick_access && has_actions"
-          >
-            <text-button
-             v-for='action in actions'
-             :key="action.text"
-             :icon="action.icon"
-             :text="action.text"
-             :handler="() => action.handler(props.item)" />
-          </v-card-actions>
-        </v-card>
-      </template>
-    </v-data-table>
+    <template v-slot="prop">
+      <v-data-table
+        :headers="real_headers"
+        :items="prop.items"
+        :expand="false"
+        :no-data-text="no_data_text"
+        item-key="name"
+        hide-actions
+      >
+        <template v-slot:items="props">
+          <tr @click="props.expanded = !props.expanded">
+            <slot :item="props.item" :index="props.index">
+            </slot>
+            <td v-if="quick_access && has_actions">
+              <bar-button
+               v-for='action in actions'
+               :key="action.text"
+               :icon="action.icon"
+               :handler="() => action.handler(props.item)" />
+            </td>
+          </tr>
+        </template>
+        <template v-slot:expand="props">
+          <v-card>
+            <slot name="text" :item="props.item" :index="props.index">
+            </slot>
+            <v-card-actions
+             class="justify-center"
+             v-if="!quick_access && has_actions"
+            >
+              <text-button
+               v-for='action in actions'
+               :key="action.text"
+               :icon="action.icon"
+               :text="action.text"
+               :handler="() => action.handler(props.item)" />
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-data-table>
+    </template>
+    <template v-slot:dialogs>
+      <slot name="dialogs"></slot>
+    </template>
   </get-list>
 </template>
 

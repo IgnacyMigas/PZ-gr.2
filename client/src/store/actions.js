@@ -77,8 +77,13 @@ const actions = {
       el.name = el['metric-id']
     })
     return res
-  }
+  },
 
+  /** Pend list of records. */
+  listRecords: async function ({ state }, { id }) {
+    const res = await state.axios.get(`/metrics/${id}/measurements`)
+    return res
+  }
 }
 
 export default actions

@@ -55,12 +55,19 @@
         </v-list-tile>
       </v-list>
     </template>
+    <template v-slot:dialogs>
+      <dialog-records
+        v-model="records_dialog.active"
+        :metric="records_dialog.item"
+      />
+    </template>
   </get-table>
 </template>
 
 <script>
 import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
+import DialogRecords from '@/components/sections/DialogRecords'
 
 /**
  * Sekcja pobierająca dane metryk.
@@ -71,7 +78,8 @@ import GetTable from '@/components/sections/GetTable'
 export default {
   name: 'list-metrics',
   components: {
-    'get-table': GetTable
+    'get-table': GetTable,
+    'dialog-records': DialogRecords
   },
   props: {
     /** Funkcja pobierająca dane do wylistowania. */
@@ -118,7 +126,11 @@ export default {
           icon: 'show_chart',
           handler: this.addToChart
         }
-      ]
+      ],
+      records_dialog: {
+        item: { 'metric-id': null },
+        active: false
+      }
     }
   },
   computed: {
@@ -150,8 +162,10 @@ export default {
 
     /** Pokazuje pomiary danej metryki */
     showRecords (item) {
-      item
-      //TODO
+      this.records_dialog.item = item
+      this.records_dialog.active = true
+      // eslint-disable-next-line
+      console.log("Showing records! " + JSON.stringify(this.records_dialog))
     },
 
     /** Dodaje metrykę pochodną */

@@ -8,6 +8,8 @@
     </v-card-text>
   
     <slot :items="items"></slot>
+
+    <slot name="dialogs"></slot>
   </div>
 </template>
 

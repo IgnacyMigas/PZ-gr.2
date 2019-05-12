@@ -1,7 +1,7 @@
 <template>
   <v-btn
     flat icon
-    @click="handler">
+    @click.stop="handler">
     <v-icon list>{{ icon }}</v-icon>
   </v-btn>
 </template>
