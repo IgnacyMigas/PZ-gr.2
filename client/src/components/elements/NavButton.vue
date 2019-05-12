@@ -1,5 +1,5 @@
 <template>
-  <v-btn flat :to="to">
+  <v-btn flat :to="to" @click="handler">
     <v-icon left>{{ icon }}</v-icon>
     <slot></slot>
   </v-btn>
@@ -24,6 +24,13 @@ export default {
     to: {
       type: String,
       required: false
+    },
+
+    /** Funkcja obsługująca kliknięcie */
+    handler: {
+      type: Function,
+      required: false,
+      default: () => {}
     }
   }
 }

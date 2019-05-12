@@ -1,5 +1,5 @@
 <template>
-  <v-btn round @click="handler">
+  <v-btn round :to="to" @click="handler">
     <v-icon left v-if="icon">{{ icon }}</v-icon>
     {{ text }}
   </v-btn>
@@ -26,10 +26,17 @@ export default {
       required: true
     },
 
+    /** Odnośnik routera do odesłania przy kliknięciu. */
+    to: {
+      type: String,
+      required: false
+    },
+
     /** Funkcja obsługująca kliknięcie */
     handler: {
       type: Function,
-      required: true
+      required: false,
+      default: () => {}
     }
   }
 }
