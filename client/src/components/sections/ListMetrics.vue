@@ -168,14 +168,7 @@ export default {
 
     /** Pobiera dane do wylistowania metryk. */
     reloadList: async function (options = {}) {
-      let data = await this.listMetrics(options)
-      if (options.searched || (options.types && options.types.length > 0)) {
-        data = data.filter(el =>
-          (el.name.search(options.searched) != -1) &&
-          options.types.includes(el.type)
-        )
-      }
-      return data
+      return await this.listMetrics(options)
     }
   }
 }

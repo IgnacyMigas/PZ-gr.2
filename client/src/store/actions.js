@@ -36,12 +36,22 @@ const actions = {
   },
 
   /** Pend list of hosts. */
-  listHosts: async function ({ state }) {
-    const res = await state.axios.get('/hosts', {
-      params: {
-        recursive: true
-      }
-    })
+  listHosts: async function ({ state }, options) {
+    const params = {
+      recursive: true
+    }
+
+    if (options.searched) {
+      params.name_like = options.searched
+    }
+    if (options.metric_types && options.metric_types.length > 0) {
+      params.metric_types = options.metric_types
+    }
+    if (options.top && options.top > 0) {
+      params.top = options.top
+    }
+
+    const res = await state.axios.get('/hosts', params)
     res.data.forEach(el => {
       el.name = el['host-id']
     })
@@ -49,12 +59,19 @@ const actions = {
   },
 
   /** Pend list of metrics. */
-  listMetrics: async function ({ state }) {  // , options
-    const res = await state.axios.get('/metrics', {
-      params: {
-        recursive: true
-      }
-    })
+  listMetrics: async function ({ state }, options) {
+    const params = {
+      recursive: true
+    }
+
+    if (options.searched) {
+      params.name_like = options.searched
+    }
+    if (options.types && options.types.length > 0) {
+      params.type = options.types
+    }
+
+    const res = await state.axios.get('/metrics', { params })
     res.data = res.data.metrics
     res.data.forEach(el => {
       el.name = el['metric-id']

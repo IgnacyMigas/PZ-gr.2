@@ -94,21 +94,7 @@ export default {
 
     /** Pobiera dane do wylistowania metryk. */
     reloadList: async function (options = {}) {
-      let data = await this.listHosts(options)
-
-      if (options.searched) {
-        data = data.filter(el => el.name.search(options.searched) != -1)
-      }
-      if (options.metric_types && options.metric_types.length > 0) {
-        const filter_fun = (el) => {
-          let types = el.metrics.map(m => m.type)
-          return options.metric_types.every(mt => types.includes(mt))
-        }
-        data = data.filter(filter_fun)
-      }
-
-      this.data = data
-      return data
+      return await this.listHosts(options)
     }
   }
 }
