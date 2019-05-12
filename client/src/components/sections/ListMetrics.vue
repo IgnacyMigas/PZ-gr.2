@@ -164,8 +164,6 @@ export default {
     showRecords (item) {
       this.records_dialog.item = item
       this.records_dialog.active = true
-      // eslint-disable-next-line
-      console.log("Showing records! " + JSON.stringify(this.records_dialog))
     },
 
     /** Dodaje metrykę pochodną */

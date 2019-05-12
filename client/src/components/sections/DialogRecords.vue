@@ -7,20 +7,31 @@
         Recordy dla: {{ metric_name }}
       </v-card-title>
       <v-card-text>
-        <ul>
-          <li
-            v-for="measurement in measurements"
-            :key="measurement.ts"
-          >
-            {{ measurement.ts }}: {{ measurement.value }}
-          </li>
-        </ul>
+        <get-list
+          ref='list'
+          :title='"Recordy dla: {{ metric_name }}"'
+          :tryGet="reloadRecords"
+          :getOptions="{ id: metric_id }"
+          v-slot="props"
+        >
+          <ul>
+            <li
+             v-for="prop in props.items"
+             :key="prop.ts"
+            >
+            {{ prop.ts }}: {{ prop.val }} {{ metric_unit }}
+            </li>
+          </ul>
+        </get-list>
       </v-card-text>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
+import Vuex from 'vuex'
+import GetList from '@/components/sections/GetList'
+
 /**
  * Dialog recordów metryki.
  *
@@ -30,6 +41,9 @@
  */
 export default {
   name: 'dialog-records',
+  components: {
+    'get-list': GetList
+  },
   props: {
     /** Czy dialog ma być aktywny.
      *
@@ -53,29 +67,20 @@ export default {
   },
   data () {
     return {
-      measurements: [
-        {
-          ts: 1,
-          value: 1
-        },
-        {
-          ts: 2,
-          value: 4
-        },
-        {
-          ts: 3,
-          value: 9
-        }
-      ]
+      mymetric: {}
     }
   },
   computed: {
     metric_id () {
-      return this.metric['metric-id']
+      return this.mymetric['metric-id']
     },
 
     metric_name () {
-      return this.metric.name || ''
+      return this.mymetric.name || ''
+    },
+
+    metric_unit () {
+      return this.mymetric.unit || ''
     },
 
     isActive: {
@@ -83,8 +88,41 @@ export default {
         return this.active
       },
       set (value) {
-        this.$emit('activityChanged', value)
+        this.set_mymetric(value)
+
+        // nextTick pozwala get-table zdążyć zresetować widok
+        this.$nextTick(() => this.$emit('activityChanged', value))
       }
+    }
+  },
+  methods: {
+    ...Vuex.mapActions(['listRecords']),
+
+    /** Pobiera dane do wylistowania pomiarów.
+     *
+     *  Uwaga: jeśli options nie zawiera id,
+     *  zapytanie nie zostanie wykonane.
+     */
+    reloadRecords: async function (options) {
+      if (options.id) {
+        return await this.listRecords(options)
+      } else {
+        return []
+      }
+    },
+
+    /** Resetuje metrykę przy zamknieciu okna lub ustawia po otwarciu. */
+    set_mymetric (value) {
+      if (!value) {  // closing --- reset to no metric
+        this.mymetric = {}
+      } else {
+        this.mymetric = this.metric
+      }
+    }
+  },
+  watch: {
+    active (value) {
+      this.set_mymetric(value)
     }
   }
 }
