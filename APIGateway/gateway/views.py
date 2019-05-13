@@ -8,10 +8,10 @@ import requests
 
 @csrf_exempt
 def metrics(request, metrics_id=None):
-    if not request.headers['access-token']:
+    if 'access-token' not in request.headers:
         return HttpResponse(status=401)
 
-    headers = {'Access-Token': request.headers['Access-Token']}
+    headers = {'access-token': request.headers['access-token']}
 
     metrics_dict = {"metrics": [], "meta": {"types": set()}}
     if metrics_id is None:
@@ -33,6 +33,9 @@ def metrics(request, metrics_id=None):
                 except requests.ConnectionError:
                     print("Delete monitor %s" % m.id)
                     m.delete()
+                except requests.exceptions.InvalidSchema:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
             metrics_dict['meta']['types'] = list(metrics_dict['meta']['types'])
             if meta == 'only':
                 metrics_dict.pop('metrics', None)
@@ -50,6 +53,9 @@ def metrics(request, metrics_id=None):
                         except requests.ConnectionError:
                             print("Delete monitor %s" % m.id)
                             m.delete()
+                        except requests.exceptions.InvalidSchema:
+                            print("Delete monitor %s" % m.id)
+                            m.delete()
             return HttpResponse(status=400)
     else:
         if request.method == 'GET':
@@ -63,6 +69,9 @@ def metrics(request, metrics_id=None):
                 except requests.ConnectionError:
                     print("Delete monitor %s" % m.id)
                     m.delete()
+                except requests.exceptions.InvalidSchema:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
         elif request.method == 'DELETE':
             for m in models.Monitor.objects.all():
                 try:
@@ -72,15 +81,18 @@ def metrics(request, metrics_id=None):
                 except requests.ConnectionError:
                     print("Delete monitor %s" % m.id)
                     m.delete()
+                except requests.exceptions.InvalidSchema:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
             return HttpResponse(status=400)
     return HttpResponse(status=404)
 
 
 def metrics_measurements(request, metrics_id):
-    if not request.headers['access-token']:
+    if 'access-token' not in request.headers:
         return HttpResponse(status=401)
 
-    headers = {'Access-Token': request.headers['Access-Token']}
+    headers = {'access-token': request.headers['access-token']}
 
     if request.method == 'GET':
         measurements_list = []
@@ -100,15 +112,18 @@ def metrics_measurements(request, metrics_id):
             except requests.ConnectionError:
                 print("Delete monitor %s" % m.id)
                 m.delete()
+            except requests.exceptions.InvalidSchema:
+                print("Delete monitor %s" % m.id)
+                m.delete()
         return HttpResponse(json.dumps(measurements_list))
     return HttpResponse(status=404)
 
 
 def hosts(request, hosts_id=None):
-    if not request.headers['access-token']:
+    if 'access-token' not in request.headers:
         return HttpResponse(status=401)
 
-    headers = {'Access-Token': request.headers['Access-Token']}
+    headers = {'access-token': request.headers['access-token']}
 
     if request.method == 'GET':
         monitors_list = []
@@ -122,6 +137,9 @@ def hosts(request, hosts_id=None):
                             body = json.loads(body)
                         monitors_list.extend(body)
                 except requests.ConnectionError:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
+                except requests.exceptions.InvalidSchema:
                     print("Delete monitor %s" % m.id)
                     m.delete()
         else:
@@ -138,13 +156,16 @@ def hosts(request, hosts_id=None):
                 except requests.ConnectionError:
                     print("Delete monitor %s" % m.id)
                     m.delete()
+                except requests.exceptions.InvalidSchema:
+                    print("Delete monitor %s" % m.id)
+                    m.delete()
         return HttpResponse(json.dumps(monitors_list))
     return HttpResponse(status=404)
 
 
 @csrf_exempt
 def monitors(request):
-    if not request.headers['access-token']:
+    if 'access-token' not in request.headers:
         return HttpResponse(status=401)
 
     # if not request.body:
