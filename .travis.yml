@@ -30,7 +30,7 @@ matrix:
       before_install:
         - cd client
       install:
-        - npm install
+        - npm install stable
       script:
         - npm run test
 
