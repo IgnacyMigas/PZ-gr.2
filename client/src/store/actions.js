@@ -79,6 +79,16 @@ const actions = {
     return res
   },
 
+  /** Pend list of metrics' meta. */
+  listTypes: async function ({ state }) {
+    const params = {
+      meta: true
+    }
+    const res = await state.axios.get('/metrics', { params })
+    res.data = res.data.meta.types.map(el => ({ name: el }))
+    return res
+  },
+
   /** Pend list of records. */
   listRecords: async function ({ state }, { id }) {
     const res = await state.axios.get(`/metrics/${id}/measurements`)
