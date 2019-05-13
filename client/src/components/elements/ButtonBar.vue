@@ -10,10 +10,10 @@
 /**
  * Przycisk dla pasków i list.
  *
- * @module components/elements/BarButton
+ * @module components/elements/ButtonBar
  */
 export default {
-  name: 'bar-button',
+  name: 'button-bar',
   props: {
     /** Ikona do wyświetlenia. */
     icon: {

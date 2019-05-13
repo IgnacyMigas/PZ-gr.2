@@ -35,8 +35,6 @@
 </template>
 
 <script>
-// import BarButton from '@/components/elements/BarButton'
-
 /**
  * Sekcja opcji wyszukiwania hostów.
  *
@@ -45,9 +43,6 @@
  */
 export default {
   name: 'options-hosts',
-  components: {
-    // 'bar-button': BarButton
-  },
   props: {
     /** Obiekt opcji do przekazania do listy hostów. */
     options: {

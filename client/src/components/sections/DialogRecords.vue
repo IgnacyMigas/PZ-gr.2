@@ -11,11 +11,11 @@
       <v-spacer></v-spacer>
 
       <v-toolbar-items>
-        <bar-button
+        <button-bar
          icon = "show_chart"
          :handler = "() => addToStaticChart()"
         />
-        <bar-button
+        <button-bar
          icon = "clear"
          :handler = "() => isActive = false"
         />
@@ -52,7 +52,7 @@
 <script>
 import Vuex from 'vuex'
 import GetList from '@/components/sections/GetList'
-import BarButton from '@/components/elements/BarButton'
+import ButtonBar from '@/components/elements/ButtonBar'
 
 /**
  * Dialog recordów metryki.
@@ -65,7 +65,7 @@ export default {
   name: 'dialog-records',
   components: {
     'get-list': GetList,
-    'bar-button': BarButton
+    'button-bar': ButtonBar
   },
   props: {
     /** Czy dialog ma być aktywny.

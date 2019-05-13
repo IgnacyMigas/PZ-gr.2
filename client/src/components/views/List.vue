@@ -72,7 +72,6 @@ export default {
     'options-hosts': OptionsHosts,
     'list-metrics': ListMetrics,
     'list-hosts': ListHosts,
-    // 'bar-button': BarButton,
     'search-bar': SearchBar
   },
   data () {

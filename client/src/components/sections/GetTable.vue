@@ -19,7 +19,7 @@
             <slot :item="props.item" :index="props.index">
             </slot>
             <td v-if="quick_access && has_actions">
-              <bar-button
+              <button-bar
                v-for='action in actions'
                :key="action.text"
                :icon="action.icon"
@@ -35,12 +35,13 @@
              class="justify-center"
              v-if="!quick_access && has_actions"
             >
-              <text-button
+              <button-text
                v-for='action in actions'
                :key="action.text"
                :icon="action.icon"
                :text="action.text"
-               :handler="() => action.handler(props.item)" />
+               :handler="() => action.handler(props.item)"
+              />
             </v-card-actions>
           </v-card>
         </template>
@@ -54,8 +55,8 @@
 
 <script>
 import GetList from '@/components/sections/GetList'
-import BarButton from '@/components/elements/BarButton'
-import TextButton from '@/components/elements/TextButton'
+import ButtonBar from '@/components/elements/ButtonBar'
+import ButtonText from '@/components/elements/ButtonText'
 
 /**
  * Samopobierająca tabela danych.
@@ -82,8 +83,8 @@ export default {
   name: 'get-table',
   components: {
     'get-list': GetList,
-    'bar-button': BarButton,
-    'text-button': TextButton
+    'button-bar': ButtonBar,
+    'button-text': ButtonText
   },
   props: {
     /** Tytuł listy. */

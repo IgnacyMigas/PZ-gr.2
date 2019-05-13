@@ -1,21 +1,27 @@
 <template>
-  <v-btn flat :to="to" @click="handler">
-    <v-icon left>{{ icon }}</v-icon>
-    <slot></slot>
+  <v-btn round :to="to" @click="handler">
+    <v-icon left v-if="icon">{{ icon }}</v-icon>
+    {{ text }}
   </v-btn>
 </template>
 
 <script>
 /**
- * Przycisk nawigacji.
+ * Przycisk dla kart.
  *
- * @module components/elements/NavButton
+ * @module components/elements/ButtonText
  */
 export default {
-  name: 'nav-button',
+  name: 'button-text',
   props: {
     /** Ikona do wyświetlenia. */
     icon: {
+      type: String,
+      required: false
+    },
+
+    /** Tekst do wyświetlenia. */
+    text: {
       type: String,
       required: true
     },

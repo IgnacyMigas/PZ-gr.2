@@ -38,8 +38,6 @@
 </template>
 
 <script>
-// import BarButton from '@/components/elements/BarButton'
-
 /**
  * Sekcja opcji wyszukiwania metryk.
  *
@@ -48,9 +46,6 @@
  */
 export default {
   name: 'options-metrics',
-  components: {
-    // 'bar-button': BarButton
-  },
   props: {
     /** Obiekt opcji do przekazania do listy metryk. */
     options: {
