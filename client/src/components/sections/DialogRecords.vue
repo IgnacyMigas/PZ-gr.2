@@ -152,7 +152,7 @@ export default {
     },
 
     get_records () {
-      return this.$refs.list.get_items()
+      return this.$refs.list.get_items
     }
   },
   watch: {

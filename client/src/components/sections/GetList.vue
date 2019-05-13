@@ -31,7 +31,7 @@ import Vuex from 'vuex'
  *   </div>
  * </get-list>
  *
- * @param {String} title - (required) tytuł
+ * @param {String} title - tytuł
  * @param {Function} tryGet - (required) Funkcja pobierająca dane
  * @param {Object} getOptions - Parametry dla funkcji pobierającej
  * @module components/sections/GetList
@@ -49,7 +49,7 @@ export default {
     /** Tytuł listy. */
     title: {
       type: String,
-      required: true
+      required: false
     },
 
     /** Funkcja pobierająca dane do wylistowania. */
@@ -58,7 +58,10 @@ export default {
       required: true
     },
 
-    /** Opcje do przekazania funkcji przeładowującej. */
+    /** Opcje do przekazania funkcji przeładowującej.
+     *
+     *  Uwaga: użycie {} spowoduje ciągłe przeładowywanie listy!
+     */
     getOptions: {
       type: Object,
       required: false,
@@ -75,8 +78,9 @@ export default {
       this.items = data || [];
       this.log = log
       this.error = error ? error.split('\n') : ''
-    },
-
+    }
+  },
+  computed: {
     /** Udostępnij kopie danych listy. */
     get_items () {
       return [...this.items]
