@@ -16,7 +16,7 @@ class SensorTools:
         self.set_variables()
     
     def set_variables(self):
-        self.hostID = "pokoj 222"
+        self.hostID = "pokoj 272A"
         self.os     = "Windows"
         if self.metric == "CPU":
             self.type           = "CPU"
@@ -48,7 +48,9 @@ class SensorTools:
             data = self.register_json_data_for_one_metric()
     
         print(data)
-        #r = requests.post(url = API_REGISTER_ENDPOINT, json = data)#, params = register_header) 
+        r = requests.post(url = self.API_REGISTER_ENDPOINT, json = data)#, params = register_header) 
+        #print(r)
+        print(r.status_code, r.reason)
     
     def register_json_data_for_one_metric(self):
         data            = {}
@@ -86,22 +88,26 @@ class SensorTools:
     def send_data(self):
         if self.metric == "Both":
             data = self.json_data_for_two_metrics()
-            #r = requests.post(url = API_CPU_MEASUREMENTS_ENDPOINT, json = data[0])#, params = register_header)
-            #r = requests.post(url = API_BATTERY_MEASUREMENTS_ENDPOINT, json = data[1])#, params = register_header)
+            r = requests.post(url = self.API_CPU_MEASUREMENTS_ENDPOINT, json = data[0])#, params = register_header)
             print(data[0])
+            print(r.status_code, r.reason)
             print("#################")
+            r = requests.post(url = self.API_BATTERY_MEASUREMENTS_ENDPOINT, json = data[1])#, params = register_header)
             print(data[1])
+            print(r.status_code, r.reason)
             self.collected_data1 = []
             self.collected_data2 = []
         elif self.metric == "CPU":
             data = self.json_data_for_one_metric()
-            #r = requests.post(url = API_CPU_MEASUREMENTS_ENDPOINT, json = sdata)#, params = register_header)
+            r = requests.post(url = self.API_CPU_MEASUREMENTS_ENDPOINT, json = sdata)#, params = register_header)
             print(data)
+            print(r.status_code, r.reason)
             self.collected_data = []
         else:
             data = self.json_data_for_one_metric()
-            #r = requests.post(url = API_BATTERY_MEASUREMENTS_ENDPOINT, json = sdata)#, params = register_header)
+            r = requests.post(url = self.API_BATTERY_MEASUREMENTS_ENDPOINT, json = sdata)#, params = register_header)
             print(data)
+            print(r.status_code, r.reason)
             self.collected_data = []
         self.timestamp = []
 
@@ -109,7 +115,7 @@ class SensorTools:
         data = []
         for i in range(len(self.collected_data)):
             temp        = {}
-            temp["val"] = self.collected_data[i]
+            temp["val"] = str(self.collected_data[i])
             temp["ts"]  = self.timestamp[i]
             data.append(temp)
         
@@ -120,11 +126,11 @@ class SensorTools:
         data2 = []
         for i in range(len(self.collected_data1)):
             temp1        = {}
-            temp1["val"] = self.collected_data1[i]
+            temp1["val"] = str(self.collected_data1[i])
             temp1["ts"]  = self.timestamp[i]
             
             temp2        = {}
-            temp2["val"] = self.collected_data2[i]
+            temp2["val"] = str(self.collected_data2[i])
             temp2["ts"]  = self.timestamp[i]
             
             data1.append(temp1)
@@ -140,7 +146,7 @@ class SensorTools:
         else:
             self.collected_data1.append(psutil.cpu_percent(interval=1.0))
             self.collected_data2.append(psutil.sensors_battery().percent)
-        self.timestamp.append(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+        self.timestamp.append(datetime.datetime.fromtimestamp(time.time()).strftime('%Y/%m/%d %H:%M:%S'))
         #print(self.collected_data)
         #print(self.timestamp)
         #print("CPU percent: {0}% \nBattery: {1}%".format(psutil.cpu_percent(interval=1.0), psutil.sensors_battery().percent))
