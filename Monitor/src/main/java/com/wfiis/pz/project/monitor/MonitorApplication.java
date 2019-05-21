@@ -27,7 +27,7 @@ public class MonitorApplication {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("monitor-id", env.getProperty("MONITORID"));
-			json.put("api-endpoint", env.getProperty("API_ENDPOINT")+env.getProperty("MONITORID")+"/");
+			json.put("api-endpoint", env.getProperty("API_ENDPOINT")+env.getProperty("API_VERSION"));
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
