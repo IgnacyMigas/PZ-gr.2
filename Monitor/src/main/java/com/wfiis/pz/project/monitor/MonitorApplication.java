@@ -38,7 +38,8 @@ public class MonitorApplication {
 		try {
 		    HttpPost request = new HttpPost(env.getProperty("API_GATEWAY_URL"));
 		    StringEntity params = new StringEntity(json.toString());
-		    request.addHeader("content-type", "application/json");
+			request.addHeader("content-type", "application/json");
+			request.addHeader("access-token", "1234");
 		    request.setEntity(params);
 		    httpClient.execute(request);
 		// handle response here...
