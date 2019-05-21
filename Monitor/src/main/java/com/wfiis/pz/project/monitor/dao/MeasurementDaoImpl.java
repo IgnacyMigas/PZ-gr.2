@@ -33,7 +33,7 @@ public class MeasurementDaoImpl implements MeasurementDao{
 
 	@Override
 	public List<Measurement> findAll() {
-		return template.query("select * from measurements", new MeasurementRowMapper());
+		return template.query("select * from measurements order by ts desc", new MeasurementRowMapper());
 	}
 	
 	
@@ -55,7 +55,7 @@ public class MeasurementDaoImpl implements MeasurementDao{
 	public List<Measurement> findAllByMetricId(String id) {
 		 SqlParameterSource param = new MapSqlParameterSource()
 					.addValue("id", id);
-		return template.query("select * from measurements where metricId = :id", param, new MeasurementRowMapper());
+		return template.query("select * from measurements where metricId = :id order by ts desc", param, new MeasurementRowMapper());
 		
 	}
 
@@ -65,14 +65,14 @@ public class MeasurementDaoImpl implements MeasurementDao{
 		SqlParameterSource param = new MapSqlParameterSource()
 				.addValue("id", id)
 				.addValue("n", n);
-	return template.query("select * from measurements where metricId = :id limit :n", param, new MeasurementRowMapper());
+	return template.query("select * from measurements where metricId = :id order by ts desc limit :n", param, new MeasurementRowMapper());
 	}
 
 
 	@Override
 	public List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to) {
 		
-		String sql = "select * from measurements where ts > :from and ts < :to";
+		String sql = "select * from measurements where ts > :from and ts < :to  order by ts desc";
 		SqlParameterSource param = new MapSqlParameterSource()
 				.addValue("from", Util.convertStringToTimestamp(from))
 				.addValue("to", Util.convertStringToTimestamp(to));
@@ -82,7 +82,7 @@ public class MeasurementDaoImpl implements MeasurementDao{
 			from = "01/01/1999 00:00:00";
 		
 		if (to == null || !to.isEmpty()){
-			sql = "select * from measurements where ts > :from";
+			sql = "select * from measurements where ts > :from  order by ts desc";
 			param = new MapSqlParameterSource()
 					.addValue("from", Util.convertStringToTimestamp(from));
 		}
