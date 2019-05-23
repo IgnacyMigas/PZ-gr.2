@@ -2,11 +2,12 @@ import requests
 import psutil
 import datetime
 import time
+import platform
 
 class SensorTools:
     API_REGISTER_ENDPOINT             = "http://localhost:8080/v1/hosts"
-    API_CPU_MEASUREMENTS_ENDPOINT     = "http://localhost:8080/v1/metrics/CPU_testHost/measurements"
-    API_BATTERY_MEASUREMENTS_ENDPOINT = "http://localhost:8080/v1/metrics/Battery_testHost/measurements"
+    API_CPU_MEASUREMENTS_ENDPOINT     = "http://localhost:8080/v1/metrics/CPU_Host/measurements"
+    API_BATTERY_MEASUREMENTS_ENDPOINT = "http://localhost:8080/v1/metrics/Battery_Host/measurements"
 
     token = "xxxxxxxx"
     register_header = { "access-token":token }
@@ -17,26 +18,26 @@ class SensorTools:
     
     def set_variables(self):
         self.hostID = "pokoj 272A"
-        self.os     = "Windows"
+        self.os     = platform.system()
         if self.metric == "CPU":
             self.type           = "CPU"
             self.unit           = "%"
-            self.metric_id      = "CPU_testHost"
+            self.metric_id      = "CPU_Host"
             self.collected_data = []
             self.timestamp      = []
         elif self.metric == "Battery":
             self.type           = "Battery"
             self.unit           = "%"
-            self.metric_id      = "Battery_testHost"
+            self.metric_id      = "Battery_Host"
             self.collected_data = []
             self.timestamp      = []
         else:
             self.type1           = "CPU"
             self.unit1           = "%"
-            self.metric_id1      = "CPU_testHost"
+            self.metric_id1      = "CPU_Host"
             self.type2           = "Battery"
             self.unit2           = "%"
-            self.metric_id2      = "Battery_testHost"
+            self.metric_id2      = "Battery_Host"
             self.collected_data1 = []
             self.collected_data2 = []
             self.timestamp       = []
@@ -99,13 +100,13 @@ class SensorTools:
             self.collected_data2 = []
         elif self.metric == "CPU":
             data = self.json_data_for_one_metric()
-            r = requests.post(url = self.API_CPU_MEASUREMENTS_ENDPOINT, json = sdata)#, params = register_header)
+            r = requests.post(url = self.API_CPU_MEASUREMENTS_ENDPOINT, json = data)#, params = register_header)
             print(data)
             print(r.status_code, r.reason)
             self.collected_data = []
         else:
             data = self.json_data_for_one_metric()
-            r = requests.post(url = self.API_BATTERY_MEASUREMENTS_ENDPOINT, json = sdata)#, params = register_header)
+            r = requests.post(url = self.API_BATTERY_MEASUREMENTS_ENDPOINT, json = data)#, params = register_header)
             print(data)
             print(r.status_code, r.reason)
             self.collected_data = []
