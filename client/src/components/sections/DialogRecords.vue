@@ -22,11 +22,30 @@
       </v-toolbar-items>
     </v-toolbar>
     <v-card>
+      <v-layout row wrap>
+        <v-flex xs12 sm4 md4>
+          <v-card flat>
+            <v-card-text>
+              <v-text-field
+                type='number'
+                v-model="options.n"
+                label="ile"
+                hide-details
+              />
+              <button-text
+                text = 'wszystkie'
+                :handler = '() => options.n = 0'
+              />
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+
       <get-list
         ref='list'
         :title='"Recordy dla: {{ metric_name }}"'
         :tryGet="reloadRecords"
-        :getOptions="{ id: metric_id }"
+        :getOptions="all_options"
         v-slot="props"
       >
         <v-container>
@@ -53,6 +72,7 @@
 import Vuex from 'vuex'
 import GetList from '@/components/sections/GetList'
 import ButtonBar from '@/components/elements/ButtonBar'
+import ButtonText from '@/components/elements/ButtonText'
 
 /**
  * Dialog recordów metryki.
@@ -65,7 +85,8 @@ export default {
   name: 'dialog-records',
   components: {
     'get-list': GetList,
-    'button-bar': ButtonBar
+    'button-bar': ButtonBar,
+    'button-text': ButtonText
   },
   props: {
     /** Czy dialog ma być aktywny.
@@ -90,7 +111,10 @@ export default {
   },
   data () {
     return {
-      mymetric: {}
+      mymetric: {},
+      options: {
+        n: 0
+      }
     }
   },
   computed: {
@@ -104,6 +128,10 @@ export default {
 
     metric_unit () {
       return this.mymetric.unit || ''
+    },
+
+    all_options () {
+      return { ...this.options, id: this.metric_id }
     },
 
     isActive: {

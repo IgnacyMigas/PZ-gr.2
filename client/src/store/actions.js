@@ -91,8 +91,15 @@ const actions = {
   },
 
   /** Pend list of records. */
-  listRecords: async function ({ state }, { id }) {
-    const res = await state.axios.get(`/metrics/${id}/measurements`)
+  listRecords: async function ({ state }, { id, n }) {
+    const params = {}
+
+    if (n && n > 0) {
+      params.n = n
+    }
+
+    const res = await state.axios.get(`/metrics/${id}/measurements`,
+      { params })
     return res
   }
 }
