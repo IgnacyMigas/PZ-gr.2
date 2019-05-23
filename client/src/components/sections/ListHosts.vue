@@ -38,12 +38,8 @@
 import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
 
-/**
+/**@group Sekcje
  * Sekcja pobierająca dane hostów.
- *
- * @param {String} searched - łańcuch do wyszukania w nazwach hostów
- * @module components/sections/ListHosts
- * @group Sekcje
  */
 export default {
   name: 'list-hosts',
@@ -51,7 +47,7 @@ export default {
     'get-table': GetTable
   },
   props: {
-    /** Funkcja pobierająca dane do wylistowania. */
+    /** Fragment nazwy do wyszukania. */
     searched: {
       type: String,
       required: false

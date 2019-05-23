@@ -38,11 +38,8 @@
 import Vuex from 'vuex'
 import Page from '@/components/templates/Page'
 
-/**
+/**@group Sekcje
  * Sekcja logowania.
- *
- * @module components/views/Login
- * @group Sekcje
  */
 export default {
   name: 'login',
@@ -61,7 +58,7 @@ export default {
   },
   methods: {
     ...Vuex.mapActions(['login']),
-    ...Vuex.mapMutations(['finPending', 'loginSuccess', 'loginWrongCredentials', 'loginError']),
+    ...Vuex.mapMutations(['loginSuccess', 'loginWrongCredentials', 'loginError']),
     trylogin: async function () {
       this.log = ''
       this.error = ''

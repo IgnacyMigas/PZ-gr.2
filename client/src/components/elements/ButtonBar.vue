@@ -7,16 +7,13 @@
 </template>
 
 <script>
-/**
+/**@group Elementy
  * Przycisk dla pasków i list.
- *
- * @module components/elements/ButtonBar
- * @group Elementy
  */
 export default {
   name: 'button-bar',
   props: {
-    /** Ikona do wyświetlenia. */
+    /** Nazwa ikony do wyświetlenia. */
     icon: {
       type: String,
       required: true

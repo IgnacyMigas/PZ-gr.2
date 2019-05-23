@@ -81,16 +81,15 @@ import GetList from '@/components/sections/GetList'
 import ButtonBar from '@/components/elements/ButtonBar'
 import ButtonText from '@/components/elements/ButtonText'
 
-/**
+/**@group Okienka
  * Dialog recordów metryki.
  *
- * Zawiera listę rekordów oraz przyciski pozwalające modyfikować opcje
- * listy ('ile' rekordów wyświetlać, wyświetlać 'wszystkie' itd.).
- *
- * @param {Boolean} active - czy dialog ma być aktywny (zalecane v-model)
- * @param {Object} metric - obiekt metryki
- * @module components/dialogs/DialogRecords
- * @group Okienka
+ * Zawiera listę rekordów oraz przyciski pozwalające modyfikować jej opcje:
+ * <ul>
+ *   <li> ile --- rekordów do wyświetlenia
+ *        (niedodatnie wartości znaczą 'wszystkie') </li>
+ *   <li> wszystkie --- resetuje liczbę rekordów do wyświetlenia </li>
+ * </ul>
  */
 export default {
   name: 'dialog-records',
@@ -111,6 +110,7 @@ export default {
 
     /** Metryka, dla której wyświetlane są rekordy. */
     metric: {
+      // { 'metric-id': String, name: String, unit: String }
       type: Object,
       required: true
     }

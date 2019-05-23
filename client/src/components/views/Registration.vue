@@ -7,13 +7,11 @@
 <script>
 import Page from '@/components/templates/Page'
 
-/**
+/**@group Strony
+ * @vuese
  * Strona formularza rejestracji.
  *
  * Używana bezpośrednio przez router.
- *
- * @module components/views/Registration
- * @group Strony
  */
 export default {
   name: 'registration',

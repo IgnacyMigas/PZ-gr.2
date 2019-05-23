@@ -6,16 +6,13 @@
 </template>
 
 <script>
-/**
+/**@group Elementy
  * Przycisk dla kart i okienek.
- *
- * @module components/elements/ButtonText
- * @group Elementy
  */
 export default {
   name: 'button-text',
   props: {
-    /** Ikona do wyświetlenia. */
+    /** Nazwa ikony do wyświetlenia. */
     icon: {
       type: String,
       required: false

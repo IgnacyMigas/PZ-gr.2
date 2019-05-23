@@ -6,16 +6,13 @@
 </template>
 
 <script>
-/**
+/**@group Elementy
  * Przycisk paska nawigacji.
- *
- * @module components/elements/ButtonNav
- * @group Elementy
  */
 export default {
   name: 'button-nav',
   props: {
-    /** Ikona do wyświetlenia. */
+    /** Nazwa ikony do wyświetlenia. */
     icon: {
       type: String,
       required: true

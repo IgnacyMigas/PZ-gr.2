@@ -34,11 +34,8 @@
 </template>
 
 <script>
-/**
+/**@group Elementy
  * Pasek wyszukiwania.
- *
- * @module components/elements/SearchBar
- * @group Elementy
  */
 export default {
   name: 'search-bar',
@@ -69,16 +66,16 @@ export default {
       default: () => {}
     },
 
-    /** Domyślna kategoria szukanego elementu.
-     *
-     *  Obiekt o postaci: { text: ..., value: ... }
-     */
+    /** Domyślna kategoria szukanego elementu. */
     category: {
+      // { text: String, value: String }
+      type: Object,
       required: false
     },
 
     /** Dostępne kategorie wyszukiwania. */
     categories: {
+      // [{ text: String, value: String }, ...]
       type: Array,
       required: true
     }

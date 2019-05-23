@@ -16,6 +16,7 @@
       >
         <template v-slot:items="props">
           <tr @click="props.expanded = !props.expanded">
+            <!-- Wiersz pojedynzcego wpisu -->
             <slot :item="props.item" :index="props.index">
             </slot>
             <td v-if="quick_access && has_actions">
@@ -29,6 +30,7 @@
         </template>
         <template v-slot:expand="props">
           <v-card>
+            <!-- Rozwinięta forma wiersza wpisu -->
             <slot name="text" :item="props.item" :index="props.index">
             </slot>
             <v-card-actions
@@ -48,6 +50,7 @@
       </v-data-table>
     </template>
     <template v-slot:dialogs>
+      <!-- Okienka -->
       <slot name="dialogs"></slot>
     </template>
   </get-list>
@@ -58,15 +61,8 @@ import GetList from '@/components/sections/GetList'
 import ButtonBar from '@/components/elements/ButtonBar'
 import ButtonText from '@/components/elements/ButtonText'
 
-/**
+/**@group Sekcje
  * Samopobierająca tabela danych.
- *
- * @param {String} title - (required) tytuł
- * @param {Array} headers - (required) nagłówki tabeli
- * @param {Function} tryGet - (required) Funkcja pobierająca dane
- * @param {Object} getOptions - Parametry dla funkcji pobierającej
- * @module components/sections/GetTable
- * @group Sekcje
  */
 export default {
   name: 'get-table',
@@ -82,9 +78,9 @@ export default {
       required: true
     },
 
-    /** Actions shown as the last column?
+    /** Czy wyświetlać Akcje jako ostatnią kolumnę?
      *
-     * If false, they're shown in the expandable tab.
+     *  Jeśli nie, będą wyświetlone w rozwinięciu.
      */
     quick_access: {
       type: Boolean,
@@ -94,6 +90,7 @@ export default {
 
     /** Funkcja pobierająca dane do wylistowania. */
     tryGet: {
+      // (options) => { log, error, data }
       type: Function,
       required: true
     },
@@ -102,11 +99,13 @@ export default {
     getOptions: {
       type: Object,
       required: false,
+      // brak opcji
       default: undefined
     },
 
     /** Nagłówki tabeli. */
     headers: {
+      // [{ text: String, value: String }, ...]
       type: Array,
       required: true
     },

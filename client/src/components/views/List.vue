@@ -62,13 +62,11 @@ import ListHosts from '@/components/sections/ListHosts'
 import SearchBar from '@/components/elements/SearchBar'
 import GetList from '@/components/sections/GetList'
 
-/**
+/**@group Strony
+ * @vuese
  * Strona listy zasobów.
  *
  * Używana bezpośrednio przez router.
- *
- * @module components/views/List
- * @group Strony
  */
 export default {
   name: 'list',
@@ -108,7 +106,7 @@ export default {
           top: 0
         }
       },
-      //TODO: unmock
+      // ust an example, unused
       moc_types: [
         {
           name: 'temperatura',

@@ -15,13 +15,11 @@
 import Page from '@/components/templates/Page'
 import Vuex from 'vuex'
 
-/**
+/**@group Strony
+ * @vuese
  * Strona logowania.
  *
  * Używana bezpośrednio przez router.
- *
- * @module components/views/Login
- * @group Strony
  */
 export default {
   name: 'login',

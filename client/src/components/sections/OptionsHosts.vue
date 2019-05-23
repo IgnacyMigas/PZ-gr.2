@@ -34,20 +34,28 @@
 </template>
 
 <script>
-/**
+/**@group Sekcje
  * Sekcja opcji wyszukiwania hostów.
- *
- * @param {Object} options - obiekt opcji do przekazania do listy hostów
- * @module components/sections/OptionsHosts
- * @group Sekcje
  */
 export default {
   name: 'options-hosts',
   props: {
     /** Obiekt opcji do przekazania do listy hostów. */
     options: {
+      /** {
+       *    quick_access: Boolean,
+       *    metric_types: [{ name: String }, ...],
+       *    top: Number
+       *  }
+       */
       type: Object,
       required: true,
+      /** {
+       *    quick_access: true,
+       *    metric_types: [],
+       *    top: 0
+       *  }
+       */
       default () {
         return {
           quick_access: true,

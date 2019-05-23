@@ -45,17 +45,13 @@
 import ButtonNav from '@/components/elements/ButtonNav'
 import Vuex from 'vuex'
 
-/**
+/**@group Sekcje
  * Pasek nawigacji aplikacji. Łączy kilka funkcjonalności:
  * <lu>
  *   <li> nagłówek całego systemu</li>
  *   <li> menu główne programu, uwzględniające
  *        stan autentyfikacji i autoryzacji </li>
  * </lu>
- *
- * @param {string} title - (required)
- * @module components/sections/Navigation
- * @group Sekcje
  */
 export default {
   name: 'navigation',

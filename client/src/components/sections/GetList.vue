@@ -16,14 +16,8 @@
 <script>
 import Vuex from 'vuex'
 
-/**
+/**@group Sekcje
  * Szablon strony pobierającej dane.
- *
- * @param {String} title - tytuł
- * @param {Function} tryGet - (required) Funkcja pobierająca dane
- * @param {Object} getOptions - Parametry dla funkcji pobierającej
- * @module components/sections/GetList
- * @group Sekcje
  */
 export default {
   name: 'get-list',
@@ -43,6 +37,7 @@ export default {
 
     /** Funkcja pobierająca dane do wylistowania. */
     tryGet: {
+      // (options) => { log, error, data }
       type: Function,
       required: true
     },
@@ -54,6 +49,7 @@ export default {
     getOptions: {
       type: Object,
       required: false,
+      // brak opcji
       default: undefined
     }
   },

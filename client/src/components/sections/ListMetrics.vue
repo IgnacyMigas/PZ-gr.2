@@ -69,12 +69,8 @@ import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
 import DialogRecords from '@/components/dialogs/DialogRecords'
 
-/**
+/**@group Sekcje
  * Sekcja pobierająca dane metryk.
- *
- * @param {String} searched - łańcuch do wyszukania w nazwach metryk
- * @module components/sections/ListMetrics
- * @group Sekcje
  */
 export default {
   name: 'list-metrics',
