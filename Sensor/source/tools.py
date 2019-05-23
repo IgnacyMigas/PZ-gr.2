@@ -146,7 +146,7 @@ class SensorTools:
         else:
             self.collected_data1.append(psutil.cpu_percent(interval=1.0))
             self.collected_data2.append(psutil.sensors_battery().percent)
-        self.timestamp.append(datetime.datetime.fromtimestamp(time.time()).strftime('%Y/%m/%d %H:%M:%S'))
+        self.timestamp.append(datetime.datetime.fromtimestamp(time.time()).strftime('%d/%m/%Y %H:%M:%S'))
         #print(self.collected_data)
         #print(self.timestamp)
         #print("CPU percent: {0}% \nBattery: {1}%".format(psutil.cpu_percent(interval=1.0), psutil.sensors_battery().percent))
