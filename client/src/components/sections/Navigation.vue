@@ -53,11 +53,9 @@ import Vuex from 'vuex'
  *        stan autentyfikacji i autoryzacji </li>
  * </lu>
  *
- * @example
- * <navbar title="Hello"/>
- *
  * @param {string} title - (required)
  * @module components/sections/Navigation
+ * @group Sekcje
  */
 export default {
   name: 'navigation',

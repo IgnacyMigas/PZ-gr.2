@@ -39,6 +39,7 @@
  *
  * @param {Object} options - obiekt opcji do przekazania do listy hostów
  * @module components/sections/OptionsHosts
+ * @group Sekcje
  */
 export default {
   name: 'options-hosts',

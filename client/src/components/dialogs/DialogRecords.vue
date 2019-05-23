@@ -90,6 +90,7 @@ import ButtonText from '@/components/elements/ButtonText'
  * @param {Boolean} active - czy dialog ma być aktywny (zalecane v-model)
  * @param {Object} metric - obiekt metryki
  * @module components/dialogs/DialogRecords
+ * @group Okienka
  */
 export default {
   name: 'dialog-records',

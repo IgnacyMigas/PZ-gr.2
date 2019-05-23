@@ -39,8 +39,10 @@ import Vuex from 'vuex'
 import Page from '@/components/templates/Page'
 
 /**
- * Strona logowania. Używana bezpośrednio przez router.
+ * Sekcja logowania.
+ *
  * @module components/views/Login
+ * @group Sekcje
  */
 export default {
   name: 'login',

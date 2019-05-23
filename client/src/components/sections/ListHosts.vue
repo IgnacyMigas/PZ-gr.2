@@ -43,6 +43,7 @@ import GetTable from '@/components/sections/GetTable'
  *
  * @param {String} searched - łańcuch do wyszukania w nazwach hostów
  * @module components/sections/ListHosts
+ * @group Sekcje
  */
 export default {
   name: 'list-hosts',

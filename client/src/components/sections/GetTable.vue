@@ -61,23 +61,12 @@ import ButtonText from '@/components/elements/ButtonText'
 /**
  * Samopobierająca tabela danych.
  *
- * @example
- *  <get-table
- *    title='Hellos'
- *    :headers="[{ text: 'greeting' }]"
- *    :tryGet="tryListHellos">
- *    <template v-slot:default="item">
- *      <td>
- *        Hello, {{ item.name }}
- *      </td>
- *    </template>
- * </get-table>
- *
  * @param {String} title - (required) tytuł
  * @param {Array} headers - (required) nagłówki tabeli
  * @param {Function} tryGet - (required) Funkcja pobierająca dane
  * @param {Object} getOptions - Parametry dla funkcji pobierającej
  * @module components/sections/GetTable
+ * @group Sekcje
  */
 export default {
   name: 'get-table',

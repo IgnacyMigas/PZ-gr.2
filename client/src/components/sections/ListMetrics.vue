@@ -74,6 +74,7 @@ import DialogRecords from '@/components/dialogs/DialogRecords'
  *
  * @param {String} searched - łańcuch do wyszukania w nazwach metryk
  * @module components/sections/ListMetrics
+ * @group Sekcje
  */
 export default {
   name: 'list-metrics',
@@ -82,7 +83,7 @@ export default {
     'dialog-records': DialogRecords
   },
   props: {
-    /** Funkcja pobierająca dane do wylistowania. */
+    /** Fragment nazwy do znalezienia. */
     searched: {
       type: String,
       required: false

@@ -68,6 +68,7 @@ import GetList from '@/components/sections/GetList'
  * Używana bezpośrednio przez router.
  *
  * @module components/views/List
+ * @group Strony
  */
 export default {
   name: 'list',

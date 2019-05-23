@@ -7,11 +7,10 @@
 
 <script>
 /**
- * Przycisk nawigacji.
- *
- * Używany na pasku nawigacji.
+ * Przycisk paska nawigacji.
  *
  * @module components/elements/ButtonNav
+ * @group Elementy
  */
 export default {
   name: 'button-nav',
@@ -38,6 +37,7 @@ export default {
     handler: {
       type: Function,
       required: false,
+      // brak obsługi
       default: () => {}
     }
   }

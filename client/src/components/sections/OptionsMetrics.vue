@@ -43,6 +43,7 @@
  *
  * @param {Object} options - obiekt opcji do przekazania do listy metryk
  * @module components/sections/OptionsMetrics
+ * @group Sekcje
  */
 export default {
   name: 'options-metrics',

@@ -7,9 +7,10 @@
 
 <script>
 /**
- * Przycisk dla kart.
+ * Przycisk dla kart i okienek.
  *
  * @module components/elements/ButtonText
+ * @group Elementy
  */
 export default {
   name: 'button-text',
@@ -36,6 +37,7 @@ export default {
     handler: {
       type: Function,
       required: false,
+      // brak obsługi
       default: () => {}
     }
   }

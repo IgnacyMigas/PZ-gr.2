@@ -19,22 +19,11 @@ import Vuex from 'vuex'
 /**
  * Szablon strony pobierającej dane.
  *
- * @example
- *  <get-list
- *    title='Hellos'
- *    :tryGet="tryListHellos">
- *   <div
- *     slot-scope="{ names }"
- *     v-for="name in names"
- *     :key="name">
- *     Hello, {{ name }}
- *   </div>
- * </get-list>
- *
  * @param {String} title - tytuł
  * @param {Function} tryGet - (required) Funkcja pobierająca dane
  * @param {Object} getOptions - Parametry dla funkcji pobierającej
  * @module components/sections/GetList
+ * @group Sekcje
  */
 export default {
   name: 'get-list',

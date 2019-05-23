@@ -13,6 +13,7 @@ import Page from '@/components/templates/Page'
  * Używana bezpośrednio przez router.
  *
  * @module components/views/Registration
+ * @group Strony
  */
 export default {
   name: 'registration',

@@ -13,6 +13,7 @@ import Page from '@/components/templates/Page'
  * Używana bezpośrednio przez router.
  *
  * @module components/views/Home
+ * @group Strony
  */
 export default {
   name: 'home',

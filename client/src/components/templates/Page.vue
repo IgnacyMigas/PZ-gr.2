@@ -15,15 +15,11 @@ import Navigation from '@/components/sections/Navigation'
 /**
  * Podstawowy szablon strony.
  *
- * Dodaje [pasek nawigacji]{@link components/Navigation}, nagłówek itd.
- *
- * @example
- * <page title="Hello">
- *   Hello, world!
- * </page>
+ * Dodaje pasek nawigacji, nagłówek itd.
  *
  * @param {string} title - (required)
  * @module components/templates/Page
+ * @group Szablony
  */
 export default {
   name: 'page',

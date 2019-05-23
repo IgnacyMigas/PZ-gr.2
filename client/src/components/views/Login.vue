@@ -21,6 +21,7 @@ import Vuex from 'vuex'
  * Używana bezpośrednio przez router.
  *
  * @module components/views/Login
+ * @group Strony
  */
 export default {
   name: 'login',

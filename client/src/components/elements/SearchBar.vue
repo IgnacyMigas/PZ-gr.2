@@ -38,6 +38,7 @@
  * Pasek wyszukiwania.
  *
  * @module components/elements/SearchBar
+ * @group Elementy
  */
 export default {
   name: 'search-bar',
@@ -55,13 +56,16 @@ export default {
      */
     onChangeShowOptions: {
       type: Function,
-      required: false
+      required: false,
+      // brak obsługi
+      default: () => {}
     },
 
     /** Funkcja wywoływana przy zmianie kategorii. */
     onChangeCategory: {
       type: Function,
       required: false,
+      // brak obsługi
       default: () => {}
     },
 
