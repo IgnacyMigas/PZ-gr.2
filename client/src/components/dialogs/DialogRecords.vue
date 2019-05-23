@@ -11,10 +11,13 @@
       <v-spacer></v-spacer>
 
       <v-toolbar-items>
+        <!-- Przycisk dodawania do wykresu (niezaimplementowany) -->
         <button-bar
          icon = "show_chart"
          :handler = "() => addToStaticChart()"
         />
+
+        <!-- Przycisk wyjścia z okna. -->
         <button-bar
          icon = "clear"
          :handler = "() => isActive = false"
@@ -26,12 +29,15 @@
         <v-flex xs12 sm4 md4>
           <v-card flat>
             <v-card-text>
+              <!-- Ile rekordów należy wyświetlić. -->
               <v-text-field
                 type='number'
                 v-model="options.n"
                 label="ile"
                 hide-details
               />
+
+              <!-- Przełącznik liczby rekordów na wszystkie. -->
               <button-text
                 text = 'wszystkie'
                 :handler = '() => options.n = 0'
@@ -41,6 +47,7 @@
         </v-flex>
       </v-layout>
 
+      <!-- Dynamiczna lista rekordów. -->
       <get-list
         ref='list'
         :title='"Recordy dla: {{ metric_name }}"'
@@ -77,9 +84,12 @@ import ButtonText from '@/components/elements/ButtonText'
 /**
  * Dialog recordów metryki.
  *
+ * Zawiera listę rekordów oraz przyciski pozwalające modyfikować opcje
+ * listy ('ile' rekordów wyświetlać, wyświetlać 'wszystkie' itd.).
+ *
  * @param {Boolean} active - czy dialog ma być aktywny (zalecane v-model)
  * @param {Object} metric - obiekt metryki
- * @module components/sections/DialogRecords
+ * @module components/dialogs/DialogRecords
  */
 export default {
   name: 'dialog-records',
@@ -111,38 +121,56 @@ export default {
   },
   data () {
     return {
-      mymetric: {},
       options: {
         n: 0
+              
+        //TODO: add 'to' and 'from' when
+        // the format is known / feature is fixed
       }
     }
   },
   computed: {
+    /** Widok metryki resetowany po zamknięciu okna. */
+    mymetric () {
+      if (!this.active) {  // closing --- reset to no metric
+        return {}
+      } else {
+        return this.metric
+      }
+    },
+
+    /** Id metryki. */
     metric_id () {
       return this.mymetric['metric-id']
     },
 
+    /** Nazwa metryki. */
     metric_name () {
       return this.mymetric.name || ''
     },
 
+    /** Jednostka metryki. */
     metric_unit () {
       return this.mymetric.unit || ''
     },
 
+    /** Wszystkie opcje zapytania. */
     all_options () {
       return { ...this.options, id: this.metric_id }
     },
 
+    /** Czy okno jest aktywne. Nieaktywne okno resetuje swoje dane. */
     isActive: {
       get () {
         return this.active
       },
       set (value) {
-        this.set_mymetric(value)
-
         // nextTick pozwala get-table zdążyć zresetować widok
-        this.$nextTick(() => this.$emit('activityChanged', value))
+        this.$nextTick(() => {
+          // Wyzwalane kiedy okno jest włączane lub wyłączane.
+          // @arg Nowy stan aktywności okna (patrz: active).
+          this.$emit('activityChanged', value)
+        })
       }
     }
   },
@@ -163,13 +191,6 @@ export default {
     },
 
     /** Resetuje metrykę przy zamknieciu okna lub ustawia po otwarciu. */
-    set_mymetric (value) {
-      if (!value) {  // closing --- reset to no metric
-        this.mymetric = {}
-      } else {
-        this.mymetric = this.metric
-      }
-    },
     
     /** Dodaje pomiary (nie metrykę) do statycznego wykresu. */
     addToStaticChart () {
@@ -179,13 +200,16 @@ export default {
       //TODO
     },
 
+    /** @vuese
+     *  Zwraca listę rekordów listy.
+     */
     get_records () {
       return this.$refs.list.get_items
     }
   },
   watch: {
     active (value) {
-      this.set_mymetric(value)
+      this.isActive = value
     }
   }
 }

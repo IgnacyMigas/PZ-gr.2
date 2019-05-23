@@ -67,7 +67,7 @@
 <script>
 import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
-import DialogRecords from '@/components/sections/DialogRecords'
+import DialogRecords from '@/components/dialogs/DialogRecords'
 
 /**
  * Sekcja pobierająca dane metryk.
