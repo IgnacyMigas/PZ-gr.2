@@ -36,6 +36,7 @@ const actions = {
   },
 
   /** Pend list of hosts. */
+  // eslint-disable-next-line
   listHosts: async function ({ state }, options) {
     const params = {
       recursive: true
@@ -51,7 +52,7 @@ const actions = {
       params.top = options.top
     }
 
-    const res = await state.axios.get('/hosts', params)
+    const res = await state.axios.get('/hosts', { params })
     res.data.forEach(el => {
       el.name = el['host-id']
     })

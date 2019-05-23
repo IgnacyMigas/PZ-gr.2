@@ -149,8 +149,6 @@ export default {
 
     /** Pobiera metadane metryk. */
     reloadTypes: async function () {
-      // eslint-disable-next-line
-      console.log("reload")
       return await this.listTypes()
     },
 
