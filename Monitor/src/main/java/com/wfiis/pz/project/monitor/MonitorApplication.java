@@ -27,7 +27,7 @@ public class MonitorApplication {
 		JSONObject json = new JSONObject();
 		try {
 			json.put("monitor-id", env.getProperty("MONITORID"));
-			json.put("api-endpoint", env.getProperty("API_ENDPOINT")+env.getProperty("MONITORID")+"/");
+			json.put("api-endpoint", env.getProperty("API_ENDPOINT")+env.getProperty("API_VERSION"));
 			
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -38,7 +38,8 @@ public class MonitorApplication {
 		try {
 		    HttpPost request = new HttpPost(env.getProperty("API_GATEWAY_URL"));
 		    StringEntity params = new StringEntity(json.toString());
-		    request.addHeader("content-type", "application/json");
+			request.addHeader("content-type", "application/json");
+			request.addHeader("access-token", "1234");
 		    request.setEntity(params);
 		    httpClient.execute(request);
 		// handle response here...

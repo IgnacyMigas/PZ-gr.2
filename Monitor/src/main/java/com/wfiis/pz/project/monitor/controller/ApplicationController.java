@@ -446,7 +446,7 @@ public class ApplicationController {
 		return;
 	}
 	
-	
+	/*
 	@GetMapping(value = "/metrics/{id}/measurements")
 	public ResponseEntity<Object> getMeasurementsForMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 																	@PathVariable String id) {
@@ -469,7 +469,7 @@ public class ApplicationController {
 		
 		return views;
 	}
-	
+	*/
 	
 	
 	
@@ -510,11 +510,11 @@ public class ApplicationController {
 	
 	
 	
-	@GetMapping(value = "/metrics/{id}/measurements", params = { "from", "to"})
+	@GetMapping(value = "/metrics/{id}/measurements")
 	public ResponseEntity<Object> getMeasurementsFromRangeForMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 																			@PathVariable String id,
-																			@RequestParam(value = "from", required = false) String from, 
-																			@RequestParam(value = "to", required = false) String to
+																			@RequestParam(value = "from", required = false, defaultValue = "") String from, 
+																			@RequestParam(value = "to", required = false, defaultValue = "") String to
 																		) {
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -530,7 +530,7 @@ public class ApplicationController {
 																	) {
 		List<Measurement> measurements;
 		
-		if ((from != null && !from.isEmpty()) || (to != null && !to.isEmpty()) ){
+		if (!from.isEmpty() || !to.isEmpty() ){
 			measurements= measurementService.findByDateMeasurementByMetricId(id, from, to);
 		}else{
 			measurements= measurementService.findTopMeasurementByMetricId(id, 25);
