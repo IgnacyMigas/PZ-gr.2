@@ -48,9 +48,9 @@ def check_metrics_argument(metrics):
     return metrics
         
 def sensor_main(args):
-    tool = SensorTools(args.metrics)
-    tool.register_sensor()
-    # TODO: check if registration OK. If not try to register again !!!
+    tool = SensorTools(args.metrics, args.name)
+    if args.reg == "yes":
+        tool.register_sensor()
     
     timer = ti.Timer(interval=args.interval, function=tool.colect_data)
     

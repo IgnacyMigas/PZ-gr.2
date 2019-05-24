@@ -12,12 +12,12 @@ class SensorTools:
     token = "xxxxxxxx"
     register_header = { "access-token":token }
 
-    def __init__(self, metric):
+    def __init__(self, metric, sensor_name):
         self.metric = metric
-        self.set_variables()
+        self.set_variables(sensor_name)
     
-    def set_variables(self):
-        self.hostID = "pokoj 272A"
+    def set_variables(self, sensor_name):
+        self.hostID = sensor_name
         self.os     = platform.system()
         if self.metric == "CPU":
             self.type           = "CPU"
@@ -47,11 +47,21 @@ class SensorTools:
             data = self.register_json_data_for_two_metrics()
         else:
             data = self.register_json_data_for_one_metric()
-    
-        print(data)
-        r = requests.post(url = self.API_REGISTER_ENDPOINT, json = data)#, params = register_header) 
-        #print(r)
-        print(r.status_code, r.reason)
+        
+        while True:
+            print(data)
+            r = requests.post(url = self.API_REGISTER_ENDPOINT, json = data)#, params = register_header) 
+            #print(r)
+            print(r.status_code, r.reason)
+            if r.status_code == 201:
+                print("Sensor registration complete")
+                break
+            elif r.status_code == 409:
+                print('Looks like, sensor with name "{0}" already exist. Skipping registration...'.format(self.hostID))
+                break
+            else:
+                print("Something went wrong during registration. HTTP code: {0}. After a few seconds, we will try again...".format(r.status_code))
+                time.sleep(5)
     
     def register_json_data_for_one_metric(self):
         data            = {}
