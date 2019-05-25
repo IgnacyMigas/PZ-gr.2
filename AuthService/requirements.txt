@@ -1,0 +1,2 @@
+flask==1.0.2
+flask_jwt_extended==3.18.2
