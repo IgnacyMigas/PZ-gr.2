@@ -86,3 +86,24 @@ Body:
 
 Success: 200 Failure: 400
 ```
+
+### v1/protected
+#### GET
+```
+For testing purpose, returns current user name only when valid access-token
+Token refresh:
+
+Body:
+
+{
+   "access-token":"<access-token>"
+}
+
+Response
+
+Success: 200
+
+{ 
+   "logged_in_as": "<username>"
+}
+```
