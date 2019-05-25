@@ -9,17 +9,16 @@
               <p class='error'>{{error}}</p>
               <v-text-field
                 prepend-icon="person"
-                type='email'
-                label='E-mail'
-                placeholder='e-mail'
-                v-model='creds.email'
+                label='Nazwa'
+                placeholder='Nazwa'
+                v-model='user.username'
                 required />
               <v-text-field
                 prepend-icon="lock"
                 type='password'
                 label='Hasło'
                 placeholder='hasło'
-                v-model='creds.password'
+                v-model='user.password'
                 required />
             </v-card-text>
             <v-card-actions>
@@ -36,20 +35,17 @@
 
 <script>
 import Vuex from 'vuex'
-import Page from '@/components/templates/Page'
 
 /**@group Sekcje
+ * @vuese
  * Sekcja logowania.
  */
 export default {
   name: 'login',
-  components: {
-    'page': Page
-  },
   data () {
     return {
-      creds: {
-        email: '',
+      user: {
+        username: '',
         password: ''
       },
       error: '',
@@ -57,39 +53,14 @@ export default {
     }
   },
   methods: {
-    ...Vuex.mapActions(['login']),
-    ...Vuex.mapMutations(['loginSuccess', 'loginWrongCredentials', 'loginError']),
+    ...Vuex.mapActions(['sendLogin', 'request']),
     trylogin: async function () {
-      this.log = ''
-      this.error = ''
-      try {
-        const response = await this.login(this.creds)
-        this.log = response.data
+      const { log, error, data } =
+        await this.request(() => this.sendLogin(this.user))
 
-        const user = response.data.user
-        user.email = this.creds.email
-        this.loginSuccess({
-          token: response.data.token,
-          email: this.creds.email,
-          user: response.data.user
-        })
-        this.$router.push('/home')
-      } catch (error) {
-        if (error.response) {
-          const response = error.response
-          if (response.status === 401 || response.status === 403) {
-            this.error = response.data.message // 'Niepoprawny login lub hasło'
-            this.loginWrongCredentials()
-          } else {
-            this.error = response.data
-            this.loginError()
-          }
-        } else {
-          this.error = 'Brak połączenia z serwerem'
-        }
-      } finally {
-        this.finPending()
-      }
+      this.items = data || [];
+      this.log = log
+      this.error = error ? error.split('\n') : ''
     }
   }
 }

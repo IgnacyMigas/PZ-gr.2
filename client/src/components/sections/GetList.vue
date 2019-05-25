@@ -37,7 +37,7 @@ export default {
 
     /** Funkcja pobierająca dane do wylistowania. */
     tryGet: {
-      // (options) => { log, error, data }
+      // (options) => response
       type: Function,
       required: true
     },

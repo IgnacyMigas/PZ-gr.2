@@ -52,7 +52,7 @@ const actions = {
       params.top = options.top
     }
 
-    const res = await state.axios.get('/hosts', { params })
+    const res = await state.api.get('/hosts', { params })
     res.data.forEach(el => {
       el.name = el['host-id']
     })
@@ -72,7 +72,7 @@ const actions = {
       params.type = options.types
     }
 
-    const res = await state.axios.get('/metrics', { params })
+    const res = await state.api.get('/metrics', { params })
     res.data = res.data.metrics
     res.data.forEach(el => {
       el.name = el['metric-id']
@@ -85,7 +85,7 @@ const actions = {
     const params = {
       meta: true
     }
-    const res = await state.axios.get('/metrics', { params })
+    const res = await state.api.get('/metrics', { params })
     res.data = res.data.meta.types.map(el => ({ name: el }))
     return res
   },
@@ -98,8 +98,24 @@ const actions = {
       params.n = n
     }
 
-    const res = await state.axios.get(`/metrics/${id}/measurements`,
+    const res = await state.api.get(`/metrics/${id}/measurements`,
       { params })
+    return res
+  },
+
+  /** Pend login request. */
+  sendLogin: async function ({ state, commit }, { username, password }) {
+    const body = {
+      username,
+      password
+    }
+    const res = await state.auth.post('/login', body)
+    //ERROR: Same Origin Policy!
+
+    if (res.access_token) {
+      commit('login', username, password, res.access_token)
+    }
+
     return res
   }
 }
