@@ -91,11 +91,17 @@ const actions = {
   },
 
   /** Pend list of records. */
-  listRecords: async function ({ state }, { id, n }) {
+  listRecords: async function ({ state }, { id, n, from, to }) {
     const params = {}
 
     if (n && n > 0) {
       params.n = n
+    }
+    if (from && from !== '') {
+      params.from = from
+    }
+    if (to && to !== '') {
+      params.to = to
     }
 
     const res = await state.api.get(`/metrics/${id}/measurements`,

@@ -45,6 +45,30 @@
             </v-card-text>
           </v-card>
         </v-flex>
+        <v-flex xs12 sm4 md4>
+          <v-card flat>
+            <v-card-text>
+              <!-- Od której daty. -->
+              <v-text-field
+                v-model="options.from"
+                label="od"
+                hide-details
+              />
+            </v-card-text>
+          </v-card>
+        </v-flex>
+        <v-flex xs12 sm4 md4>
+          <v-card flat>
+            <v-card-text>
+              <!-- Do której daty. -->
+              <v-text-field
+                v-model="options.to"
+                label="do"
+                hide-details
+              />
+            </v-card-text>
+          </v-card>
+        </v-flex>
       </v-layout>
 
       <!-- Dynamiczna lista rekordów. -->
