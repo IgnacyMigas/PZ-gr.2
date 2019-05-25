@@ -1,19 +1,26 @@
-import { shallowMount } from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
+import sinon from 'sinon'
 import ButtonBar from '@/components/elements/ButtonBar'
 
-describe('ButtonBar', () => {
-  let counter = 0
 
-  const btn = shallowMount(ButtonBar, {
-    propsData: {
-      icon: 'exit',
-      handler: () => counter += 1
-    }
+describe('ButtonBar', () => {
+  let spy;
+  let btn;
+
+  beforeEach(() => {
+    spy = sinon.spy()
+    btn = mount(ButtonBar, {
+      propsData: {
+        icon: 'exit',
+        handler: spy
+      }
+    })
   })
 
+
   it('handler function called when clicking', () => {
-    const last_counter_val = counter
-    btn.trigger('click')
-    expect(counter).toBe(last_counter_val + 1)
+    sinon.assert.notCalled(spy)
+    btn.trigger('click.stop')
+    sinon.assert.calledOnce(spy)
   })
 })
