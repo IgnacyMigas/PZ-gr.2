@@ -47,7 +47,7 @@ const router = new Router({
       path: '/charts',
       name: 'Charts',
       component: Charts,
-      beforeEnter: hasToken
+      beforeEnter: hasToken,
     },
     {
       path: '/list',
