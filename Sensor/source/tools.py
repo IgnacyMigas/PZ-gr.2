@@ -157,10 +157,18 @@ class SensorTools:
         if self.metric == "CPU":
             self.collected_data.append(psutil.cpu_percent(interval=1.0))
         elif self.metric == "Battery":
-            self.collected_data.append(psutil.sensors_battery().percent)
+            if psutil.sensors_battery() is None:
+                val = -1
+            else: 
+                val = psutil.sensors_battery().percent
+            self.collected_data.append(val)
         else:
             self.collected_data1.append(psutil.cpu_percent(interval=1.0))
-            self.collected_data2.append(psutil.sensors_battery().percent)
+            if psutil.sensors_battery() is None:
+                val = -1
+            else: 
+                val = psutil.sensors_battery().percent
+            self.collected_data2.append(val)
         self.timestamp.append(datetime.datetime.fromtimestamp(time.time()).strftime('%d/%m/%Y %H:%M:%S'))
         #print(self.collected_data)
         #print(self.timestamp)
