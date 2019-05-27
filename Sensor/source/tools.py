@@ -5,10 +5,6 @@ import time
 import platform
 
 class SensorTools:
-    API_REGISTER_ENDPOINT             = "http://localhost:8080/v1/hosts"
-    API_CPU_MEASUREMENTS_ENDPOINT     = "http://localhost:8080/v1/metrics/CPU_Host/measurements"
-    API_BATTERY_MEASUREMENTS_ENDPOINT = "http://localhost:8080/v1/metrics/Battery_Host/measurements"
-
     token = "xxxxxxxx"
     register_header = { "access-token":token }
 
@@ -17,27 +13,31 @@ class SensorTools:
         self.set_variables(sensor_name)
     
     def set_variables(self, sensor_name):
+        self.API_REGISTER_ENDPOINT             = "http://localhost:8080/v1/hosts"
+        self.API_CPU_MEASUREMENTS_ENDPOINT     = "http://localhost:8080/v1/metrics/" + sensor_name + "_CPU_Host/measurements"
+        self.API_BATTERY_MEASUREMENTS_ENDPOINT = "http://localhost:8080/v1/metrics/" + sensor_name + "_Battery_Host/measurements"
+        
         self.hostID = sensor_name
         self.os     = platform.system()
         if self.metric == "CPU":
             self.type           = "CPU"
             self.unit           = "%"
-            self.metric_id      = "CPU_Host"
+            self.metric_id      = sensor_name + "_CPU_Host"
             self.collected_data = []
             self.timestamp      = []
         elif self.metric == "Battery":
             self.type           = "Battery"
             self.unit           = "%"
-            self.metric_id      = "Battery_Host"
+            self.metric_id      = sensor_name + "_Battery_Host"
             self.collected_data = []
             self.timestamp      = []
         else:
             self.type1           = "CPU"
             self.unit1           = "%"
-            self.metric_id1      = "CPU_Host"
+            self.metric_id1      = sensor_name + "_CPU_Host"
             self.type2           = "Battery"
             self.unit2           = "%"
-            self.metric_id2      = "Battery_Host"
+            self.metric_id2      = sensor_name + "_Battery_Host"
             self.collected_data1 = []
             self.collected_data2 = []
             self.timestamp       = []
