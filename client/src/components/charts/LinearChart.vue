@@ -39,7 +39,8 @@
                     {
                         label: 'Value',
                         backgroundColor: '#f87979',
-                        data: allVal
+                        data: [0.99, 0.99, 0.98, 0.97, 0.98, 0.99, 0.99, 0.97, 0.99, 0.97]
+                        //data: allVal
                     }
 
                 ]
