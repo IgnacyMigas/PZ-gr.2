@@ -46,11 +46,26 @@ class SensorTools:
             data = self.register_json_data_for_two_metrics()
         else:
             data = self.register_json_data_for_one_metric()
-    
-        print(data)
-        r = requests.post(url = self.API_REGISTER_ENDPOINT, json = data)#, params = register_header) 
-        #print(r)
-        print(r.status_code, r.reason)
+        
+        while True:
+            print(data)
+            try:
+                r = requests.post(url = self.API_REGISTER_ENDPOINT, json = data)#, params = register_header) 
+                #print(r)
+                print(r.status_code, r.reason)
+                if r.status_code == 201:
+                    print("Sensor registration complete")
+                    break
+                elif r.status_code == 409:
+                    print('Looks like, sensor with name "{0}" already exist. Skipping registration...'.format(self.hostID))
+                    break
+                else:
+                    print("Something went wrong during registration. HTTP code: {0}. After a few seconds, we will try again...".format(r.status_code))
+                    time.sleep(5)
+            except requests.exceptions.ConnectionError:
+                print("Can not find server. Try to connect again after 5 seconds...")
+                time.sleep(5)
+
     
     def register_json_data_for_one_metric(self):
         data            = {}
