@@ -9,6 +9,7 @@ parser.add_argument('--name',                '-n',  help="sensor name",         
 parser.add_argument('--interval',            '-i',  help="measurements interval. Min: 1.0. Max: 30.0",                     type=float, default=1.0)
 parser.add_argument('--measurements_amount', '-ma', help="number of measurements sended in one package. Min: 1. Max: 100", type=int,   default=10)
 parser.add_argument('--metrics',             '-m',  help="metrics flag. Options: CPU, Battery or Both, Default: Both",     type=str,   default="Both")
+parser.add_argument('--url',                 '-u',  help="url to monitor instance. Default: http://localhost:8080/v1/",    type=str,   default="http://localhost:8080/v1/")
 
 def check_starting_arguments(args):
     args.reg                 = check_reg_argument(args.reg)
@@ -48,7 +49,7 @@ def check_metrics_argument(metrics):
     return metrics
         
 def sensor_main(args):
-    tool = SensorTools(args.metrics, args.name)
+    tool = SensorTools(args.metrics, args.name, args.url)
     if args.reg == "yes":
         tool.register_sensor()
     
