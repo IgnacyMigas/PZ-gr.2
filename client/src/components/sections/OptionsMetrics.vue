@@ -38,24 +38,28 @@
 </template>
 
 <script>
-// import BarButton from '@/components/elements/BarButton'
-
-/**
+/**@group Sekcje
  * Sekcja opcji wyszukiwania metryk.
- *
- * @param {Object} options - obiekt opcji do przekazania do listy metryk
- * @module components/sections/OptionsMetrics
  */
 export default {
   name: 'options-metrics',
-  components: {
-    // 'bar-button': BarButton
-  },
   props: {
     /** Obiekt opcji do przekazania do listy metryk. */
     options: {
+      /** {
+       *    quick_access: Boolean,
+       *    show_type: Boolean,
+       *    types: [{ name: String, unit: String }, ...]
+       *  }
+       */
       type: Object,
       required: true,
+      /** {
+       *    quick_access: true,
+       *    show_type: true,
+       *    types: []
+       *  }
+       */
       default () {
         return {
           quick_access: true,
@@ -67,8 +71,10 @@ export default {
 
     /** Dostępne typy metryk. */
     types: {
+      // [{ name: String, unit: String }, ...]
       type: Array,
       required: false,
+      // []
       default () {
         return []
       }
@@ -77,6 +83,7 @@ export default {
   /** Aktualizuje wyjście do rodzica przy każdym wywołaniu wydarzenia. */
   model: {
     prop: 'options',
+    // Zdarzenie zmiany opcji.
     event: 'change'
   }
 }

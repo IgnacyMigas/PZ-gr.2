@@ -4,6 +4,7 @@
     <v-content app>
       <h1 v-if="title !== ''">{{ title }}</h1>
 
+      <!-- Treść strony. -->
       <slot></slot>
     </v-content>
   </div>
@@ -12,22 +13,15 @@
 <script>
 import Navigation from '@/components/sections/Navigation'
 
-/**
+/**@group Szablony
  * Podstawowy szablon strony.
  *
- * Dodaje [pasek nawigacji]{@link components/Navigation}, nagłówek itd.
- *
- * @example
- * <page title="Hello">
- *   Hello, world!
- * </page>
- *
- * @param {string} title - (required)
- * @module components/templates/Page
+ * Dodaje pasek nawigacji, nagłówek itd.
  */
 export default {
   name: 'page',
   props: {
+    /** Tytuł strony */
     title: {
       type: String,
       required: true

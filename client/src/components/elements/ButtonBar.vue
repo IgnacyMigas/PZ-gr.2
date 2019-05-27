@@ -1,21 +1,19 @@
 <template>
   <v-btn
     flat icon
-    @click="handler">
+    @click.stop="handler">
     <v-icon list>{{ icon }}</v-icon>
   </v-btn>
 </template>
 
 <script>
-/**
+/**@group Elementy
  * Przycisk dla pasków i list.
- *
- * @module components/elements/BarButton
  */
 export default {
-  name: 'bar-button',
+  name: 'button-bar',
   props: {
-    /** Ikona do wyświetlenia. */
+    /** Nazwa ikony do wyświetlenia. */
     icon: {
       type: String,
       required: true

@@ -8,12 +8,16 @@
           <v-card class="elevation-12">
             <v-card-text>
               <search-bar
-                @click:append="toggleMenu"
                 :category="listOfSearchFors[0]"
                 :categories="listOfSearchFors"
                 :onChangeShowOptions="changeShowOptions"
                 :onChangeCategory="changeCategory"
                 :onSearch="doSearch"
+              />
+
+              <get-list
+               ref='typesList'
+               :tryGet="reloadTypes"
               />
 
               <options-metrics
@@ -49,20 +53,20 @@
 </template>
 
 <script>
+import Vuex from 'vuex'
 import Page from '@/components/templates/Page'
 import OptionsMetrics from '@/components/sections/OptionsMetrics'
 import OptionsHosts from '@/components/sections/OptionsHosts'
 import ListMetrics from '@/components/sections/ListMetrics'
 import ListHosts from '@/components/sections/ListHosts'
-// import BarButton from '@/components/elements/BarButton'
 import SearchBar from '@/components/elements/SearchBar'
+import GetList from '@/components/sections/GetList'
 
-/**
+/**@group Strony
+ * @vuese
  * Strona listy zasobów.
  *
  * Używana bezpośrednio przez router.
- *
- * @module components/views/List
  */
 export default {
   name: 'list',
@@ -72,8 +76,8 @@ export default {
     'options-hosts': OptionsHosts,
     'list-metrics': ListMetrics,
     'list-hosts': ListHosts,
-    // 'bar-button': BarButton,
-    'search-bar': SearchBar
+    'search-bar': SearchBar,
+    'get-list': GetList
   },
   data () {
     return {
@@ -102,8 +106,8 @@ export default {
           top: 0
         }
       },
-      //TODO: unmock
-      types: [
+      // ust an example, unused
+      moc_types: [
         {
           name: 'temperatura',
           unit: '°C'
@@ -124,6 +128,11 @@ export default {
     }
   },
   computed: {
+    /** Typy metryk */
+    types () {
+      return this.$refs.typesList.get_items
+    },
+
     /** Sprawdź, czy szukane są metryki. */
     isSearchingForMetrics () {
       return (this.searchFor === 'metrics')
@@ -135,6 +144,13 @@ export default {
     }
   },
   methods: {
+    ...Vuex.mapActions(['listTypes']),
+
+    /** Pobiera metadane metryk. */
+    reloadTypes: async function () {
+      return await this.listTypes()
+    },
+
     /** Jeśli zmieniono kryteria wyszukiwania, aktualizuje listę. */
     doSearch (text) {
       if (text !== this.searched) {
@@ -154,11 +170,6 @@ export default {
       if (category !== this.searchFor) {
         this.searchFor = category
       }
-    },
-
-    /** Pokazuje lub ukrywa menu wyszukiwania */
-    toggleMenu () {
-      //TODO
     }
   }
 }

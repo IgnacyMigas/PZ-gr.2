@@ -1,20 +1,18 @@
 <template>
-  <v-btn round @click="handler">
+  <v-btn round :to="to" @click="handler">
     <v-icon left v-if="icon">{{ icon }}</v-icon>
     {{ text }}
   </v-btn>
 </template>
 
 <script>
-/**
- * Przycisk dla kart.
- *
- * @module components/elements/TextButton
+/**@group Elementy
+ * Przycisk dla kart i okienek.
  */
 export default {
-  name: 'text-button',
+  name: 'button-text',
   props: {
-    /** Ikona do wyświetlenia. */
+    /** Nazwa ikony do wyświetlenia. */
     icon: {
       type: String,
       required: false
@@ -26,10 +24,18 @@ export default {
       required: true
     },
 
+    /** Odnośnik routera do odesłania przy kliknięciu. */
+    to: {
+      type: String,
+      required: false
+    },
+
     /** Funkcja obsługująca kliknięcie */
     handler: {
       type: Function,
-      required: true
+      required: false,
+      // brak obsługi
+      default: () => {}
     }
   }
 }

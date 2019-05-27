@@ -25,14 +25,10 @@ npm run test
 npm run lint
 ```
 
-### Styleguide
+### Documentation
 ```
-npm run styleguide
-```
-
-### Styleguide static
-```
-npm run styleguide:build
+vuese gen
+firefox website/index.html
 ```
 
 ### Customize configuration
@@ -42,4 +38,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 * Vue.js
 * Vue CLI
 * Vuetify
-* Vue styleguide
+* Vuese
