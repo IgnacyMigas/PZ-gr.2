@@ -7,9 +7,14 @@
       <div></div>
       <div id="chartsContainer">
       Dane historyczne
+        <LineChart />
+
+        <div></div>
+        <div></div>
+
       <linear-chart :width="300" :height="300"> </linear-chart>
         Zoom chart
-        <LineChart />
+
         Online
         <!--
         <RealtimeChart />
@@ -21,7 +26,7 @@
 
 <script>
     import Page from '@/components/templates/Page'
-    import LinearChart from '@/components/charts/LinearChart'
+    import LinearChart from '@/components/charts/LinearChart.vue'
     import LineChart from '@/components/charts/LineChart.vue'
 
     /*
