@@ -8,29 +8,16 @@
     </v-card-text>
   
     <slot :items="items"></slot>
+
+    <slot name="dialogs"></slot>
   </div>
 </template>
 
 <script>
-/**
+import Vuex from 'vuex'
+
+/**@group Sekcje
  * Szablon strony pobierającej dane.
- *
- * @example
- *  <get-list
- *    title='Hellos'
- *    :tryGet="tryListHellos">
- *   <div
- *     slot-scope="{ names }"
- *     v-for="name in names"
- *     :key="name">
- *     Hello, {{ name }}
- *   </div>
- * </get-list>
- *
- * @param {String} title - (required) tytuł
- * @param {Function} tryGet - (required) Funkcja pobierająca dane
- * @param {Object} getOptions - Parametry dla funkcji pobierającej
- * @module components/sections/GetList
  */
 export default {
   name: 'get-list',
@@ -45,27 +32,43 @@ export default {
     /** Tytuł listy. */
     title: {
       type: String,
-      required: true
+      required: false
     },
 
     /** Funkcja pobierająca dane do wylistowania. */
     tryGet: {
+      // (options) => response
       type: Function,
       required: true
     },
 
-    /** Opcje do przekazania funkcji przeładowującej. */
+    /** Opcje do przekazania funkcji przeładowującej.
+     *
+     *  Uwaga: użycie {} spowoduje ciągłe przeładowywanie listy!
+     */
     getOptions: {
       type: Object,
       required: false,
+      // brak opcji
       default: undefined
     }
   },
   methods: {
+    ...Vuex.mapActions(['request']),
+
     /** Przeładuj listę. */
     reload: async function (options = this.getOptions) {
-      const data = await this.tryGet(options)
-      this.items = data
+      const { log, error, data } =
+        await this.request(() => this.tryGet(options))
+      this.items = data || [];
+      this.log = log
+      this.error = error ? error.split('\n') : ''
+    }
+  },
+  computed: {
+    /** Udostępnij kopie danych listy. */
+    get_items () {
+      return [...this.items]
     }
   },
   mounted () {

@@ -18,7 +18,7 @@
         align="right"
         class="caption"
       >
-        ( {{ props.item.type }} )
+        ( {{ props.item.type || "brak typu" }} )
       </td>
     </template>
     <template v-slot:text="props">
@@ -55,25 +55,31 @@
         </v-list-tile>
       </v-list>
     </template>
+    <template v-slot:dialogs>
+      <dialog-records
+        v-model="records_dialog.active"
+        :metric="records_dialog.item"
+      />
+    </template>
   </get-table>
 </template>
 
 <script>
+import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
+import DialogRecords from '@/components/dialogs/DialogRecords'
 
-/**
+/**@group Sekcje
  * Sekcja pobierająca dane metryk.
- *
- * @param {String} searched - łańcuch do wyszukania w nazwach metryk
- * @module components/sections/ListMetrics
  */
 export default {
   name: 'list-metrics',
   components: {
-    'get-table': GetTable
+    'get-table': GetTable,
+    'dialog-records': DialogRecords
   },
   props: {
-    /** Funkcja pobierająca dane do wylistowania. */
+    /** Fragment nazwy do znalezienia. */
     searched: {
       type: String,
       required: false
@@ -87,7 +93,6 @@ export default {
   },
   data () {
     return {
-      data: [],
       all_headers: {
         name: {
           text: 'Nazwa',
@@ -118,7 +123,11 @@ export default {
           icon: 'show_chart',
           handler: this.addToChart
         }
-      ]
+      ],
+      records_dialog: {
+        item: { 'metric-id': null },
+        active: false
+      }
     }
   },
   computed: {
@@ -146,10 +155,12 @@ export default {
     }
   },
   methods: {
+    ...Vuex.mapActions(['listMetrics']),
+
     /** Pokazuje pomiary danej metryki */
     showRecords (item) {
-      item
-      //TODO
+      this.records_dialog.item = item
+      this.records_dialog.active = true
     },
 
     /** Dodaje metrykę pochodną */
@@ -160,60 +171,15 @@ export default {
 
     /** Dodaje do wykresu */
     addToChart (item) {
+      // eslint-disable-next-line
+      console.log("item: " + json.stringify(item))
       item
       //TODO
     },
 
     /** Pobiera dane do wylistowania metryk. */
     reloadList: async function (options = {}) {
-      // (mock)
-      let data = [
-        {
-          name: 'Temperatura (D10, 205, stanowisko 1)',
-          type: 'temperatura',
-          unit: '°C',
-          'host-id': 'D10, 205, stanowisko 1',
-          'user-id': null
-        },
-        {
-          name: 'Zużycie pamięci (D10, 205, stanowisko 1)',
-          type: 'zużycie pamięci',
-          unit: 'MB',
-          'host-id': 'D10, 205, stanowisko 1',
-          'user-id': null
-        },
-        {
-          name: 'Temperatura (D10, 205, stanowisko 2)',
-          type: 'temperatura',
-          unit: '°C',
-          'host-id': 'D10, 205, stanowisko 2',
-          'user-id': null
-        },
-        {
-          name: 'Zużycie pamięci (D10, 205, stanowisko 2)',
-          type: 'zużycie pamięci',
-          unit: 'MB',
-          'host-id': 'D10, 205, stanowisko 2',
-          'user-id': null
-        },
-        {
-          name: 'Zużycie GPU (Cyfronet, 402, stanowisko 4)',
-          type: 'zużycie GPU',
-          unit: 'flops',
-          'host-id': 'Cyfronet, 402, stanowisko 4',
-          'user-id': 'K. Noga'
-        }
-      ]
-
-      if (options.searched || (options.types && options.types.length > 0)) {
-        data = data.filter(el =>
-          (el.name.search(options.searched) != -1) &&
-          options.types.includes(el.type)
-        )
-      }
-
-      this.data = data
-      return data
+      return await this.listMetrics(options)
     }
   }
 }

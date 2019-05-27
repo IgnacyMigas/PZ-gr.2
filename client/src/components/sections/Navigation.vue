@@ -10,54 +10,48 @@
     <v-spacer></v-spacer>
 
     <v-toolbar-items>
-      <nav-button
+      <button-nav
         icon='home'
-        to='/home'>
-        Dom
-      </nav-button>
-      <nav-button
+        text='Dom'
+        to='/home'
+      />
+      <button-nav
         icon='show_chart'
-        to='/charts'>
-        Wykresy
-      </nav-button>
-      <nav-button
+        text='Wykresy'
+        to='/charts'
+      />
+      <button-nav
         icon='list'
-        to='/list'>
-        Lista
-      </nav-button>
-      <nav-button
+        text='Lista'
+        to='/list'
+      />
+      <button-nav
         v-if="!isLoggedIn"
         icon='exit_to_app'
-        to='/login'>
-        Zaloguj
-      </nav-button>
-      <nav-button
+        text='Wyloguj'
+        to='/login'
+      />
+      <button-nav
         v-if="isLoggedIn"
         icon='power_settings_new'
-        @click.native="logout">
-        Wyloguj
-      </nav-button>
+        text='Wyloguj'
+        @click.native="logout"
+      />
     </v-toolbar-items>
   </v-toolbar>
 </template>
 
 <script>
-import NavButton from '@/components/elements/NavButton'
+import ButtonNav from '@/components/elements/ButtonNav'
 import Vuex from 'vuex'
 
-/**
+/**@group Sekcje
  * Pasek nawigacji aplikacji. Łączy kilka funkcjonalności:
  * <lu>
  *   <li> nagłówek całego systemu</li>
  *   <li> menu główne programu, uwzględniające
  *        stan autentyfikacji i autoryzacji </li>
  * </lu>
- *
- * @example
- * <navbar title="Hello"/>
- *
- * @param {string} title - (required)
- * @module components/sections/Navigation
  */
 export default {
   name: 'navigation',
@@ -66,7 +60,7 @@ export default {
     title: String
   },
   components: {
-    'nav-button': NavButton
+    'button-nav': ButtonNav
   },
   computed: {
     ...Vuex.mapGetters(['isLoggedIn', 'user'])

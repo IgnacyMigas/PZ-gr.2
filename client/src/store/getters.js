@@ -7,5 +7,8 @@ export const user = (state) =>
 export const access_token = state =>
   state.access_token
 
-export const axios = state =>
-  state.auth.axios
+export const api = state =>
+  state.api
+
+export const auth = state =>
+  state.auth

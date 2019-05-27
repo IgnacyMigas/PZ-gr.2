@@ -18,11 +18,11 @@
       <v-list two-line>
         <v-list-tile
          v-for="metric in props.item.metrics"
-         :key="metric.name"
+         :key="metric['metric-id']"
         >
           <v-list-tile-content>
             <v-list-tile-title>
-              {{ metric.name }}
+              {{ metric['metric-id'] }}
             </v-list-tile-title>
             <v-list-tile-sub-title>
               {{ metric.type }} [{{ metric.unit }}]
@@ -35,13 +35,11 @@
 </template>
 
 <script>
+import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
 
-/**
+/**@group Sekcje
  * Sekcja pobierająca dane hostów.
- *
- * @param {String} searched - łańcuch do wyszukania w nazwach hostów
- * @module components/sections/ListHosts
  */
 export default {
   name: 'list-hosts',
@@ -49,7 +47,7 @@ export default {
     'get-table': GetTable
   },
   props: {
-    /** Funkcja pobierająca dane do wylistowania. */
+    /** Fragment nazwy do wyszukania. */
     searched: {
       type: String,
       required: false
@@ -83,6 +81,8 @@ export default {
     }
   },
   methods: {
+    ...Vuex.mapActions(['listHosts']),
+
     /** Pokazuje metryki dostępne dla danego hosta */
     showMetrics (item) {
       item
@@ -91,68 +91,7 @@ export default {
 
     /** Pobiera dane do wylistowania metryk. */
     reloadList: async function (options = {}) {
-      // (mock)
-      let data = [
-        {
-          name: 'D10, 205, stanowisko 1',
-          metrics: [
-            {
-              name: 'Temperatura (D10, 205, stanowisko 1)',
-              type: 'temperatura',
-              unit: '°C',
-              'user-id': null
-            },
-            {
-              name: 'Zużycie pamięci (D10, 205, stanowisko 1)',
-              type: 'zużycie pamięci',
-              unit: 'MB',
-              'user-id': null
-            }
-          ]
-        },
-        {
-          name: 'D10, 205, stanowisko 2',
-          metrics: [
-            {
-              name: 'Temperatura (D10, 205, stanowisko 2)',
-              type: 'temperatura',
-              unit: '°C',
-              'user-id': null
-            },
-            {
-              name: 'Zużycie pamięci (D10, 205, stanowisko 2)',
-              type: 'zużycie pamięci',
-              unit: 'MB',
-              'user-id': null
-            }
-          ]
-        },
-        {
-          name: 'Cyfronet, 402, stanowisko 4',
-          metrics: [
-            {
-              name: 'Zużycie GPU (Cyfronet, 402, stanowisko 4)',
-              type: 'zużycie GPU',
-              unit: 'flops',
-              'user-id': 'K. Noga'
-            }
-          ]
-        },
-      ]
-
-      if (options.searched) {
-        data = data.filter(el => el.name.search(options.searched) != -1)
-      }
-      if (options.metric_types && options.metric_types.length > 0) {
-        const filter_fun = (el) => {
-          let types = el.metrics.map(m => m.type)
-          return options.metric_types.every(mt => types.includes(mt))
-        }
-        data = data.filter(filter_fun)
-      }
-
-      this.data = data
-      return data
+      return await this.listHosts(options)
     }
   }
 }
