@@ -6,6 +6,5 @@ docker_build:
 docker_run:
 	docker run -d --network host -it gateway-km2
 	docker run -d --network host -it monitor-km2
-	sleep 10 
 	docker run -d --network host -it sensor-km2
 	docker run -d --network host -it client-km2
