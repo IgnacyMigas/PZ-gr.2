@@ -1,11 +1,16 @@
 <template>
     <div>
-        <apexcharts width="1100" height="350" type="line" :options="chartOptions" :series="series"></apexcharts>
+        <apexcharts width=1100 height=300 align="center" type="line" :options="chartOptions" :series="series"></apexcharts>
     </div>
 </template>
 
 <script>
+
     import VueApexCharts from 'vue-apexcharts'
+    import axios from "axios";
+
+    const myURL = 'http://localhost:8080/v1/metrics/Battery_testHost/measurements?n=10'
+
 
     export default {
         name: 'LineChart',
@@ -76,7 +81,27 @@
                 }]
             }
         },
+        mounted() {
+            axios.get(myURL, {
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                },
+                proxy: {
+                    host: 'http://localhost',
+                    port: 8080
+                }
+            }).then(res => {
+                this.ip = res
+                //console.log(res)
+            }, error => {
+                this.ip = error
+                //console.error(error);
+            });
+        }
     }
+
+
+
 </script>
 
 
