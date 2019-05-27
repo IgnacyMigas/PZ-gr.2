@@ -6,14 +6,11 @@
       <div></div>
       <div></div>
       <div id="chartsContainer">
-      Dane historyczne
-        <LineChart />
 
-        <div></div>
-        <div></div>
-
-      <linear-chart :width="300" :height="300"> </linear-chart>
-        Zoom chart
+        <LineChart class="charts" align="center" />
+        <div class="empty"></div>
+        Dane historyczne
+      <linear-chart class="charts" align="center" width=900 height=300 > </linear-chart>
 
         Online
         <!--
@@ -58,16 +55,23 @@ export default {
 </script>
 
 <Style>
+  .charts {
+    text-align: center;
+    align-content: center;
+    margin: 5px;
+  }
+
+  .empty {
+    margin-top: 20px;
+  }
+
   #container {
     min-width: 310px;
     max-width: 400px;
     max-height: 100px;
     margin: 0 auto
   }
-  LinearChart {
-    width: 400px;
-    height: 100px;
-  }
+
   #chartsContainer {
     padding: 10px;
   }

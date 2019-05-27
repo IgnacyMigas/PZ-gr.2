@@ -3,7 +3,7 @@ https://apexcharts.com/vue-chart-demos/line-charts/realtime/
 -->
 <template>
     <div id="chart">
-        <apexchart ref="realtimeChart" type=line height=350 :options="chartOptions" :series="series" />
+        <apexchart ref='realtimeChart' type=line height=350 :options="chartOptions" :series="series" />
     </div>
 </template>
 

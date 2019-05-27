@@ -1,6 +1,6 @@
 <template>
     <div>
-        <apexcharts width="1400" height="600" type="line" :options="chartOptions" :series="series"></apexcharts>
+        <apexcharts width="1100" height="350" type="line" :options="chartOptions" :series="series"></apexcharts>
     </div>
 </template>
 
@@ -18,7 +18,15 @@
                     chart: {
                         id: 'basic-bar'
                     },
-                    colors: ['#008FFB'],
+                    labels: {
+                        style: {
+                            colors: ['#dede12']
+                        }
+                    },
+                    markers: {
+                        colors: ['#F44336']
+                    },
+                    colors: ['#ee8FFB'],
                     tooltip: {
                         followCursor: false,
                         theme: 'dark',
@@ -30,28 +38,40 @@
                         }
                     },
                     xaxis: {
-                        categories: ['26/05/2019 01:05:35', '26/05/2019 01:05:36', '26/05/2019 01:05:37', '26/05/2019 01:05:38', '26/05/2019 01:05:39', '26/05/2019 01:05:40', '26/05/2019 01:05:41', '26/05/2019 01:05:42', '26/05/2019 01:05:43', '26/05/2019 01:05:44']
+                        categories: ['26/05/2019 01:05:35', '26/05/2019 01:05:36', '26/05/2019 01:05:37', '26/05/2019 01:05:38', '26/05/2019 01:05:39', '26/05/2019 01:05:40', '26/05/2019 01:05:41', '26/05/2019 01:05:42', '26/05/2019 01:05:43', '26/05/2019 01:05:44'],
+                        colors: ['#dede12']
+                    },
+                    axisBorder: {
+                        show: true,
+                        color: '#dede12'
                     },
                     grid: {
                         row: {
                             colors: ['#676767', 'transparent'], // takes an array which will be repeated on columns
                             opacity: 0.4
                         },
+                        column: {
+                            colors: ['#343434']
+                        }
                     },
                     title: {
                         text: 'Dane historyczne - wykres liniowy',
-                        align: 'left'
+                        align: 'left',
+                        style: {
+                            color: '#dedede',
+                            fontSize: '12px'
+                        },
                     },
                     dataLabels: {
-                        enabled: false
+                        enabled: false,
+                        colors: ['#1Ca710']
                     },
                     stroke: {
                         curve: 'straight'
-                    },
+                    }
                 },
                 series: [{
                     name: 'value',
-                    colors: '#121212',
                     data: [0.81, 0.81, 0.81, 0.81, 0.84, 0.99, 0.99, 0.97, 0.95, 0.96]
                 }]
             }
