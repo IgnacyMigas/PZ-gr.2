@@ -1,12 +1,6 @@
-
 <script>
-    /*
-
-    export default {
-        name: "LinearChart"
-    }
-*/
     import { Line } from 'vue-chartjs'
+
     export default {
         extends: Line,
         name: "LinearChart",
