@@ -52,7 +52,7 @@ const actions = {
       params.top = options.top
     }
 
-    const res = await state.api.get('/hosts', { params })
+    const res = await state.api.get('/v1/hosts', { params })
     res.data.forEach(el => {
       el.name = el['host-id']
     })
@@ -72,7 +72,7 @@ const actions = {
       params.type = options.types
     }
 
-    const res = await state.api.get('/metrics', { params })
+    const res = await state.api.get('/v1/metrics', { params })
     res.data = res.data.metrics
     res.data.forEach(el => {
       el.name = el['metric-id']
@@ -85,7 +85,7 @@ const actions = {
     const params = {
       meta: true
     }
-    const res = await state.api.get('/metrics', { params })
+    const res = await state.api.get('/v1/metrics', { params })
     res.data = res.data.meta.types.map(el => ({ name: el }))
     return res
   },
@@ -104,7 +104,7 @@ const actions = {
       params.to = to
     }
 
-    const res = await state.api.get(`/metrics/${id}/measurements`,
+    const res = await state.api.get(`/v1/metrics/${id}/measurements`,
       { params })
     return res
   },
