@@ -5,13 +5,15 @@
     <div id="container">
       <div></div>
       <div></div>
-      <div id="charts">
+      <div id="chartsContainer">
       Dane historyczne
       <linear-chart :width="300" :height="300"> </linear-chart>
         Zoom chart
         <LineChart />
         Online
+        <!--
         <RealtimeChart />
+        -->
       </div>
     </div>
   </page>
@@ -20,8 +22,11 @@
 <script>
     import Page from '@/components/templates/Page'
     import LinearChart from '@/components/charts/LinearChart'
-    import RealtimeChart from '@/components/charts/RealtimeChart.vue'
     import LineChart from '@/components/charts/LineChart.vue'
+
+    /*
+    import RealtimeChart from '@/components/charts/RealtimeChart.vue'
+    */
 
   /**@group Strony
    * @vuese
@@ -32,12 +37,16 @@
 
 
 export default {
-    name: 'charts',
+    name: 'Charts',
     components: {
         'page': Page,
         LineChart,
-        LinearChart,
+        LinearChart
+        /*
+        TODO: RealtimeChart
+        ,
         RealtimeChart
+         */
     }
 }
 
@@ -53,5 +62,8 @@ export default {
   LinearChart {
     width: 400px;
     height: 100px;
+  }
+  #chartsContainer {
+    padding: 10px;
   }
 </Style>
