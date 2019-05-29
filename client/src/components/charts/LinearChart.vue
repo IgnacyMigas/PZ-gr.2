@@ -7,9 +7,9 @@
 <script>
 
     import VueApexCharts from 'vue-apexcharts'
-    import axios from "axios";
 
-    const myURL = 'http://localhost:8080/v1/metrics/Battery_testHost/measurements?n=10'
+    // import axios from "axios";
+    // const myURL = 'http://localhost:8080/v1/metrics/Battery_testHost/measurements?n=10'
 
     export default {
         name: 'LinearChart',
@@ -91,6 +91,7 @@
                 }]
             }
         },
+        /*
         mounted() {
             axios.get(myURL, {
                 headers: {
@@ -108,6 +109,7 @@
                 //console.error(error);
             });
         }
+        */
     }
 
 
