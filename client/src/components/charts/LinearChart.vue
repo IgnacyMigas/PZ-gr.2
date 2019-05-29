@@ -1,5 +1,11 @@
 <template>
     <div>
+        <h2>{{ time }}</h2>
+        <h2>{{ value }}</h2>
+        <h2>{{ blob_samples }}</h2>
+
+
+
         <apexcharts height=350 align="center" type="line" :options="chartOptions" :series="series"></apexcharts>
     </div>
 </template>
@@ -8,13 +14,40 @@
 
     import VueApexCharts from 'vue-apexcharts'
 
-    // import axios from "axios";
-    // const myURL = 'http://localhost:8080/v1/metrics/Battery_testHost/measurements?n=10'
+    var host = 'http://localhost:8080'
+    var metricsName = 'Battery_testHost'
+    var version = 'v1'
+    var n = 15
+    var url = host + '/' + version + '/metrics/' + metricsName + '/measurements?n=' + n
+
+    var ts = ["yolo"]
+    var val = [96]
 
     export default {
         name: 'LinearChart',
         components: {
             apexcharts: VueApexCharts,
+        },
+        created() {
+            this.$http.get(url, { useCredentails: true }).then(function(data) {
+                this.blob_samples = data.body.slice(0, 10);
+
+                var index;
+                for (index = 0; index < this.blob_samples.length; ++index) {
+                    this.value[index] = parseFloat(this.blob_samples[this.blob_samples.length - index - 1].val),
+                        this.time[index] = this.blob_samples[this.blob_samples.length - index - 1].ts,
+                        this.$data.val = this.value[index],
+                        this.$data.ts = this.time[index]
+                }
+                //     var vm = this;
+                //
+                //     setTimeout(function() {
+                //         // This works, since wm refers to your view model.
+                //         vm.val = this.value
+                //         vm.ts = this.time
+                //     }, 1000);
+                // });
+            });
         },
         data: function() {
             return {
@@ -42,7 +75,7 @@
                         }
                     },
                     xaxis: {
-                        categories: ['26/05/2019 01:05:35', '26/05/2019 01:05:36', '26/05/2019 01:05:37', '26/05/2019 01:05:38', '26/05/2019 01:05:39', '26/05/2019 01:05:40', '26/05/2019 01:05:41', '26/05/2019 01:05:42', '26/05/2019 01:05:43', '26/05/2019 01:05:44'],
+                        categories: ts,
                         labels: {
                             style: {
                                 colors: '#efefef',
@@ -87,29 +120,14 @@
                 },
                 series: [{
                     name: 'value',
-                    data: [0.81, 0.81, 0.81, 0.81, 0.84, 0.99, 0.99, 0.97, 0.95, 0.96]
-                }]
+                    data: val
+                }],
+                time: [],
+                value: [],
+                blob_samples: [],
+
             }
-        },
-        /*
-        mounted() {
-            axios.get(myURL, {
-                headers: {
-                    'Access-Control-Allow-Origin': '*',
-                },
-                proxy: {
-                    host: 'http://localhost',
-                    port: 8080
-                }
-            }).then(res => {
-                this.ip = res
-                //console.log(res)
-            }, error => {
-                this.ip = error
-                //console.error(error);
-            });
         }
-        */
     }
 
 
