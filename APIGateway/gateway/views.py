@@ -2,13 +2,14 @@ from django.db import IntegrityError
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from . import models
+from . import authentication
 import json
 import requests
 
 
 @csrf_exempt
 def metrics(request, metrics_id=None):
-    if 'access-token' not in request.headers:
+    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
         return HttpResponse(status=401)
 
     headers = {'access-token': request.headers['access-token']}
@@ -89,7 +90,7 @@ def metrics(request, metrics_id=None):
 
 
 def metrics_measurements(request, metrics_id):
-    if 'access-token' not in request.headers:
+    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
         return HttpResponse(status=401)
 
     headers = {'access-token': request.headers['access-token']}
@@ -120,7 +121,7 @@ def metrics_measurements(request, metrics_id):
 
 
 def hosts(request, hosts_id=None):
-    if 'access-token' not in request.headers:
+    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
         return HttpResponse(status=401)
 
     headers = {'access-token': request.headers['access-token']}
@@ -165,11 +166,8 @@ def hosts(request, hosts_id=None):
 
 @csrf_exempt
 def monitors(request):
-    if 'access-token' not in request.headers:
+    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
         return HttpResponse(status=401)
-
-    # if not request.body:
-    #     return HttpResponse(status=406)
 
     if request.method == 'POST':
         try:
