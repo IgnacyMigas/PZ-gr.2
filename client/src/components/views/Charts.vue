@@ -1,31 +1,26 @@
 <template>
   <page title="Wykresy">
-    Tu będą prezentowane wykresy.
-
     <div id="container">
       <div id="chartsContainer">
-        Dane historyczne
-        <LineChart class="myChart" />
 
-        Dane historyczne
-        <linear-chart :width="1100" :height="300" class="myChart" align="center"></linear-chart>
-        Zoom chart
-        <!--
-         <ZoomableChart />
-         -->
-        Online
-        <!--
+        <LinearChart />
+        <BrushChart />
         <RealtimeChart />
-        -->
+        <Measurements />
+
       </div>
+
     </div>
+
   </page>
 </template>
 
 <script>
     import Page from '@/components/templates/Page'
     import LinearChart from '@/components/charts/LinearChart.vue'
-    import LineChart from '@/components/charts/LineChart.vue'
+    import BrushChart from '@/components/charts/BrushChart.vue'
+    import Measurements from '@/components/charts/GetMeasurements.vue'
+    import RealtimeChart from '@/components/charts/RealtimeChart.vue'
     /*
     import RealtimeChart from '@/components/charts/RealtimeChart.vue'
     */
@@ -39,15 +34,13 @@
         name: 'Charts',
         components: {
             'page': Page,
-            LineChart,
-            LinearChart
-            /*
-            TODO: RealtimeChart
-            ,
-            RealtimeChart
-             */
+            LinearChart,
+            BrushChart,
+            RealtimeChart,
+            Measurements
         }
     }
+
 </script>
 
 <Style>
