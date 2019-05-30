@@ -6,9 +6,9 @@
 
         <h2>Wybierz metrykę:  </h2>
 
-        <select  @change="onChange($event)" class="t2e-select" v-model="selected"  @click="handleButtonClick">
+        <select  @click="handleButtonClick" @change="onChange($event)" class="t2e-select" v-model="selected" >
             <option disabled value=""> Please select one </option>
-            <option v-for="(metric) in metrics_keys"  v-bind:value="metric">
+            <option v-for="(metric) in metrics_keys"  v-bind:value="metric" >
                 metric-id: {{ metric }} , monitor-id: {{monitor_keys[0]}}
             </option>
         </select>
@@ -34,8 +34,6 @@
 
      var time= []
      var value = []
-//     var metrics_keys = []
-// var monitor_keys = []
 
     export default {
         name: 'LinearChart',
@@ -53,7 +51,6 @@
             getMetrics: function(){
                 this.$http.get(url_metrics , {useCredentails: true}).then(function (data) {
                     this.metrics= data.body.metrics;
-
                      var index;
                      for (index = 0; index < this.metrics.length; ++index) {
                          this.metrics_keys[index]  = this.metrics[index]["metric-id"];
@@ -63,26 +60,32 @@
             },
             created: function() {
                 this.getMetrics()
-                var url_2 = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=' + n
+                if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
+                    var url_2 = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=' + n
 
-                this.$http.get(url_2, {useCredentails: true}).then(function (data) {
-                    this.blob_samples = data.body.slice(0, 10);
+                    this.$http.get(url_2, {useCredentails: true}).then(function (data) {
+                        this.blob_samples = data.body.slice(0, 10);
 
-                    var index;
-                    for (index = 0; index < this.blob_samples.length; ++index) {
-                        this.value[index] = parseFloat(this.blob_samples[this.blob_samples.length - index - 1].val),
-                            this.time[index] = this.blob_samples[this.blob_samples.length - index - 1].ts
-                    }
-
-                    this.$refs.updateChart.updateOptions({
-                        xaxis: {
-                            categories: this.time,
-                        },
-                        series: [{
-                            data: this.value,
-                        }],
-                    })
-                });
+                        if (data.body == '' || data.body == '[]' || data.body == null || data.body == []) {
+                            this.value = [];
+                            this.time = [];
+                        } else {
+                            var index;
+                            for (index = 0; index < this.blob_samples.length; ++index) {
+                                this.value[index] = parseFloat(this.blob_samples[this.blob_samples.length - index - 1].val),
+                                    this.time[index] = this.blob_samples[this.blob_samples.length - index - 1].ts
+                            }
+                        }
+                        this.$refs.updateChart.updateOptions({
+                            xaxis: {
+                                categories: this.time,
+                            },
+                            series: [{
+                                data: this.value,
+                            }],
+                        })
+                    });
+                }
             },
             handleButtonClick: function() {
                 /* call two methods. */
