@@ -1,21 +1,22 @@
 <template>
     <div>
-        <h1><a @click="handleButtonClick" >Pokaż dane dla: {{ metricsName_2 }}</a></h1>
-        <h2>{{metrics}}</h2>
-        <h2>{{metrics_keys}}</h2>
-        <h2>{{monitor_keys }}</h2>
+        <!--<h1><a @click="handleButtonClick" >Pokaż dane</a></h1>-->
+        <!--<h2>{{metrics_keys}}</h2>-->
+        <!--<h2>{{monitor_keys }}</h2>-->
 
-        <span>Selected:  </span>
+        <h2>Wybierz metrykę:  </h2>
 
-        <select class="t2e-select" v-model="selected">
+        <select  @change="onChange($event)" class="t2e-select" v-model="selected"  @click="handleButtonClick">
             <option disabled value=""> Please select one </option>
             <option v-for="(metric) in metrics_keys"  v-bind:value="metric">
-                metric-id: {{ metric }} , monitoid: {{monitor_keys[0]}}
+                metric-id: {{ metric }} , monitor-id: {{monitor_keys[0]}}
             </option>
         </select>
 
+        <!--<h2>{{selectedMetric}}</h2>-->
 
         <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
+        <h5>{{metrics}}</h5>
         <!--<h2>{{ time }}</h2>-->
         <!--<h2>{{ value }}</h2>-->
         <!--<h2>{{ blob_samples }}</h2>-->
@@ -27,21 +28,18 @@
     import VueApexCharts from 'vue-apexcharts'
 
     var host = 'http://localhost:8080'
-    // var metricsName_1 = 'CPU_testHost'
-    var metricsName_2 = 'Battery_testHost'
-    //var metricsName_3 = 'CPU_Host'
     var version = 'v1'
     var n = 15
-
-
     var url_metrics = host + '/' + version + '/metrics'
-    var url_2 = host + '/' + version + '/metrics/' + metricsName_2 + '/measurements?n=' + n
 
      var time= []
      var value = []
+//     var metrics_keys = []
+// var monitor_keys = []
 
     export default {
         name: 'LinearChart',
+        props: ['metric'],
         components: {
             apexcharts: VueApexCharts,
         },
@@ -49,6 +47,9 @@
             this.getMetrics() //method1 will execute at pageload
         },
         methods: {
+            onChange(event) {
+                this.selectedMetric = event.target.value
+            },
             getMetrics: function(){
                 this.$http.get(url_metrics , {useCredentails: true}).then(function (data) {
                     this.metrics= data.body.metrics;
@@ -62,6 +63,8 @@
             },
             created: function() {
                 this.getMetrics()
+                var url_2 = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=' + n
+
                 this.$http.get(url_2, {useCredentails: true}).then(function (data) {
                     this.blob_samples = data.body.slice(0, 10);
 
@@ -164,12 +167,13 @@
                     time: [],
                     value: [],
                     blob_samples: [],
-                    metricsName_2: metricsName_2,
                     metrics: [],
                     metrics_keys: [],
                     monitor_keys : [],
                     selected: '',
+                    selectedMetric: [],
                     mounted: function () {
+                        this.onChange(event)
                         this.getMetrics()
                         this.created()
                     },
