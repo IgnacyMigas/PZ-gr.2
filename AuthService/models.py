@@ -1,57 +1,41 @@
-class User:
+from app import db
+from passlib.hash import pbkdf2_sha256 as sha256
 
-    def __init__(self, id, username, password):
-        self.id = id
-        self.username = username
-        self.password = password
+class UserModel(db.Model):
+    __tablename__ = 'users'
 
-    def __repr__(self):
-        template = 'User id={s.id}: <{s.username}>'
-        return template.format(s=self)
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(120), nullable=False)
+    
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def find_by_username(cls, username):
+        return cls.query.filter_by(username=username).first()
 
-    def __str__(self):
-        return self.__repr__()
+    @staticmethod
+    def generate_hash(password):
+        return sha256.hash(password)
+    
+    @staticmethod
+    def verify_hash(password, hash):
+        return sha256.verify(password, hash)
 
-    def match_password(self, password):
-        if password != self.password:
-            raise User.PasswordDoesNotMatch
 
-    class DoesNotExist(BaseException):
-        pass
+class RevokedTokenModel(db.Model):
+    __tablename__ = 'revoked_tokens'
 
-    class TooManyObjects(BaseException):
-        pass
-
-    class PasswordDoesNotMatch(BaseException):
-        pass
-
-    class objects:
-        _storage = []
-        _max_id = 0
-
-        @classmethod
-        def create(cls, username, password):
-            cls._max_id += 1
-            cls._storage.append(User(cls._max_id, username, password))
-            print(type(cls._storage[0]))
-
-        @classmethod
-        def all(cls):
-            return cls._storage
-
-        @classmethod
-        def filter(cls, **kwargs):
-            users = cls._storage
-            for k, v in kwargs.items():
-                if v:
-                    users = [u for u in users if getattr(u, k, None) == v]
-            return users
-
-        @classmethod
-        def get(cls, id=None, username=None):
-            users = cls.filter(id=id, username=username)
-            if len(users) > 1:
-                raise User.TooManyObjects
-            if len(users) == 0:
-                raise User.DoesNotExist
-            return users[0]
+    id = db.Column(db.Integer, primary_key=True)
+    jti = db.Column(db.String(120))
+    
+    def add(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def is_jti_blacklisted(cls, jti):
+        query = cls.query.filter_by(jti=jti).first()
+        return bool(query)
