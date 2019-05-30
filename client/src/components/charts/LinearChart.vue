@@ -1,8 +1,6 @@
 <template>
     <div>
-
         <h1><a @click="created">Show data</a></h1>
-
         <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
         <!--<h2>{{ time }}</h2>-->
         <!--<h2>{{ value }}</h2>-->
