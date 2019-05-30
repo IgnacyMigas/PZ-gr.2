@@ -15,17 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.wfiis.pz.project.monitor.entity.Host;
 import com.wfiis.pz.project.monitor.entity.Measurement;
@@ -49,7 +39,7 @@ import com.wfiis.pz.project.monitor.utils.MetricPreview;
 
 @RestController
 @RequestMapping("/${MONITORID}")
-public class ApplicationController {
+public class ApplicationController extends WebConfig {
 
 	@Resource 
 	HostService hostService;
@@ -62,8 +52,8 @@ public class ApplicationController {
 	
 	@Autowired
 	private Environment env;
-	
-	
+
+
 	@GetMapping(value = "/hosts")
 	public ResponseEntity<Object> getHostsWrapper(@RequestHeader(value="access-token", required = false, defaultValue = "") String header){
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -82,8 +72,8 @@ public class ApplicationController {
 		}
 		return views;
 	}
-	
-	
+
+
 	@GetMapping(value = "/hosts", params = {"name"})
 	public ResponseEntity<Object> getHostsWithNameWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 															@RequestParam("name") String name
@@ -106,7 +96,7 @@ public class ApplicationController {
 		}
 		return views;
 	}
-	
+
 	@GetMapping(value = "/hosts", params = {"name_like"})
 	public ResponseEntity<Object> getHostsWithNameLikeWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 																@RequestParam("name_like") String name_like
@@ -131,7 +121,7 @@ public class ApplicationController {
 		}
 		return views;
 	}
-	
+
 	@GetMapping(value = "/hosts", params = {"top", "metric_type"})
 	public ResponseEntity<Object> getHostsWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,	
 													@RequestParam("top") Integer top, 
@@ -157,7 +147,7 @@ public class ApplicationController {
 		}
 		return views;
 	}
-	
+
 
 	@PostMapping(value = "/hosts")
 	public ResponseEntity<Object> postHostWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
@@ -188,7 +178,7 @@ public class ApplicationController {
 			metricService.insertMetric(m);
 		}
 	}
-	
+
 	@GetMapping(value = "/hosts", params = {"recursive"})
 	public ResponseEntity<Object> getHostsReqursiveWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 															@RequestParam("recursive") Boolean recursive) {
@@ -215,7 +205,7 @@ public class ApplicationController {
 			return views;
 		}
 	}
-	
+
 	@GetMapping(value = "/hosts/{id}")
 	public ResponseEntity<Object> getHostWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 											@PathVariable String id) {
@@ -240,7 +230,7 @@ public class ApplicationController {
 		
 		return hdv;
 	}
-	
+
 
 	@DeleteMapping(value = "/hosts/{id}")
 	public ResponseEntity<Object> deleteHostWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
@@ -258,7 +248,7 @@ public class ApplicationController {
 	public void deleteHost(String id) {	
 		hostService.deleteHostById(id);
 	}
-	
+
 	@GetMapping(value = "/metrics")
 	public ResponseEntity<Object> getMetricsWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 														@RequestParam(value = "name_like" , required = false, defaultValue = "") String name_like, 
@@ -371,8 +361,8 @@ public class ApplicationController {
 	public MetricAbstractPresenter getMetrics(Boolean recursive) {
 		return getMetrics("", "", "", recursive);
 	}
-	
-	
+
+
 	@PostMapping(value = "/metrics")
 	public ResponseEntity<Object> postMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 														@RequestBody CompoundMetric cm) {
@@ -409,8 +399,8 @@ public class ApplicationController {
 		
 		return mp;
 	}
-	
-	
+
+
 	@GetMapping(value = "/metrics/{id}")
 	public ResponseEntity<Object> getMetricDetailsWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 															@PathVariable String id) {
@@ -425,8 +415,8 @@ public class ApplicationController {
 		Metric m = metricService.findMetricById(id);
 		return m;
 	}
-	
-	
+
+
 
 	@DeleteMapping(value = "/metrics/{id}")
 	public ResponseEntity<Object> deleteMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
@@ -446,7 +436,7 @@ public class ApplicationController {
 		return;
 	}
 	
-	
+	/*
 	@GetMapping(value = "/metrics/{id}/measurements")
 	public ResponseEntity<Object> getMeasurementsForMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 																	@PathVariable String id) {
@@ -469,10 +459,10 @@ public class ApplicationController {
 		
 		return views;
 	}
-	
-	
-	
-	
+	*/
+
+
+	@CrossOrigin
 	@GetMapping(value = "/metrics/{id}/measurements", params = {"n"})
 	public ResponseEntity<Object> getNMeasurementsForMetric(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 																@PathVariable String id,
@@ -507,14 +497,14 @@ public class ApplicationController {
 		
 		return views;
 	}
-	
-	
-	
-	@GetMapping(value = "/metrics/{id}/measurements", params = { "from", "to"})
+
+
+	@CrossOrigin
+	@GetMapping(value = "/metrics/{id}/measurements")
 	public ResponseEntity<Object> getMeasurementsFromRangeForMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 																			@PathVariable String id,
-																			@RequestParam(value = "from", required = false) String from, 
-																			@RequestParam(value = "to", required = false) String to
+																			@RequestParam(value = "from", required = false, defaultValue = "") String from, 
+																			@RequestParam(value = "to", required = false, defaultValue = "") String to
 																		) {
 		
 		HttpHeaders responseHeaders = new HttpHeaders();
@@ -530,7 +520,7 @@ public class ApplicationController {
 																	) {
 		List<Measurement> measurements;
 		
-		if ((from != null && !from.isEmpty()) || (to != null && !to.isEmpty()) ){
+		if (!from.isEmpty() || !to.isEmpty() ){
 			measurements= measurementService.findByDateMeasurementByMetricId(id, from, to);
 		}else{
 			measurements= measurementService.findTopMeasurementByMetricId(id, 25);
@@ -544,9 +534,9 @@ public class ApplicationController {
 		
 		return views;
 	}
-	
-	
-	
+
+
+	@CrossOrigin
 	@GetMapping(value = "/metrics/{id}/measurements", params = {"all"})
 	public ResponseEntity<Object> getMeasurementsForMetric(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 															@PathVariable String id,
@@ -580,9 +570,9 @@ public class ApplicationController {
 		
 		return views;
 	}
-	
-	
-	
+
+
+	@CrossOrigin
 	@PostMapping(value = "/metrics/{id}/measurements")
 	public ResponseEntity<Object> postMeasurementsForMetricWrapper(	@RequestHeader(value="access-token", required = false, defaultValue = "") String header,
 													@PathVariable String id, 

@@ -73,18 +73,19 @@ public class MeasurementDaoImpl implements MeasurementDao{
 	public List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to) {
 		
 		String sql = "select * from measurements where ts > :from and ts < :to  order by ts desc";
-		SqlParameterSource param = new MapSqlParameterSource()
-				.addValue("from", Util.convertStringToTimestamp(from))
-				.addValue("to", Util.convertStringToTimestamp(to));
+		SqlParameterSource param;
 		
-		
-		if (from == null || !from.isEmpty())
+		if (from.isEmpty())
 			from = "01/01/1999 00:00:00";
 		
-		if (to == null || !to.isEmpty()){
+		if (to.isEmpty()){
 			sql = "select * from measurements where ts > :from  order by ts desc";
 			param = new MapSqlParameterSource()
 					.addValue("from", Util.convertStringToTimestamp(from));
+		}else{
+			param = new MapSqlParameterSource()
+					.addValue("from", Util.convertStringToTimestamp(from))
+					.addValue("to", Util.convertStringToTimestamp(to));
 		}
 	return template.query(sql, param, new MeasurementRowMapper());
 	}
