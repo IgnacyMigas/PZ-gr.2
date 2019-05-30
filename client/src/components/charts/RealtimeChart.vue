@@ -147,13 +147,13 @@ https://apexcharts.com/vue-chart-demos/line-charts/realtime/
                             }])
                         }, 1000)
 
-                        // every 60 seconds, we reset the data to prevent memory leaks
+                        // every 1 seconds, we reset the data to prevent memory leaks
                         window.setInterval(function () {
                             resetData()
                             me.$refs.realtimeChart.updateSeries([{
                                 data
                             }], false, true)
-                        }, 60000)
+                        }, 1000)
                     }
                 }
             }

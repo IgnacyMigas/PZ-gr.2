@@ -6,7 +6,7 @@
         <LinearChart />
         <BrushChart />
         <RealtimeChart />
-        <Measurements />
+        <!--<Measurements />-->
 
       </div>
 
@@ -19,11 +19,9 @@
     import Page from '@/components/templates/Page'
     import LinearChart from '@/components/charts/LinearChart.vue'
     import BrushChart from '@/components/charts/BrushChart.vue'
-    import Measurements from '@/components/charts/GetMeasurements.vue'
+    // import Measurements from '@/components/charts/GetMeasurements.vue'
     import RealtimeChart from '@/components/charts/RealtimeChart.vue'
-    /*
-    import RealtimeChart from '@/components/charts/RealtimeChart.vue'
-    */
+
     /**@group Strony
      * @vuese
      * Strona prezentacji wykresów.
@@ -36,8 +34,8 @@
             'page': Page,
             LinearChart,
             BrushChart,
-            RealtimeChart,
-            Measurements
+            RealtimeChart
+            // ,Measurements
         }
     }
 
