@@ -4,6 +4,17 @@
         <h2>{{metrics}}</h2>
         <h2>{{metrics_keys}}</h2>
         <h2>{{monitor_keys }}</h2>
+
+        <span>Selected:  </span>
+
+        <select class="t2e-select" v-model="selected">
+            <option disabled value=""> Please select one </option>
+            <option v-for="(metric) in metrics_keys"  v-bind:value="metric">
+                metric-id: {{ metric }} , monitoid: {{monitor_keys[0]}}
+            </option>
+        </select>
+
+
         <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
         <!--<h2>{{ time }}</h2>-->
         <!--<h2>{{ value }}</h2>-->
@@ -34,6 +45,9 @@
         components: {
             apexcharts: VueApexCharts,
         },
+        mounted:function(){
+            this.getMetrics() //method1 will execute at pageload
+        },
         methods: {
             getMetrics: function(){
                 this.$http.get(url_metrics , {useCredentails: true}).then(function (data) {
@@ -47,6 +61,7 @@
                 });
             },
             created: function() {
+                this.getMetrics()
                 this.$http.get(url_2, {useCredentails: true}).then(function (data) {
                     this.blob_samples = data.body.slice(0, 10);
 
@@ -153,6 +168,7 @@
                     metrics: [],
                     metrics_keys: [],
                     monitor_keys : [],
+                    selected: '',
                     mounted: function () {
                         this.getMetrics()
                         this.created()
@@ -163,5 +179,13 @@
 
 </script>
 
+<style>
+    .t2e-select{
+        background-color: #898989;
+
+        padding: 15px;
+        font-size: 14px;
+    }
+</style>
 
            
