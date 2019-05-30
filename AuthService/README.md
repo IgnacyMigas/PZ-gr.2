@@ -2,11 +2,21 @@
 ```
 python install
 pip install -r requirements.txt
+
 ```
 
 ### Run server
+#### Unix Bash(Linux, Mac, etc.):
 ```
-python app.py
+export FLASK_APP=app.py
+export FLASK_RUN_PORT=8000
+flask run
+```
+#### Windows:
+```
+set FLASK_APP=app.py
+set FLASK_RUN_PORT=8000
+flask run
 ```
 
 ## Available endpoints
