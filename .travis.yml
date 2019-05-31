@@ -1,6 +1,7 @@
 matrix:
   include:
-    - language: python
+    - stage: test
+      language: python
       python: 3.7
       dist: xenial
       install:
@@ -9,7 +10,8 @@ matrix:
       script:
         - python APIGateway/gateway/tests.py
 
-    - language: java
+    - stage: test
+      language: java
       before_install:
         - cd Monitor
       install:
@@ -17,7 +19,8 @@ matrix:
       script:
         - mvn test
 
-    - language: python
+    - stage: test
+      language: python
       python: 3.7
       dist: xenial
       install:
@@ -26,7 +29,8 @@ matrix:
       script:
         - python Sensor/test/tests.py
 
-    - language: node_js
+    - stage: test
+      language: node_js
       before_install:
         - cd client
       install:
