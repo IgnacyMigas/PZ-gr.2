@@ -57,6 +57,10 @@ matrix:
         - docker build --tag=monitor:km3 Monitor/
         - docker build --tag=sensor:km3 Sensor/
         - docker build --tag=client:km3 client/
+      after_success:
+        - docker run -d --network host -it gateway:km3
+        - docker run -d --network host -it monitor:km3
+        - docker run -d --network host -it sensor:km3
 
 
 
