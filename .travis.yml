@@ -19,6 +19,7 @@ matrix:
       before_install:
         - cd Monitor
       install:
+        - mvn clean
         - mvn install
       script:
         - mvn test
