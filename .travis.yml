@@ -35,11 +35,11 @@ matrix:
         - python Sensor/test/tests.py
 
     - stage: test
+      dist: xenial
       language: node_js
       node_js:
         - "8"
-      dist: xenial
-      before_install:node
+      before_install:
         - cd client
       install:
         - npm install
