@@ -57,47 +57,39 @@ v
                     var now = new Date();
                     dateFormat(now, "DD/mm/YYYY HH:MM:SS");
 
-                    Number.prototype.padLeft = function (base, chr) {
-                        var len = (String(base || 10).length - String(this).length) + 1;
-                        return len > 0 ? new Array(len).join(chr || '0') + this : this;
-                    }
-                    // usage
-                    //=> 3..padLeft() => '03'
-                    //=> 3..padLeft(100,'-') => '--3'
-
-
-                    // Fri May 31 2019 15:19:41 GMT+0200 (Central European Summer Time)
-                    // 31/05/2019 15:34:41
-
+                    // default Data(): "Fri May 31 2019 15:19:41 GMT+0200 (Central European Summer Time)"
+                    // expected: "31/05/2019 15:34:41"
+                    
+                    var hour
                     if (range == '15m') {
                         var _15min = new Date(Date.now() - 1000 * 60 * 15);
-                        _15min = dateFormat(_15min, "dd/mm/yyyy hh:MM:ss");
-                        //alert('Hello ' + '! ' + _15min);
+                        hour = _15min.getHours();
+                        _15min = dateFormat(_15min, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _15min);
                     }
                     else if (range == '30m') {
                         var _30min = new Date(Date.now() - 1000 * 60 * 30);
-                        _30min = dateFormat(_30min, "dd/mm/yyyy hh:MM:ss");
-                        //alert('Hello ' + '! ' + _30min);
+                        hour = _30min.getHours();
+                        _30min = dateFormat(_30min, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _30min);
                     }
                     else if (range == '1h') {
                         var _1h = new Date(Date.now() - 1000 * 60 * 60 * 1);
-                        _1h = dateFormat(_1h, "dd/mm/yyyy hh:MM:ss");
-                        //alert('Hello ' + '! ' + _1h);
+                        hour = _1h.getHours();
+                        _1h = dateFormat(_1h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _1h);
 
                     }
                     else if (range == '24h') {
                         var _24h = new Date(Date.now() - 1000 * 60 * 60 * 24);
-                        _24h = dateFormat(_24h, "dd/mm/yyyy hh:MM:ss");
-                        //alert('Hello ' + '! ' + _24h);
+                        hour = _24h.getHours();
+                        _24h = dateFormat(_24h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _24h);
                     }
                     else if (range == '48h') {
                         var _48h = new Date(Date.now() - 1000 * 60 * 60 * 48);
-                        _48h = dateFormat(_48h, "dd/mm/yyyy hh:MM:ss");
-                        //alert('Hello ' + '! ' + _48h);
+                        hour = _48h.getHours();
+                        _48h = dateFormat(_48h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _48h);
                     }
                     else {
