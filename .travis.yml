@@ -36,6 +36,7 @@ matrix:
 
     - stage: test
       language: node_js
+      dist: xenial
       before_install:
         - cd client
       install:
