@@ -11,11 +11,11 @@
 
 
     <div class="actions">
-            <button class="btn btn-primary" @click="handleButtonClick" v-on:click="greet">15min</button>
-            <button class="btn btn-primary" v-on:click="greet">30min</button>
-            <button class="btn btn-primary" v-on:click="greet">1h</button>
-            <button class="btn btn-primary" v-on:click="greet">24h</button>
-            <button class="btn btn-primary" v-on:click="greet">48h</button>
+            <button class="btn btn-primary" @click="handleButtonClick" v-on:click="timeRange">15min</button>
+            <button class="btn btn-primary" v-on:click="timeRange">30min</button>
+            <button class="btn btn-primary" v-on:click="timeRange">1h</button>
+            <button class="btn btn-primary" v-on:click="timeRange">24h</button>
+            <button class="btn btn-primary" v-on:click="timeRange">48h</button>
     </div>
         <div id="chart1">
             <apexchart ref="updateChart" type=line height=230 :options="chartOptionsArea" :series="series" />

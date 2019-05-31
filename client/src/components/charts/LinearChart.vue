@@ -17,11 +17,11 @@
 v
         <div>
             <div class="actions">
-                <button class="btn btn-xs t2e-btn-select-time-15m btn-primary"  type="button" @click="handleButtonClick" v-on:click="greet"> 15 min </button>
-                <button class="btn btn-xs t2e-btn-select-time-30m btn-white" type="button"  v-on:click="greet"> 30 min </button>
-                <button class="btn btn-xs t2e-btn-select-time-24h btn-white" type="button" v-on:click="greet"> 1 h </button>
-                <button class="btn btn-xs t2e-btn-select-time-48h btn-white" type="button" v-on:click="greet"> 24 h </button>
-                <button class="btn btn-xs t2e-btn-select-time-range btn-white" type="button" v-on:click="greet"> 48 h </button>
+                <button class="btn btn-xs t2e-btn-select-time-15m btn-primary"  type="button" @click="handleButtonClick" v-on:click="timeRange('15m')"> 15 min </button>
+                <button class="btn btn-xs t2e-btn-select-time-30m btn-white" type="button"  v-on:click="timeRange('30m')"> 30 min </button>
+                <button class="btn btn-xs t2e-btn-select-time-24h btn-white" type="button" v-on:click="timeRange('1h')"> 1 h </button>
+                <button class="btn btn-xs t2e-btn-select-time-48h btn-white" type="button" v-on:click="timeRange('24h')"> 24 h </button>
+                <button class="btn btn-xs t2e-btn-select-time-range btn-white" type="button" v-on:click="timeRange('48h')"> 48 h </button>
             </div>
 
         <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
@@ -39,6 +39,8 @@ v
 
     import VueApexCharts from 'vue-apexcharts'
 
+
+
     var host = 'http://localhost:8080'
     var version = 'v1'
     var n = 15
@@ -54,9 +56,56 @@ v
             apexcharts: VueApexCharts,
         },
         mounted:function(){
-            this.getMetrics() //method1 will execute at pageload
+            this.getMetrics() //method will execute at pageload
         },
         methods: {
+            timeRange: function(range) {
+
+                var dateFormat = require('dateformat');
+                var now = new Date();
+                dateFormat(now, "DD/mm/YYYY HH:MM:SS");
+
+                Number.prototype.padLeft = function(base,chr){
+                    var  len = (String(base || 10).length - String(this).length)+1;
+                    return len > 0? new Array(len).join(chr || '0')+this : this;
+                }
+                // usage
+                //=> 3..padLeft() => '03'
+                //=> 3..padLeft(100,'-') => '--3'
+
+
+                // Fri May 31 2019 15:19:41 GMT+0200 (Central European Summer Time)
+                // 31/05/2019 15:34:41
+
+                if(range == '15m'){
+                    var _15min = new Date( Date.now() - 1000 * 60 * 15);
+                    _15min = dateFormat(_15min, "dd/mm/yyyy hh:MM:ss");
+                    alert('Hello ' + '! ' + _15min);
+                }
+                else if(range == '30m'){
+                    var _30min = new Date( Date.now() - 1000 * 60 * 30);
+                    _30min = dateFormat(_30min, "dd/mm/yyyy hh:MM:ss");
+                    alert('Hello ' + '! ' + _30min);
+                }
+                else if(range == '1h'){
+                    var _1h = new Date( Date.now() - 1000 * 60 * 60 * 1);
+                    _1h = dateFormat(_1h, "dd/mm/yyyy hh:MM:ss");
+                    alert('Hello ' + '! ' + _1h);
+                }
+                else if(range == '24h'){
+                    var _24h = new Date( Date.now() - 1000 * 60 * 60 * 24);
+                    _24h = dateFormat(_24h, "dd/mm/yyyy hh:MM:ss");
+                    alert('Hello ' + '! ' + _24h);
+                }
+                else if(range == '48h'){
+                    var _48h = new Date( Date.now() - 1000 * 60 * 60 * 48);
+                    _48h = dateFormat(_48h, "dd/mm/yyyy hh:MM:ss");
+                    alert('Hello ' + '! ' + _48h);
+                }
+                else{
+                    alert('Hello ' + '! Wrong time range');
+                }
+            },
             onChange(event) {
                 this.selectedMetric = event.target.value
             },
@@ -187,6 +236,7 @@ v
                     monitor_keys : [],
                     selected: '',
                     selectedMetric: [],
+                    d: [],
                     mounted: function () {
                         this.onChange(event)
                         this.getMetrics()
