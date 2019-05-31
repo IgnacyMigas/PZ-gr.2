@@ -13,9 +13,6 @@ matrix:
         - pip install -r APIGateway/requirements.txt
       script:
         - python APIGateway/gateway/tests.py
-      stage: build
-      script:
-        - docker build --tag=gateway:km3 APIGateway/
 
     - stage: test
       language: java
@@ -44,6 +41,14 @@ matrix:
         - npm install stable
       script:
         - npm run test
+
+    - stage: build
+      script:
+        - docker build --tag=gateway:km3 APIGateway/
+        - docker build --tag=monitor:km3 Monitor/
+        - docker build --tag=sensor:km3 Sensor/
+        - docker build --tag=client:km3 client/
+
 
 
 notifications:
