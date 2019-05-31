@@ -4,8 +4,8 @@
       <div id="chartsContainer">
 
         <LinearChart />
-        <BrushChart />
-        <RealtimeChart />
+        <!--<BrushChart />-->
+        <!--<RealtimeChart />-->
         <!--<Measurements />-->
 
       </div>
@@ -18,9 +18,9 @@
 <script>
     import Page from '@/components/templates/Page'
     import LinearChart from '@/components/charts/LinearChart.vue'
-    import BrushChart from '@/components/charts/BrushChart.vue'
+    // import BrushChart from '@/components/charts/BrushChart.vue'
     // import Measurements from '@/components/charts/GetMeasurements.vue'
-    import RealtimeChart from '@/components/charts/RealtimeChart.vue'
+    // import RealtimeChart from '@/components/charts/RealtimeChart.vue'
 
     /**@group Strony
      * @vuese
@@ -32,9 +32,9 @@
         name: 'Charts',
         components: {
             'page': Page,
-            LinearChart,
-            BrushChart,
-            RealtimeChart
+            LinearChart
+            // ,BrushChart,
+            // RealtimeChart
             // ,Measurements
         }
     }
