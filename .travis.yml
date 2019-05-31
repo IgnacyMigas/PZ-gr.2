@@ -50,6 +50,7 @@ matrix:
         - npm run test
 
     - stage: build
+      dist: xenial
       language: python
       script:
         - docker build --tag=gateway:km3 APIGateway/
