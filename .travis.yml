@@ -1,49 +1,44 @@
-matrix:
-  include:
-    - language: python
-      python: 3.7
-      dist: xenial
-      install:
-        - python -m pip install --upgrade pip
-        - pip install -r APIGateway/requirements.txt
-      script:
-        - python APIGateway/gateway/tests.py
-      after_success:
-        - docker build --tag=gateway:km3 ./APIGateway
+- language: python
+  python: 3.7
+  dist: xenial
+  install:
+    - python -m pip install --upgrade pip
+    - pip install -r APIGateway/requirements.txt
+  script:
+    - python APIGateway/gateway/tests.py
+  after_success:
+    - docker build --tag=gateway:km3 ./APIGateway
 
-    - language: java
-      before_install:
-        - cd Monitor
-      install:
-        - mvn install
-      script:
-        - mvn test
+- language: java
+  before_install:
+    - cd Monitor
+  install:
+    - mvn install
+  script:
+    - mvn test
 
-    - language: python
-      python: 3.7
-      dist: xenial
-      install:
-        - python -m pip install --upgrade pip
-        - pip install -r Sensor/requirements.txt
-      script:
-        - python Sensor/test/tests.py
+- language: python
+  python: 3.7
+  dist: xenial
+  install:
+    - python -m pip install --upgrade pip
+    - pip install -r Sensor/requirements.txt
+  script:
+    - python Sensor/test/tests.py
 
-    - language: node_js
-      before_install:
-        - cd client
-      install:
-        - npm install stable
-      script:
-        - npm run test
+- language: node_js
+  before_install:
+    - cd client
+  install:
+    - npm install stable
+  script:
+    - npm run test
 
-jobs:
-  include:
-    - stage: integration
-      language: python
-      python: 3.7
-      dist: xenial
-      script:
-        - python3 tests/tests.py
+
+script:
+  - python -m pip install --upgrade pip
+  - pip install -r tests/requirements.txt
+  - python3 tests/tests.py
 
 
 notifications:
