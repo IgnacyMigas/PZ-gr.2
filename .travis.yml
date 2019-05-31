@@ -1,6 +1,7 @@
 jobs:
   include:
-    - language: python
+    - stage: test
+      language: python
       python: 3.7
       dist: xenial
       install:
@@ -11,7 +12,8 @@ jobs:
       after_success:
         - docker build --tag=gateway:km3 ./APIGateway
 
-    - language: java
+    - stage: test
+      language: java
       before_install:
         - cd Monitor
       install:
@@ -19,7 +21,8 @@ jobs:
       script:
         - mvn test
 
-    - language: python
+    - stage: test
+      language: python
       python: 3.7
       dist: xenial
       install:
@@ -28,7 +31,8 @@ jobs:
       script:
         - python Sensor/test/tests.py
 
-    - language: node_js
+    - stage: test
+      language: node_js
       before_install:
         - cd client
       install:
@@ -36,7 +40,8 @@ jobs:
       script:
         - npm run test
 
-    - language: python
+    - integration test
+      language: python
       python: 3.7
       dist: xenial
       script:
