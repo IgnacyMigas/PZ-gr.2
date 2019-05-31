@@ -52,6 +52,19 @@
             this.getMetrics() //method1 will execute at pageload
         },
         methods: {
+            generateDayWiseTimeSeries: function (baseval, count, yrange) {
+                var i = 0;
+                var series = [];
+                while (i < count) {
+                    var x = baseval;
+                    var y = Math.floor(Math.random() * (yrange.max - yrange.min + 1)) + yrange.min;
+
+                    series.push([x, y]);
+                    baseval += 86400000;
+                    i++;
+                }
+                return series;
+            },
             onChange(event) {
                 this.selectedMetric = event.target.value
             },
@@ -118,6 +131,11 @@
                 series: [{
                     name: 'value',
                     data: value.slice(0,10),
+                    //     this.generateDayWiseTimeSeries(new Date('11 Feb 2017').getTime(), 185, {
+                    //     min: 30,
+                    //     max: 90
+                    // })
+                    //
                 }],
                 chartOptionsArea: {
                     chart: {
@@ -162,7 +180,7 @@
                         colors: ['#149E5A'],
                     },
                     xaxis: {
-                        categories: time.slice(0,10),
+                        // categories: time.slice(0,10),
                         labels: {
                             style: {
                                 colors: '#efefef',
@@ -176,28 +194,6 @@
                             },
                         },
                     },
-                    // crosshairs: {
-                    //     show: true,
-                    //     width: 1,
-                    //     position: 'back',
-                    //     opacity: 0.9,
-                    //     stroke: {
-                    //         color: '#343434',
-                    //         width: 0,
-                    //         dashArray: 0,
-                    //     },
-                    //     fill: {
-                    //         type: 'solid',
-                    //         color: '#343434',
-                    //     },
-                    //     dropShadow: {
-                    //         enabled: false,
-                    //         top: 0,
-                    //         left: 0,
-                    //         blur: 1,
-                    //         opacity: 0.4,
-                    //     },
-                    // },
                     grid: {
                         row: {
                             colors: ['#cdcdcd', 'transparent'], // takes an array which will be repeated on columns
@@ -218,8 +214,8 @@
                         selection: {
                             enabled: true,
                             xaxis: {
-                                // min: new Date('19 Jun 2017').getTime(),
-                                // max: new Date('14 Aug 2017').getTime()
+                                min: value.slice(0,10)[5],
+                                max: value.slice(0,1)[0]
                             }
                         },
                     },
@@ -245,7 +241,7 @@
                         tooltip: {
                             enabled: false
                         },
-                        categories: time.slice(0,10),
+                        //categories: time.slice(0,10),
                         labels: {
                             style: {
                                 colors: '#efefef',
@@ -260,10 +256,6 @@
                             },
                         },
                     },
-                    series: [{
-                        name: 'value',
-                        data: value.slice(0,10),
-                    }],
                 }
             }
         },

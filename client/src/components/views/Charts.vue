@@ -33,8 +33,8 @@
         components: {
             'page': Page,
             LinearChart
-            // ,BrushChart,
-            // RealtimeChart
+            // ,BrushChart
+            // ,RealtimeChart
             // ,Measurements
         }
     }
