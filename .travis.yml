@@ -1,7 +1,6 @@
 matrix:
   include:
-    - stage: test
-      language: python
+    - language: python
       python: 3.7
       dist: xenial
       install:
@@ -9,12 +8,10 @@ matrix:
         - pip install -r APIGateway/requirements.txt
       script:
         - python APIGateway/gateway/tests.py
-      stage: build_docker_image
-      script:
-        - docker build tag=gateway:km3 ./APIGateway
+      after_success:
+        - docker build --tag=gateway:km3 ./APIGateway
 
-    - stage: test
-      language: java
+    - language: java
       before_install:
         - cd Monitor
       install:
@@ -22,8 +19,7 @@ matrix:
       script:
         - mvn test
 
-    - stage: test
-      language: python
+    - language: python
       python: 3.7
       dist: xenial
       install:
@@ -32,14 +28,22 @@ matrix:
       script:
         - python Sensor/test/tests.py
 
-    - stage: test
-      language: node_js
+    - language: node_js
       before_install:
         - cd client
       install:
         - npm install stable
       script:
         - npm run test
+
+jobs:
+  include:
+    - stage: integration
+      language: python
+      python: 3.7
+      dist: xenial
+      script:
+        - python3 tests/tests.py
 
 
 notifications:
