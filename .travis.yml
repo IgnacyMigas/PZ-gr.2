@@ -55,8 +55,6 @@ matrix:
       install:
         - python -m pip install --upgrade pip
         - pip install -r tests/requirements.txt
-        - export DOCKER_USER="user"
-        - export DOCKER_PASS="pass"
       script:
         - docker build --tag=$DOCKER_USER/pz-gr2:gateway-km3 APIGateway/
         - docker build --tag=$DOCKER_USER/pz-gr2:monitor-km3 Monitor/
