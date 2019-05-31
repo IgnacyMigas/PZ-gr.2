@@ -2,6 +2,9 @@ stages:
 - test
 - build
 
+services:
+  - docker
+
 matrix:
   include:
     - stage: test
@@ -47,6 +50,7 @@ matrix:
         - npm run test
 
     - stage: build
+      language: python
       script:
         - docker build --tag=gateway:km3 APIGateway/
         - docker build --tag=monitor:km3 Monitor/
