@@ -3,21 +3,21 @@
         <h2>Wybierz metrykę:  </h2>
 
         <select  @click="handleButtonClick" @change="onChange($event)" class="t2e-select" v-model="selected" >
-            <option disabled value=""> Please select one </option>
+            <option disabled value=""> Przoszę wybrać metrykę</option>
             <option v-for="(metric) in metrics_keys"  v-bind:value="metric" >
                 metric-id: {{ metric }} , monitor-id: {{monitor_keys[0]}}
             </option>
         </select>
+        v
 
-        <!--<h2>{{selectedMetric}}</h2>-->
-v
         <div>
             <div class="actions">
-                <button class="btn btn-xs t2e-btn-select-time-15m btn-primary"  type="button" @click="handleButtonClick" v-on:click="timeRange('15m')"> 15 min </button>
-                <button class="btn btn-xs t2e-btn-select-time-30m btn-white" type="button"  v-on:click="timeRange('30m')"> 30 min </button>
-                <button class="btn btn-xs t2e-btn-select-time-24h btn-white" type="button" v-on:click="timeRange('1h')"> 1 h </button>
-                <button class="btn btn-xs t2e-btn-select-time-48h btn-white" type="button" v-on:click="timeRange('24h')"> 24 h </button>
-                <button class="btn btn-xs t2e-btn-select-time-range btn-white" type="button" v-on:click="timeRange('48h')"> 48 h </button>
+                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-15m" :class="{'btn-primary': range == '15m', 'btn-white': range != '15m'}" type="button"  v-on:click="timeRange('15m')"> 15 min </button>
+                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-30m" :class="{'btn-primary': range == '30m', 'btn-white': range != '30m'}" type="button"  v-on:click="timeRange('30m')"> 30 min </button>
+                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-1h"  :class="{'btn-primary': range == '1h', 'btn-white': range != '1h'}" type="button" v-on:click="timeRange('1h')"> 1 h </button>
+                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-24h" :class="{'btn-primary': range == '24h', 'btn-white': range != '24h'}" type="button" v-on:click="timeRange('24h')"> 24 h </button>
+                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-48h" :class="{'btn-primary': range == '48h', 'btn-white': range != '48h'}" type="button" v-on:click="timeRange('48h')"> 48 h </button>
+                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-range" :class="{'btn-primary': range == 'selectRange', 'btn-white': range != 'selectRange'}" type="button" v-on:click="timeRange('selectRange')"> Zakres </button>
             </div>
 
             <span class="metricsAlerts">{{noDataInfo}}</span>
@@ -50,6 +50,10 @@ v
             this.getMetrics() //method will execute at pageload
         },
         methods: {
+            setActiveTab(){
+                let _this = this;
+                _this.activeTab = 1;
+            },
             timeRange: function(range) {
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
                     var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=30&from='
@@ -59,21 +63,24 @@ v
 
                     // default Data(): "Fri May 31 2019 15:19:41 GMT+0200 (Central European Summer Time)"
                     // expected: "31/05/2019 15:34:41"
-                    
+
                     var hour
                     if (range == '15m') {
+                        this.range = '15m';
                         var _15min = new Date(Date.now() - 1000 * 60 * 15);
                         hour = _15min.getHours();
                         _15min = dateFormat(_15min, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _15min);
                     }
                     else if (range == '30m') {
+                        this.range = '30m';
                         var _30min = new Date(Date.now() - 1000 * 60 * 30);
                         hour = _30min.getHours();
                         _30min = dateFormat(_30min, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _30min);
                     }
                     else if (range == '1h') {
+                        this.range = '1h';
                         var _1h = new Date(Date.now() - 1000 * 60 * 60 * 1);
                         hour = _1h.getHours();
                         _1h = dateFormat(_1h, "dd/mm/yyyy "+ hour +":MM:ss");
@@ -81,27 +88,34 @@ v
 
                     }
                     else if (range == '24h') {
+                        this.range = '24h';
                         var _24h = new Date(Date.now() - 1000 * 60 * 60 * 24);
                         hour = _24h.getHours();
                         _24h = dateFormat(_24h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _24h);
                     }
                     else if (range == '48h') {
+                        this.range = '48h';
                         var _48h = new Date(Date.now() - 1000 * 60 * 60 * 48);
                         hour = _48h.getHours();
                         _48h = dateFormat(_48h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _48h);
                     }
+                    else if (range == 'selectRange') {
+                        this.range = 'selectRange';
+                        alert('TODO select range!');
+                    }
                     else {
-                        alert('Niepoprawny zakres czasu');
+                        this.noDataInfo = 'Niepoprawny zakres czasu'
                     }
             }
                 else{
-                    alert('Proszę najpierw wybrać metrykę');
+                    this.noDataInfo = 'Proszę wybrać metrykę, aby zobaczyć jej pomiary'
                 }
             },
             draw(url){
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
+                    this.range = '15m',//default
                     this.$http.get(url, {useCredentails: true}).then(function (data) {
                         this.blob_samples = data.body;//.slice(0, 10);
 
@@ -227,6 +241,8 @@ v
                     selectedMetric: [],
                     d: [],
                     noDataInfo: '',
+                    activeTab: 0,
+                    range: '',//default
                     mounted: function () {
                         this.onChange(event)
                         this.getMetrics()
@@ -248,7 +264,6 @@ v
     }
     .t2e-select{
         background-color: #898989;
-
         padding: 15px;
         font-size: 14px;
     }
@@ -260,10 +275,11 @@ v
         font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-size: 13px;
         height: 27px;
-        line-height: 18.5714px;
+        line-height: 19px;
         text-size-adjust: 100%;
-        width: 372.984px;
+        width: 450px;
         margin-left: 40px;
+        margin-top: 30px;
     }
 
     .btn-primary{
