@@ -8,6 +8,18 @@ services:
 matrix:
   include:
     - stage: test
+      dist: xenial
+      language: node_js
+      node_js:
+        - "8"
+      before_install:
+        - cd client
+      install:
+        - npm install
+      script:
+        - npm run test
+
+    - stage: test
       language: python
       python: 3.7
       dist: xenial
@@ -36,18 +48,6 @@ matrix:
         - pip install -r Sensor/requirements.txt
       script:
         - python Sensor/test/tests.py
-
-    - stage: test
-      dist: xenial
-      language: node_js
-      node_js:
-        - "8"
-      before_install:
-        - cd client
-      install:
-        - npm install
-      script:
-        - npm run test
 
     - stage: build
       dist: xenial
