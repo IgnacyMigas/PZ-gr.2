@@ -2,10 +2,10 @@
     <div>
         <h2>Wybierz metrykę:  </h2>
 
-        <select  @click="handleButtonClick" @change="onChange($event)" class="t2e-select" v-model="selected" >
+        <select  @click="handleButtonClick" @change="onChange($event)" class="t2e-select-metric" v-model="selected" >
             <option disabled value=""> Przoszę wybrać metrykę</option>
-            <option v-for="(metric) in metrics_keys"  v-bind:value="metric" >
-                metric-id: {{ metric }} , monitor-id: {{monitor_keys[0]}}
+            <option v-for="(metric, index) in metrics_keys"  v-bind:value="metric" >
+                Metryka: '{{ metric }}' , Monitor: '{{monitor_keys[index]}}'
             </option>
         </select>
         v
@@ -13,11 +13,16 @@
         <div>
             <div class="actions">
                 <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-15m" :class="{'btn-primary': range == '15m', 'btn-white': range != '15m'}" type="button"  v-on:click="timeRange('15m')"> 15 min </button>
-                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-30m" :class="{'btn-primary': range == '30m', 'btn-white': range != '30m'}" type="button"  v-on:click="timeRange('30m')"> 30 min </button>
+                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-30m" :class="{'btn-primary': range == '30m', 'btn-white': range != '30m'}" type="button" v-on:click="timeRange('30m')"> 30 min </button>
                 <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-1h"  :class="{'btn-primary': range == '1h', 'btn-white': range != '1h'}" type="button" v-on:click="timeRange('1h')"> 1 h </button>
                 <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-24h" :class="{'btn-primary': range == '24h', 'btn-white': range != '24h'}" type="button" v-on:click="timeRange('24h')"> 24 h </button>
                 <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-48h" :class="{'btn-primary': range == '48h', 'btn-white': range != '48h'}" type="button" v-on:click="timeRange('48h')"> 48 h </button>
                 <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-range" :class="{'btn-primary': range == 'selectRange', 'btn-white': range != 'selectRange'}" type="button" v-on:click="timeRange('selectRange')"> Zakres </button>
+
+                <v-range-selector v-if="!isHiddenCalendar"
+                                  :start-date.sync="dataRange.start"
+                        :end-date.sync="dataRange.end"
+                />
             </div>
 
             <span class="metricsAlerts">{{noDataInfo}}</span>
@@ -31,6 +36,8 @@
 
 <script>
     import VueApexCharts from 'vue-apexcharts'
+    import VRangeSelector from 'vuelendar/components/vl-range-selector';
+
 
     var host = 'http://localhost:8080'
     var version = 'v1'
@@ -45,6 +52,7 @@
         props: ['metric'],
         components: {
             apexcharts: VueApexCharts,
+            VRangeSelector,
         },
         mounted:function(){
             this.getMetrics() //method will execute at pageload
@@ -56,6 +64,7 @@
             },
             timeRange: function(range) {
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
+                    this.isHiddenCalendar = true;
                     var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=30&from='
                     var dateFormat = require('dateformat');
                     var now = new Date();
@@ -66,44 +75,45 @@
 
                     var hour
                     if (range == '15m') {
-                        this.range = '15m';
                         var _15min = new Date(Date.now() - 1000 * 60 * 15);
                         hour = _15min.getHours();
                         _15min = dateFormat(_15min, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _15min);
+                        this.range = '15m';
                     }
                     else if (range == '30m') {
-                        this.range = '30m';
                         var _30min = new Date(Date.now() - 1000 * 60 * 30);
                         hour = _30min.getHours();
                         _30min = dateFormat(_30min, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _30min);
+                        this.range = '30m';
                     }
                     else if (range == '1h') {
-                        this.range = '1h';
                         var _1h = new Date(Date.now() - 1000 * 60 * 60 * 1);
                         hour = _1h.getHours();
                         _1h = dateFormat(_1h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _1h);
+                        this.range = '1h';
 
                     }
                     else if (range == '24h') {
-                        this.range = '24h';
                         var _24h = new Date(Date.now() - 1000 * 60 * 60 * 24);
                         hour = _24h.getHours();
                         _24h = dateFormat(_24h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _24h);
+                        this.range = '24h';
                     }
                     else if (range == '48h') {
-                        this.range = '48h';
                         var _48h = new Date(Date.now() - 1000 * 60 * 60 * 48);
                         hour = _48h.getHours();
                         _48h = dateFormat(_48h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _48h);
+                        this.range = '48h';
                     }
                     else if (range == 'selectRange') {
                         this.range = 'selectRange';
-                        alert('TODO select range!');
+                        this.isHiddenCalendar = false;
+                        //alert('TODO select range!');
                     }
                     else {
                         this.noDataInfo = 'Niepoprawny zakres czasu'
@@ -115,7 +125,8 @@
             },
             draw(url){
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
-                    this.range = '15m',//default
+                    this.range = '15m';//default
+                    this.isHiddenCalendar = true;
                     this.$http.get(url, {useCredentails: true}).then(function (data) {
                         this.blob_samples = data.body;//.slice(0, 10);
 
@@ -157,7 +168,7 @@
             },
             created: function() {
                 var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=' + n
-                this.getMetrics()
+                this.getMetrics();
                 this.draw(url);
             },
             handleButtonClick: function() {
@@ -243,6 +254,9 @@
                     noDataInfo: '',
                     activeTab: 0,
                     range: '',//default
+                    dataRange: {},
+                    date: null,
+                    isHiddenCalendar: true,
                     mounted: function () {
                         this.onChange(event)
                         this.getMetrics()
@@ -262,13 +276,19 @@
         padding: 30px;
         position: relative;
     }
-    .t2e-select{
+
+    select{
+        cursor:pointer;
+    }
+
+    .t2e-select-metric{
         background-color: #898989;
         padding: 15px;
         font-size: 14px;
     }
 
     .actions{
+        text-align: left;
         box-sizing: border-box;
         color: rgb(103, 106, 108);
         display: block;
@@ -277,11 +297,16 @@
         height: 27px;
         line-height: 19px;
         text-size-adjust: 100%;
-        width: 450px;
+        width: 800px;
         margin-left: 40px;
         margin-top: 30px;
     }
 
+    .btn-white {
+        color: inherit;
+        background: #fff;
+        border: 1px solid #e7eaec;
+    }
     .btn-primary{
         background-color: #faaf40;
         border-color: #faaf40;
@@ -309,12 +334,6 @@
         font-size: 12px;
         line-height: 1.5;
         margin-bottom: 15px;
-    }
-
-    .btn-white {
-        color: inherit;
-        background: #fff;
-        border: 1px solid #e7eaec;
     }
 
     button {
