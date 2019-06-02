@@ -101,6 +101,7 @@ class SensorTools:
         return data
 
     def send_data(self):
+        self.coppy_data()
         if self.metric == "Both":
             data = self.json_data_for_two_metrics()
             r = requests.post(url = self.API_CPU_MEASUREMENTS_ENDPOINT, json = data[0])#, params = register_header)
@@ -110,21 +111,16 @@ class SensorTools:
             r = requests.post(url = self.API_BATTERY_MEASUREMENTS_ENDPOINT, json = data[1])#, params = register_header)
             print(data[1])
             print(r.status_code, r.reason)
-            self.collected_data1 = []
-            self.collected_data2 = []
         elif self.metric == "CPU":
             data = self.json_data_for_one_metric()
             r = requests.post(url = self.API_CPU_MEASUREMENTS_ENDPOINT, json = data)#, params = register_header)
             print(data)
             print(r.status_code, r.reason)
-            self.collected_data = []
         else:
             data = self.json_data_for_one_metric()
             r = requests.post(url = self.API_BATTERY_MEASUREMENTS_ENDPOINT, json = data)#, params = register_header)
             print(data)
             print(r.status_code, r.reason)
-            self.collected_data = []
-        self.timestamp = []
 
     def json_data_for_one_metric(self):
         data = []
@@ -139,14 +135,14 @@ class SensorTools:
     def json_data_for_two_metrics(self):
         data1 = []
         data2 = []
-        for i in range(len(self.collected_data1)):
+        for i in range(len(self.data1_to_send)):
             temp1        = {}
-            temp1["val"] = str(self.collected_data1[i])
-            temp1["ts"]  = self.timestamp[i]
+            temp1["val"] = str(self.data1_to_send[i])
+            temp1["ts"]  = self.data_timestamp_to_send[i]
             
             temp2        = {}
-            temp2["val"] = str(self.collected_data2[i])
-            temp2["ts"]  = self.timestamp[i]
+            temp2["val"] = str(self.data2_to_send[i])
+            temp2["ts"]  = self.data_timestamp_to_send[i]
             
             data1.append(temp1)
             data2.append(temp2)
@@ -170,6 +166,20 @@ class SensorTools:
                 val = psutil.sensors_battery().percent
             self.collected_data2.append(val)
         self.timestamp.append(datetime.datetime.fromtimestamp(time.time()).strftime('%d/%m/%Y %H:%M:%S'))
-        #print(self.collected_data)
-        #print(self.timestamp)
-        #print("CPU percent: {0}% \nBattery: {1}%".format(psutil.cpu_percent(interval=1.0), psutil.sensors_battery().percent))
+        
+    def coppy_data(self):
+        if self.metric == "Both":
+            self.data1_to_send   = self.collected_data1
+            self.data2_to_send   = self.collected_data2
+            self.collected_data1 = []
+            self.collected_data2 = []
+        else:
+            self.data_to_send    = self.collected_data
+            self.collected_data  = []
+        
+        self.data_timestamp_to_send = self.timestamp
+        self.timestamp = []
+    
+    def data_amount(self):
+        return len(self.timestamp)
+         

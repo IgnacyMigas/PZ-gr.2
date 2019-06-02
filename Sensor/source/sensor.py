@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--reg',                 '-r',  help="registration flag. Options:yes or no. Default: yes",             type=str,   default="yes")
 parser.add_argument('--name',                '-n',  help="sensor name",                                                    type=str,   default="pokojXXX")
 parser.add_argument('--interval',            '-i',  help="measurements interval. Min: 1.0. Max: 30.0",                     type=float, default=1.0)
-parser.add_argument('--measurements_amount', '-ma', help="number of measurements sended in one package. Min: 1. Max: 100", type=int,   default=10)
+parser.add_argument('--measurements_amount', '-ma', help="number of measurements sended in one package. Min: 5. Max: 100", type=int,   default=10)
 parser.add_argument('--metrics',             '-m',  help="metrics flag. Options: CPU, Battery or Both, Default: Both",     type=str,   default="Both")
 parser.add_argument('--url',                 '-u',  help="url to monitor instance. Default: http://localhost:8080/v1/",    type=str,   default="http://localhost:8080/v1/")
 
@@ -34,9 +34,9 @@ def check_interval_argument(interval):
     return interval
 
 def check_measurements_amount_argument(measurements_amount):
-    if (measurements_amount < 1):
-        print("Measurements amount can not be lower than 1. Sensor will be run with measurements amount min value: 1")
-        measurements_amount = 1
+    if (measurements_amount < 5):
+        print("Measurements amount can not be lower than 5. Sensor will be run with measurements amount min value: 5")
+        measurements_amount = 5
     elif (measurements_amount > 100):
         print("Measurements amount can not be higher than 100. Sensor will be run with measurements amount max value: 100")
         measurements_amount = 100
@@ -57,9 +57,8 @@ def sensor_main(args):
     
     timer.start()
     while True:
-        time.sleep(args.measurements_amount*args.interval)
-        #timer.stop()
-        tool.send_data()
+        if args.measurements_amount == tool.data_amount():
+            tool.send_data()
     
 if __name__ == '__main__':
     args = parser.parse_args()
