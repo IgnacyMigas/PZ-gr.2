@@ -50,21 +50,10 @@ class SensorTools:
         
         while True:
             print(data)
-            try:
-                r = requests.post(url = self.API_REGISTER_ENDPOINT, json = data)#, params = register_header) 
-                #print(r)
-                print(r.status_code, r.reason)
-                if r.status_code == 201:
-                    print("Sensor registration complete")
-                    break
-                elif r.status_code == 409:
-                    print('Looks like, sensor with name "{0}" already exist. Skipping registration...'.format(self.hostID))
-                    break
-                else:
-                    print("Something went wrong during registration. HTTP code: {0}. After a few seconds, we will try again...".format(r.status_code))
-                    time.sleep(5)
-            except requests.exceptions.ConnectionError:
-                print("Can not find server. Try to connect again after 5 seconds...")
+            r = self.post(endpoint = self.API_REGISTER_ENDPOINT, data = data) 
+            if r == True:
+                break
+            else:
                 time.sleep(5)
     
     def register_json_data_for_one_metric(self):
@@ -104,30 +93,25 @@ class SensorTools:
         self.coppy_data()
         if self.metric == "Both":
             data = self.json_data_for_two_metrics()
-            r = requests.post(url = self.API_CPU_MEASUREMENTS_ENDPOINT, json = data[0])#, params = register_header)
             print(data[0])
-            print(r.status_code, r.reason)
-            print("#################")
-            r = requests.post(url = self.API_BATTERY_MEASUREMENTS_ENDPOINT, json = data[1])#, params = register_header)
             print(data[1])
-            print(r.status_code, r.reason)
+            r = self.post(endpoint = self.API_CPU_MEASUREMENTS_ENDPOINT,     data = data[0])
+            r = self.post(endpoint = self.API_BATTERY_MEASUREMENTS_ENDPOINT, data = data[1])
         elif self.metric == "CPU":
             data = self.json_data_for_one_metric()
-            r = requests.post(url = self.API_CPU_MEASUREMENTS_ENDPOINT, json = data)#, params = register_header)
             print(data)
-            print(r.status_code, r.reason)
+            r = self.post(endpoint = self.API_CPU_MEASUREMENTS_ENDPOINT,     data = data)
         else:
             data = self.json_data_for_one_metric()
-            r = requests.post(url = self.API_BATTERY_MEASUREMENTS_ENDPOINT, json = data)#, params = register_header)
             print(data)
-            print(r.status_code, r.reason)
+            r = self.post(endpoint = self.API_BATTERY_MEASUREMENTS_ENDPOINT, data = data)
 
     def json_data_for_one_metric(self):
         data = []
-        for i in range(len(self.collected_data)):
+        for i in range(len(self.data_to_send)):
             temp        = {}
-            temp["val"] = str(self.collected_data[i])
-            temp["ts"]  = self.timestamp[i]
+            temp["val"] = str(self.data_to_send[i])
+            temp["ts"]  = self.data_timestamp_to_send[i]
             data.append(temp)
         
         return data
@@ -182,4 +166,39 @@ class SensorTools:
     
     def data_amount(self):
         return len(self.timestamp)
+    
+    def post(self, endpoint, data):
+        result = False
+        if endpoint == self.API_REGISTER_ENDPOINT:
+            try:
+                r = requests.post(url = endpoint, json = data)#, params = register_header) 
+                #print(r)
+                print(r.status_code, r.reason)
+                if r.status_code == 201:
+                    print("Sensor registration complete")
+                    result = True
+                elif r.status_code == 409:
+                    print('Looks like, sensor with name "{0}" already exist. Skipping registration...'.format(self.hostID))
+                    result = True
+                else:
+                    print("Something went wrong during registration. HTTP code: {0}. After a 5 seconds, we will try again...".format(r.status_code))
+                    result = False
+            except requests.exceptions.ConnectionError:
+                print("Can not find server. Try to connect again after 5 seconds...")
+                result = False
+            except requests.exceptions.RequestException as e:
+                print("During registration error: {0} ocurre.".format(e))
+                result = False
+        else:
+            try:
+                r = requests.post(url = endpoint, json = data)#, params = register_header) 
+                #print(r)
+                print(r.status_code, r.reason)
+                if r.status_code == 201:
+                    result = True
+            except requests.exceptions.RequestException as e:
+                print("During data send error: {0} occurred.".format(e))
+                result = False
+        
+        return result
          
