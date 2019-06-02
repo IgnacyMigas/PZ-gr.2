@@ -111,7 +111,7 @@ Body:
 
 Response
 
-Success: 200
+Success: 200 Failure: 401
 
 { 
    "logged_in_as": "<username>"
