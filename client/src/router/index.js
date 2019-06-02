@@ -5,20 +5,35 @@ import Login from '@/components/views/Login'
 import Registration from '@/components/views/Registration'
 import Charts from '@/components/views/Charts'
 import List from '@/components/views/List'
+import { isLoggedIn } from '../store/getters'
 
 /**
- * Check login token, if present, route to home.
+ * Check if logged in.
  */
-const tokenOrHome = (to, from, next) => {
-  next()
+const checkLoggedIn = (to, from, next) => {
+  // if logged in, go!
+  if (isLoggedIn) {
+    next()
+    return true
+  }
+  store.commit('tryFromLocalStorage')
+  if (user.isLoggedIn) {
+    next()
+    return true
+  }
+  return false
 }
 
 /**
- * Check login token.
+ * Check login status, if not logged in, route to home.
  */
-const hasToken = (to, from, next) => {
-  next()
+const loginOrHome = (to, from, next) => {
+  const login = checkLoggedIn()
+  if (!login) {
+    router.push('/home')
+  }
 }
+
 
 Vue.use(Router)
 
@@ -29,31 +44,31 @@ const router = new Router({
       alias: '/home',
       name: 'Home',
       component: Home,
-      beforeEnter: hasToken
+      beforeEnter: checkLoggedIn
     },
     {
       path: '/login',
       name: 'Login',
       component: Login,
-      beforeEnter: tokenOrHome
+      beforeEnter: checkLoggedIn
     },
     {
       path: '/registration',
       name: 'Registration',
       component: Registration,
-      beforeEnter: tokenOrHome
+      beforeEnter: checkLoggedIn
     },
     {
       path: '/charts',
       name: 'Charts',
       component: Charts,
-      beforeEnter: hasToken
+      beforeEnter: loginOrHome
     },
     {
       path: '/list',
       name: 'List',
       component: List,
-      beforeEnter: hasToken
+      beforeEnter: loginOrHome
     }
   ]
 })

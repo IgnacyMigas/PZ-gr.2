@@ -115,11 +115,10 @@ const actions = {
       username,
       password
     }
-    const res = await state.auth.post('/login', body)
-    //ERROR: Same Origin Policy!
+    const res = await state.auth.post('/v1/login', body)
 
-    if (res.access_token) {
-      commit('login', username, password, res.access_token)
+    if (res.data && res.data.access_token) {
+      commit('login', username, password, res.data.access_token)
     }
 
     return res
