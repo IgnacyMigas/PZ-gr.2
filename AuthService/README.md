@@ -56,8 +56,8 @@ Response
 Success: 200
 
 {
-   "access-token":"<access-token>",
-   "refresh-token":"<refresh-token>"
+   "access_token":"<access_token>",
+   "refresh_token":"<refresh_token>"
 }
 
 Failure: 400, 401
@@ -71,7 +71,7 @@ Token refresh:
 Body:
 
 {
-   "refresh-token":"<refresh-token>"
+   "refresh_token":"<refresh_token>"
 }
 
 Response
@@ -79,7 +79,7 @@ Response
 Success: 200
 
 {
-   "access-token":"<access-token>"
+   "access_token":"<access_token>"
 }
 
 Failure: 400, 401
@@ -91,7 +91,7 @@ Invalidates refresh token.
 Body:
 
 {
-   "refresh-token":"<refresh-token>"
+   "refresh_token":"<refresh_token>"
 }
 
 Success: 200 Failure: 400
@@ -106,7 +106,7 @@ Token refresh:
 Body:
 
 {
-   "access-token":"<access-token>"
+   "access_token":"<access_token>"
 }
 
 Response
