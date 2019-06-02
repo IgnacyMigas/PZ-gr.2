@@ -49,6 +49,16 @@ matrix:
       script:
         - python Sensor/test/tests.py
 
+    - stage: test
+      language: python
+      python: 3.7
+      dist: xenial
+      install:
+        - python -m pip install --upgrade pip
+        - pip install -r AuthService/requirements.txt
+      script:
+        - python AuthService/tests.py
+
     - stage: build
       dist: xenial
       language: python
