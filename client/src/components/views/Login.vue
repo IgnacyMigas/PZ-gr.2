@@ -1,17 +1,7 @@
 <template>
   <page title="Logowanie">
-    Tu będzie logowanie.
-
     <login-window>
     </login-window>
-    <!--
-    <v-layout justify-center>
-      <v-card-actions>
-        <v-btn @click='login'>Zaloguj się</v-btn>
-        <v-btn to='registration'>Zarejestruj się</v-btn>
-      </v-card-actions>
-    </v-layout>
-    -->
   </page>
 </template>
 

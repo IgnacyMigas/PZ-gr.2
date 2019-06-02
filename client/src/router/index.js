@@ -28,6 +28,18 @@ const onlyLogged = (to, from, next) => {
   }
 }
 
+/**
+ * Check login status, if logged in, route to home.
+ */
+const onlyUnlogged = (to, from, next) => {
+  store.commit('tryFromLocalStorage')
+  if (store.getters.isLoggedIn) {
+    router.push('/home')
+  } else {
+    next()
+  }
+}
+
 
 Vue.use(Router)
 
@@ -44,13 +56,13 @@ const router = new Router({
       path: '/login',
       name: 'Login',
       component: Login,
-      beforeEnter: checkLoggedIn
+      beforeEnter: onlyUnlogged
     },
     {
       path: '/registration',
       name: 'Registration',
       component: Registration,
-      beforeEnter: checkLoggedIn
+      beforeEnter: onlyUnlogged
     },
     {
       path: '/charts',
