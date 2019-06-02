@@ -143,7 +143,7 @@ const actions = {
   },
 
   /** Pend register request. */
-  sendRegister: async function ({ state, commit }, { username, password }) {
+  sendRegister: async function ({ state }, { username, password }) {
     const body = { username, password }
     const res = await state.auth.post('/v1/users', body)
     return res
