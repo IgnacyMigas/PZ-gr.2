@@ -1,3 +1,26 @@
+import { isLoggedIn, req_route } from './getters'
+import router from '../router'
+
+const get_error = (e)  => {
+  let response = e.response || e
+  if (response && response.data) {
+    response = response.data
+  }
+  if (response && response.message) {
+    response = response.message
+  }
+  if (response && response.status) {
+    const s = response.status
+    response = 'Błąd ' + s
+    switch (s) {
+      case 401:
+        response += ' (nie znaleziono)'
+    }
+  }
+  return response
+}
+
+
 const actions = {
   login: ({ commit }) => {
     commit('login')
@@ -5,6 +28,7 @@ const actions = {
 
   logout: ({ commit }) => {
     commit('logout')
+    router.push('/login')
   },
 
   /** Make async request. */
@@ -21,16 +45,7 @@ const actions = {
         }
       }
     } catch (e) {
-      if (e.response) { // there is some response
-        const data = e.response.data
-        if (data.message !== undefined && data.message !== '') {
-          error = data.message
-        } else {
-          error = data
-        }
-      } else {
-        error = 'Błąd ' + e.status
-      }
+      error = get_error(e)
     }
     return { log, error, data }
   },
@@ -111,17 +126,26 @@ const actions = {
 
   /** Pend login request. */
   sendLogin: async function ({ state, commit }, { username, password }) {
-    const body = {
-      username,
-      password
-    }
-    const res = await state.auth.post('/login', body)
-    //ERROR: Same Origin Policy!
+    const body = { username, password }
+    const res = await state.auth.post('/v1/login', body)
 
-    if (res.access_token) {
-      commit('login', username, password, res.access_token)
+    if (res.data && res.data.access_token) {
+      const token = res.data.access_token
+      commit('login', { username, password, token })
+
+      if (isLoggedIn) {
+        const route = req_route(state) || '/home'
+        router.push(route)
+      }
     }
 
+    return res
+  },
+
+  /** Pend register request. */
+  sendRegister: async function ({ state, commit }, { username, password }) {
+    const body = { username, password }
+    const res = await state.auth.post('/v1/users', body)
     return res
   }
 }

@@ -28,7 +28,7 @@
       <button-nav
         v-if="!isLoggedIn"
         icon='exit_to_app'
-        text='Wyloguj'
+        text='Zaloguj'
         to='/login'
       />
       <button-nav

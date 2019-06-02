@@ -1,11 +1,13 @@
 <template>
   <page title='Rejestracja'>
-    Tu będzie rejestracja.
+    <register-window>
+    </register-window>
   </page>
 </template>
 
 <script>
 import Page from '@/components/templates/Page'
+import RegisterWindow from '@/components/sections/RegisterWindow'
 
 /**@group Strony
  * @vuese
@@ -16,7 +18,8 @@ import Page from '@/components/templates/Page'
 export default {
   name: 'registration',
   components: {
-    'page': Page
+    'page': Page,
+    'register-window': RegisterWindow
   }
 }
 </script>
