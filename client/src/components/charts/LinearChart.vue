@@ -2,7 +2,7 @@
     <div>
         <h2>Wybierz metrykę:  </h2>
 
-        <select  @click="handleButtonClick" @change="onChange($event)" class="t2e-select-metric" v-model="selected" >
+        <select  @change="onChange($event)" class="t2e-select-metric" v-model="selected" >
             <option disabled value=""> Przoszę wybrać metrykę</option>
             <option v-for="(metric, index) in metrics_keys"  v-bind:value="metric" >
                 Metryka: '{{ metric }}' , Monitor: '{{monitor_keys[index]}}'
@@ -19,11 +19,14 @@
                 <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-48h" :class="{'btn-primary': range == '48h', 'btn-white': range != '48h'}" type="button" v-on:click="timeRange('48h')"> 48 h </button>
                 <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-range" :class="{'btn-primary': range == 'selectRange', 'btn-white': range != 'selectRange'}" type="button" v-on:click="timeRange('selectRange')"> Zakres </button>
 
-                <v-range-selector v-if="!isHiddenCalendar"
+                <v-range-selector  @click="yolo()" v-if="!isHiddenCalendar"
                                   :start-date.sync="dataRange.start"
                         :end-date.sync="dataRange.end"
                 />
+                <!--v-on:click="yolo('dataRange.start', 'dataRange.end')"-->
             </div>
+            <h1>{{dataRange.start}}</h1>
+            <h1>{{dataRange.end}}</h1>
 
             <span class="metricsAlerts">{{noDataInfo}}</span>
             <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
@@ -62,6 +65,15 @@
                 let _this = this;
                 _this.activeTab = 1;
             },
+            yolo(){
+                 var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=30&from='
+                // this.$http.get(url + start + '&to='+ end, {useCredentails: true}).then(function (data) {
+                // });
+               //if(this.dataRange.start != undefined && this.dataRange.end != undefined){
+                    this.draw(url + this.dataRange.start + '&to='+ this.dataRange.end);
+               // }
+
+            },
             timeRange: function(range) {
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
                     this.isHiddenCalendar = true;
@@ -72,7 +84,6 @@
 
                     // default Data(): "Fri May 31 2019 15:19:41 GMT+0200 (Central European Summer Time)"
                     // expected: "31/05/2019 15:34:41"
-
                     var hour
                     if (range == '15m') {
                         var _15min = new Date(Date.now() - 1000 * 60 * 15);
@@ -111,8 +122,14 @@
                         this.range = '48h';
                     }
                     else if (range == 'selectRange') {
-                        this.range = 'selectRange';
+
                         this.isHiddenCalendar = false;
+                        // while(this.dataRange.start != undefined && this.dataRange.end != undefined){
+                        //     this.range = 'selectRange';
+                        // }
+                        // this.draw(url + this.dataRange.start + '&to='+ this.dataRange.end);
+                        this.range = 'selectRange';
+                        //this.draw(url + this.dataRange.start + '&to='+ this.dataRange.end);
                         //alert('TODO select range!');
                     }
                     else {
@@ -155,8 +172,12 @@
             },
             onChange(event) {
                 this.selectedMetric = event.target.value
+                this.getMetrics();
+                this.created();
             },
             getMetrics: function(){
+                this.value = [];
+                this.time = [];
                 this.$http.get(url_metrics , {useCredentails: true}).then(function (data) {
                     this.metrics= data.body.metrics;
                      var index;
