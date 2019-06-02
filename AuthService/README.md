@@ -82,7 +82,7 @@ Success: 200
    "access_token":"<access_token>"
 }
 
-Failure: 400, 401
+Failure: 400, 401, 422
 ```
 #### DELETE
 ```
@@ -94,7 +94,7 @@ Body:
    "refresh_token":"<refresh_token>"
 }
 
-Success: 200 Failure: 400
+Success: 200 Failure: 400, 401, 422
 ```
 
 ### v1/protected
@@ -111,7 +111,7 @@ Body:
 
 Response
 
-Success: 200
+Success: 200 Failure: 401, 422
 
 { 
    "logged_in_as": "<username>"
