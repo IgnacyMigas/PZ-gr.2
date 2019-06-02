@@ -20,7 +20,7 @@ describe('ButtonBar', () => {
 
   it('handler function called when clicking', () => {
     sinon.assert.notCalled(spy)
-    btn.trigger('click.stop')
+    btn.trigger('click')
     sinon.assert.calledOnce(spy)
   })
 })
