@@ -66,10 +66,12 @@ matrix:
         - python -m pip install --upgrade pip
         - pip install -r tests/requirements.txt
       script:
+        - docker build --tag=$DOCKER_USER/pz-gr2:auth-km3 AuthService/
         - docker build --tag=$DOCKER_USER/pz-gr2:gateway-km3 APIGateway/
         - docker build --tag=$DOCKER_USER/pz-gr2:monitor-km3 Monitor/
         - docker build --tag=$DOCKER_USER/pz-gr2:sensor-km3 Sensor/
         - docker build --tag=$DOCKER_USER/pz-gr2:client-km3 client/
+        - docker run -d --network host -it $DOCKER_USER/pz-gr2:auth-km3
         - docker run -d --network host -it $DOCKER_USER/pz-gr2:gateway-km3
         - docker run -d --network host -it $DOCKER_USER/pz-gr2:monitor-km3
         - docker run -d --network host -it $DOCKER_USER/pz-gr2:sensor-km3
@@ -79,6 +81,7 @@ matrix:
       deploy:
         - script:
             - docker login -u $DOCKER_USER -p $DOCKER_PASS
+            - docker push $DOCKER_USER/pz-gr2:auth-km3
             - docker push $DOCKER_USER/pz-gr2:monitor-km3
             - docker push $DOCKER_USER/pz-gr2:gateway-km3
             - docker push $DOCKER_USER/pz-gr2:sensor-km3
