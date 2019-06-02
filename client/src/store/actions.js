@@ -1,3 +1,7 @@
+import { isLoggedIn, req_route } from './getters'
+import router from '../router'
+
+
 const actions = {
   login: ({ commit }) => {
     commit('login')
@@ -5,6 +9,7 @@ const actions = {
 
   logout: ({ commit }) => {
     commit('logout')
+    router.push('/login')
   },
 
   /** Make async request. */
@@ -118,7 +123,13 @@ const actions = {
     const res = await state.auth.post('/v1/login', body)
 
     if (res.data && res.data.access_token) {
-      commit('login', username, password, res.data.access_token)
+      const token = res.data.access_token
+      commit('login', { username, password, token })
+
+      if (isLoggedIn) {
+        const route = req_route(state) || '/home'
+        router.push(route)
+      }
     }
 
     return res

@@ -1,3 +1,6 @@
+export const req_route = (state) =>
+  state.req_route
+
 export const isLoggedIn = (state) =>
   state.isLoggedIn
 

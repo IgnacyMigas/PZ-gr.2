@@ -9,6 +9,9 @@ Vue.use(Vuex)
 
 
 const state = {
+  /** Last requested route derirected to login. */
+  req_route: null,
+
   /** If the user is authentified */
   isLoggedIn: false,
 

@@ -5,32 +5,26 @@ import Login from '@/components/views/Login'
 import Registration from '@/components/views/Registration'
 import Charts from '@/components/views/Charts'
 import List from '@/components/views/List'
-import { isLoggedIn } from '../store/getters'
+import store from '../store'
 
 /**
  * Check if logged in.
  */
-const checkLoggedIn = (to, from, next) => {
-  // if logged in, go!
-  if (isLoggedIn) {
-    next()
-    return true
-  }
+const checkLoggedIn = (to, _from, next) => {
   store.commit('tryFromLocalStorage')
-  if (user.isLoggedIn) {
-    next()
-    return true
-  }
-  return false
+  next()
 }
 
 /**
  * Check login status, if not logged in, route to home.
  */
-const loginOrHome = (to, from, next) => {
-  const login = checkLoggedIn()
-  if (!login) {
-    router.push('/home')
+const onlyLogged = (to, from, next) => {
+  store.commit('tryFromLocalStorage')
+  if (store.getters.isLoggedIn) {
+    next()
+  } else {
+    store.commit('save_route', to.path)
+    router.push('/login')
   }
 }
 
@@ -62,13 +56,13 @@ const router = new Router({
       path: '/charts',
       name: 'Charts',
       component: Charts,
-      beforeEnter: loginOrHome
+      beforeEnter: onlyLogged
     },
     {
       path: '/list',
       name: 'List',
       component: List,
-      beforeEnter: loginOrHome
+      beforeEnter: onlyLogged
     }
   ]
 })
