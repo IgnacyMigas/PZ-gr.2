@@ -9,14 +9,14 @@ class SensorTools:
     register_header = { "access-token":token }
 
     def __init__(self, metric, sensor_name, url):
-        self.metric = metric
-        self.set_variables(sensor_name, url)
+        self.set_variables(metric, sensor_name, url)
     
-    def set_variables(self, sensor_name, url):
+    def set_variables(self, metric, sensor_name, url):
         self.API_REGISTER_ENDPOINT             = url + "hosts"
         self.API_CPU_MEASUREMENTS_ENDPOINT     = url + "metrics/" + sensor_name + "_CPU_Host/measurements"
         self.API_BATTERY_MEASUREMENTS_ENDPOINT = url + "metrics/" + sensor_name + "_Battery_Host/measurements"
         
+        self.metric = metric
         self.hostID = sensor_name
         self.os     = platform.system()
         if self.metric == "CPU":
