@@ -9,12 +9,22 @@ const get_error = (e)  => {
   if (response && response.message) {
     response = response.message
   }
+  if (response && response.log) {
+    response = response.log
+  }
   if (response && response.status) {
     const s = response.status
     response = 'Błąd ' + s
     switch (s) {
       case 401:
+        response += ' (brak uprawnień)'
+        break
+      case 404:
         response += ' (nie znaleziono)'
+        break
+      case 409:
+        response += ' (konflikt)'
+        break
     }
   }
   return response
@@ -36,14 +46,8 @@ const actions = {
     let [log, error, data] = ['', '', null]
     try {
       const response = await promise()
-      if (response !== undefined) {
-        if (response.data !== undefined) {
-          if (response.log !== undefined) log = response.log
-          data = response.data
-        } else {
-          data = response
-        }
-      }
+      data = (response && response.data) || response
+      log = response && response.log
     } catch (e) {
       error = get_error(e)
     }
