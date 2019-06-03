@@ -3,8 +3,8 @@
         <h2>Wybierz metrykę:  </h2>
 
         <select  @change="onChange($event)" class="t2e-select-metric" v-model="selected">
-            <option disabled value=""> Przoszę wybrać metrykę</option>
-            <option v-for="(metric, index) in metrics_keys"  v-bind:value="metric" >
+            <option value="" selected disabled> Przoszę wybrać metrykę</option>
+            <option v-for="(metric, index) in metrics_keys"  v-bind:value="metric">
                 Metryka: '{{ metric }}' , Monitor: '{{monitor_keys[index]}}'
             </option>
         </select>
@@ -63,16 +63,13 @@
             <span class="metricsAlerts">{{noDataInfo}}</span>
             <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
         </div>
-
         <h5>{{metrics}}</h5>
-
     </div>
 </template>
 
 <script>
     import VueApexCharts from 'vue-apexcharts'
     import VRangeSelector from 'vuelendar/components/vl-range-selector';
-    // import Buefy from 'buefy'
     import Vue from 'vue'
 
     import { Field } from 'buefy/dist/components/field'
@@ -83,11 +80,11 @@
     Vue.component('b-timepicker', Timepicker)
     Vue.component('b-icon', Icon)
 
-    //TODO: limit ?n=30 and add old-data-picker
+    //TODO: limit ?n=20 and add old-data-picker
 
     var host = 'http://localhost:8080'
     var version = 'v1'
-    var n = 15
+    var n = 20
     var url_metrics = host + '/' + version + '/metrics'
 
      var time= []
@@ -102,12 +99,6 @@
         mounted:function(){
             this.getMetrics() //method will execute at pageload
         },
-        computed: {
-            clickable() {
-                // if something
-                return true;
-            }
-        },
         methods: {
             setActiveTab(){
                 let _this = this;
@@ -118,13 +109,11 @@
                 var p = dateString.split(/\D+/g)
                 return [p[2],p[1],p[0] ].join("/")
             },
-            // timeChangeHandler(){
-            //     // ...
-            // },
             timeRange: function(range) {
+                this.beforeDestroy();
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
                     this.isHiddenCalendar = true;
-                    var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=30&from='
+                    var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n='+ n +'&from='
                     var dateFormat = require('dateformat');
                     var now = new Date();
                     dateFormat(now, "DD/mm/YYYY HH:MM:SS");
@@ -138,6 +127,13 @@
                         _15min = dateFormat(_15min, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _15min);
                         this.range = '15m';
+
+                        this.interval = setInterval(function () {
+                            _15min = new Date(Date.now() - 1000 * 60 * 15);
+                            hour  = ("0" + _15min.getHours()).slice(-2);
+                            _15min = dateFormat(_15min, "dd/mm/yyyy "+ hour +":MM:ss");
+                            this.draw(url + _15min);
+                        }.bind(this), 8000);
                     }
                     else if (range == '30m') {
                         var _30min = new Date(Date.now() - 1000 * 60 * 30);
@@ -233,8 +229,7 @@
                 }
             },
             onChange(event) {
-                this.selectedMetric = event.target.value
-                this.getMetrics();
+                this.selectedMetric = event.target.value;
                 this.created();
             },
             getMetrics: function(){
@@ -250,14 +245,11 @@
                 });
             },
             created: function() {
-                var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=' + n
                 this.getMetrics();
-                this.draw(url);
+                this.timeRange('15m')
             },
-            handleButtonClick: function() {
-                /* call two methods. */
-                this.getMetrics();
-                this.created();
+            beforeDestroy: function(){
+                clearInterval(this.interval);
             }
         },
             data() {
