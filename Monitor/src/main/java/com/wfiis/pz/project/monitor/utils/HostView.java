@@ -9,6 +9,7 @@ public class HostView extends HostAbstractView {
 	@JsonProperty("monitor-id")
 	String monitorId;
 	
+	@Override
 	@JsonProperty("host-id")
 	public String getHostId() {
 		return hostId;

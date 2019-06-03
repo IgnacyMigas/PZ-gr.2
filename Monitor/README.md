@@ -30,6 +30,10 @@ To set Api Gateway URL (url Api Gateway where the POST requests for registration
 To set Api endpoint for monitor
 
 	Modify variable API_ENDPOINT in file application.properties (src/main/resources)
+	
+To set Api endpoint for authorization (default (internal stub) "http://localhost:8080/v1/protected")
+
+	Modify variable AUTH_SERVICE_URL in file application.properties (src/main/resources) 
 
 
 
@@ -62,6 +66,10 @@ To set Api Gateway URL (your url Api Gateway where the POST requests for registr
 To set Api endpoint for monitor (default "http://localhost:8080/")
 
 	Modify variable API_ENDPOINT in file application.properties (src/main/resources) 
+	
+To set Api endpoint for authorization (default (internal stub) "http://localhost:8080/v1/protected")
+
+	Modify variable AUTH_SERVICE_URL in file application.properties (src/main/resources) 
 
 
 
@@ -76,6 +84,8 @@ To be able to run your Spring Boot app you will need to first build it. To build
 use the below command. You will need to run it from the project folder which contains the pom.xml file:
 
 	mvn install
+	or
+	mvn install -DskipTests
 
 Run Spring Boot app using Maven:
 

@@ -11,6 +11,7 @@ public class HostDetailsView extends HostAbstractView {
 	String os;
 	List<Metric> metrics;
 	
+	@Override
 	@JsonProperty("host-id")
 	public String getHostId() {
 		return hostId;

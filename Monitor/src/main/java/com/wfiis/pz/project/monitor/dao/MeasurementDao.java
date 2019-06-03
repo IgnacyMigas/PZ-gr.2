@@ -12,9 +12,18 @@ public interface MeasurementDao {
 
 	List<Measurement> findAllByMetricId(String id);
 
-	List<Measurement> findTopByMetricId(String id, Integer n);
+	List<Measurement> findTopByMetricId(String id, Integer n, Boolean all);
 
-	List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to);
+	List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to, Integer n, Boolean all);
+	
+	
+	
+
+	List<Measurement> findMeasurementBySimpleMetricId(String simpleMetricId);
+
+	List<Measurement> findByDateMeasurementBySimpleMetricId(String simpleMetricId, String from, String to, Integer n, Boolean all);
+
+	List<Measurement> findTopMeasurementBySimpleMetricId(String simpleMetricId, Integer n, Boolean all);
 
 	
 }

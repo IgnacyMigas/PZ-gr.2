@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.wfiis.pz.project.monitor.entity.Measurement;
-import com.wfiis.pz.project.monitor.utils.Util;
 
 
 
@@ -18,7 +17,7 @@ public class MeasurementRowMapper implements RowMapper<Measurement> {
 		
 		m.setMetricId(rs.getString("metricId"));
 		m.setVal(rs.getString("val"));
-		m.setTs(Util.convertTimestampToString(rs.getTimestamp("ts") ));
+		m.setTs(rs.getString("ts"));
  
         return m;
 	}

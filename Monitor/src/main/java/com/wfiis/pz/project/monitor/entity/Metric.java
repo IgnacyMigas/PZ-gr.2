@@ -15,6 +15,7 @@ public class Metric{
 	@JsonProperty("monitor-id")
 	String monitorId;
 	
+	@JsonProperty("metric-ids")
 	String simpleMetricId;
 	String kind;
 	

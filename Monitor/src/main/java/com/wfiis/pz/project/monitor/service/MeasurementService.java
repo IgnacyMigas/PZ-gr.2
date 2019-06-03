@@ -13,9 +13,17 @@ public interface MeasurementService {
 
 	void insertMeasurment(Measurement m);
 
-	List<Measurement> findTopMeasurementByMetricId(String id, Integer n);
+	List<Measurement> findTopMeasurementByMetricId(String id, Integer n, Boolean all);
 
-	List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to);
+	List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to, Integer n, Boolean all);
+	
+	
+
+	List<Measurement> findTopMeasurementBySimpleMetricId(String simpleMetricId, Integer n, Boolean all);
+
+	List<Measurement> findByDateMeasurementBySimpleMetricId(String simpleMetricId, String from, String to, Integer n, Boolean all);
+
+	List<Measurement> findMeasurementBySimpleMetricId(String simpleMetricId);
 	
 }
 

@@ -28,12 +28,27 @@ public class MeasurementServiceImpl implements MeasurementService{
 		
 	}
 	@Override
-	public List<Measurement> findTopMeasurementByMetricId(String id, Integer n) {
-		return measurementDao.findTopByMetricId(id,n);
+	public List<Measurement> findTopMeasurementByMetricId(String id, Integer n, Boolean all) {
+		return measurementDao.findTopByMetricId(id,n, all);
 	}
 	@Override
-	public List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to) {
-		return measurementDao.findByDateMeasurementByMetricId(id, from, to);
+	public List<Measurement> findByDateMeasurementByMetricId(String id, String from, String to, Integer n, Boolean all) {
+		return measurementDao.findByDateMeasurementByMetricId(id, from, to,  n, all);
+	}
+	
+	
+	
+	@Override
+	public List<Measurement> findTopMeasurementBySimpleMetricId(String simpleMetricId, Integer n, Boolean all) {
+		return measurementDao.findTopMeasurementBySimpleMetricId(simpleMetricId, n, all);
+	}
+	@Override
+	public List<Measurement> findByDateMeasurementBySimpleMetricId(String simpleMetricId, String from, String to, Integer n, Boolean all) {
+		return measurementDao.findByDateMeasurementBySimpleMetricId(simpleMetricId, from, to, n, all);
+	}
+	@Override
+	public List<Measurement> findMeasurementBySimpleMetricId(String simpleMetricId) {
+		return measurementDao.findMeasurementBySimpleMetricId(simpleMetricId);
 	}
 	
 }

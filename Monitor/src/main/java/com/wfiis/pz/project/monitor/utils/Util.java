@@ -20,16 +20,4 @@ public class Util{
       return null;
     }
   }
-  
-  public static String convertTimestampToString(java.sql.Timestamp timeStampDate) {
-	  
-	  SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	  String stringDate  = dateFormat.format(timeStampDate);
-	  return stringDate;
-	
-	 
-  }
-  
-  
-  
 }

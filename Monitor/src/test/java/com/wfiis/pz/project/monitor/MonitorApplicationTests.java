@@ -26,6 +26,7 @@ import com.wfiis.pz.project.monitor.entity.Metric;
 import com.wfiis.pz.project.monitor.service.HostService;
 import com.wfiis.pz.project.monitor.service.MeasurementService;
 import com.wfiis.pz.project.monitor.service.MetricService;
+import com.wfiis.pz.project.monitor.utils.HostAbstractView;
 import com.wfiis.pz.project.monitor.utils.HostDetails;
 import com.wfiis.pz.project.monitor.utils.HostDetailsView;
 import com.wfiis.pz.project.monitor.utils.HostView;
@@ -140,34 +141,34 @@ public class MonitorApplicationTests {
 	
 	@Test
 	public void getHosts(){
-		List<HostView> hosts = app.getHosts();
+		List<HostAbstractView> hosts = app.getHosts(false);
 		assertNotEquals(0, hosts.size());
 	}
 	
 	
 	@Test
 	public void getHostsWithName(){
-		List<HostView> hosts = app.getHostsWithName(hostIdW);
+		List<HostAbstractView> hosts = app.getHostsWithName(hostIdW, false);
 		assertEquals(1, hosts.size());
 		assertEquals(hostIdW, hosts.get(0).getHostId());
 	}
 	
 	@Test
 	public void getHostsWithWrongName(){
-		List<HostView> hosts = app.getHostsWithName("SomeWrongHostId");
+		List<HostAbstractView> hosts = app.getHostsWithName("SomeWrongHostId", false);
 		assertEquals(0, hosts.size());
 	}
 	
 	@Test
 	public void getHostsWithNameLike(){
-		List<HostView> hosts = app.getHostsWithNameLike(hostIdW);
+		List<HostAbstractView> hosts = app.getHostsWithNameLike(hostIdW, false);
 		assertEquals(1, hosts.size());
 	}
 	
 	@Test
 	public void getHostsByMetricType(){
 		
-		List<HostView> hosts = app.getHostsWithMetricType(1, "CPU");
+		List<HostAbstractView> hosts = app.getHostsWithMetricType(1, "CPU", false);
 		assertEquals(1, hosts.size());
 	}
 	
