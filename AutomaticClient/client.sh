@@ -1,6 +1,8 @@
 #!/bin/bash
 
-url="http://www.example.com"
+url="http://ec2-18-221-159-205.us-east-2.compute.amazonaws.com:8081/v1"
+access_token="xxxxxxx"
+box="+ --------------------------------------- +"
 FAILED=1
 SUCCESS=0
 
@@ -19,7 +21,7 @@ do
 	case $o in
 	m) metric=$OPTARG
 	   ;;
-	l) curl "$url/metrics";
+	l) curl -sH "access-token: $access_token" "$url/metrics?meta=true" | sed -n 's/^.*types":\s\[//p' | sed -n 's/\]\}\}/\n/p';
 	   exit $SUCCESS;
 	   ;;
 	h|*) usage
@@ -27,23 +29,11 @@ do
 	esac
 done
 
-echo $metric;
 if [ -z "$metric" ]; then
 	usage
 fi
 
-#auth
-#curl "$url/token?access_token=1234567890abcdefghijklmnopqrstuvwxyzABCD"
-
-#quick check
-if curl --output /dev/null --silent --head --fail "$url"; then
-  printf '%s\n' "$url exist"
-else
-  printf '%s\n' "$url does not exist"
-  exit $FAILED;
-fi
-
 #print top 10, refresh 1s
-watch -n1 -t curl "$url/hosts?top=10&metric_type=$metric"
+watch -n1 -td "curl -sH 'access-token: $access_token' '$url/hosts?metric_type=$metric&top=10' | sed 's/,/\n$box/g' | sed 's/.*host-id\":\s\"/\t\t/' | sed 's/\".*//' ";
 
 exit $SUCCESS;
