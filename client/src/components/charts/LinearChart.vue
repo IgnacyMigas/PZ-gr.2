@@ -1,7 +1,23 @@
 <template>
     <div>
         <h2>Wybierz metrykę:  </h2>
+        <b-field label="Select time" class="max_z_index">
+            <b-timepicker v-model="pickerTime"
+                          placeholder="Click to select...">
 
+                <button class="button is-primary"
+                        @click="pickerTime = new Date()">
+                    <b-icon icon="clock"></b-icon>
+                    <span>Now</span>
+                </button>
+
+                <button class="button is-danger"
+                        @click="pickerTime = null">
+                    <b-icon icon="close"></b-icon>
+                    <span>Clear</span>
+                </button>
+            </b-timepicker>
+        </b-field>
         <select  @change="onChange($event)" class="t2e-select-metric" v-model="selected">
             <option disabled value=""> Przoszę wybrać metrykę</option>
             <option v-for="(metric, index) in metrics_keys"  v-bind:value="metric" >
@@ -18,12 +34,10 @@
                 <button v-if="isHiddenCalendar" @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-24h" :class="{'btn-primary': range == '24h', 'btn-white': range != '24h'}" type="button" v-on:click="timeRange('24h')"> 24 h </button>
                 <button v-if="isHiddenCalendar" @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-48h" :class="{'btn-primary': range == '48h', 'btn-white': range != '48h'}" type="button" v-on:click="timeRange('48h')"> 48 h </button>
                 <button v-if="isHiddenCalendar" @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-range" :class="{'btn-primary': range == 'showRangeSelector', 'btn-white': range != 'showRangeSelector'}" type="button" v-on:click="timeRange('showRangeSelector')"> Zakres </button>
-
                 <input v-if="!isHiddenCalendar"
                        name="range_from"
                         type="text"
                        :placeholder="'Od: ' + [[ dataRange.start ]]"
-                        v-model="message"
                        class="input_data_range"
                        :readonly=true
                 />
@@ -31,11 +45,10 @@
                        name="range_to"
                         type="text"
                        :placeholder="'Do: ' + [[ dataRange.end ]]"
-                       v-model="message"
                        class="input_data_range"
                        :readonly=true
                 />
-                <button  :disabled="clickable" v-if="!isHiddenCalendar" class="btn btn-xs t2e-btn-select-ok btn-white" type="button" v-on:click="timeRange('selectRange')" > Ok </button>
+                <button  v-if="!isHiddenCalendar" class="btn btn-xs t2e-btn-select-ok btn-white" type="button" v-on:click="timeRange('selectRange')" > Ok </button>
                 <button v-if="!isHiddenCalendar" class="btn btn-xs t2e-btn-select-cancle btn-white" type="button" v-on:click="timeRange('cancle')"> Anuluj </button>
                 <v-range-selector  v-if="!isHiddenCalendar"
                                   :start-date.sync="dataRange.start"
@@ -45,9 +58,15 @@
                                    <!--onclick="if(true){this.isHiddenCalendar = true;}"-->
                                    <!--onclick="if(true){alert(dataRange.start);}"-->
 
+
+                <!--<vue-clock-picker-->
+                        <!--mode="24" :defaultHour="defaultHour"-->
+                        <!--:defaultMinute="defaultMinute"-->
+                        <!--:onTimeChange="timeChangeHandler"-->
+                <!--&gt;-->
+                <!--</vue-clock-picker>-->
+
             </div>
-            <h1>{{dataRange.start}}</h1>
-            <h1>{{dataRange.end}}</h1>
 
             <span class="metricsAlerts">{{noDataInfo}}</span>
             <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
@@ -61,7 +80,19 @@
 <script>
     import VueApexCharts from 'vue-apexcharts'
     import VRangeSelector from 'vuelendar/components/vl-range-selector';
+    // import VueClockPicker from 'vue-clock-picker'
+    import Buefy from 'buefy'
+    import Vue from 'vue'
 
+    import { Field } from 'buefy/dist/components/field'
+    import { Timepicker } from 'buefy/dist/components/timepicker'
+    import { Icon } from 'buefy/dist/components/icon'
+    import 'buefy/dist/buefy.css'
+    Vue.component('b-field', Field)
+    Vue.component('b-timepicker', Timepicker)
+    Vue.component('b-icon', Icon)
+
+    //
 
     var host = 'http://localhost:8080'
     var version = 'v1'
@@ -76,6 +107,7 @@
         components: {
             apexcharts: VueApexCharts,
             VRangeSelector,
+            // VueClockPicker,
         },
         mounted:function(){
             this.getMetrics() //method will execute at pageload
@@ -91,13 +123,14 @@
                 let _this = this;
                 _this.activeTab = 1;
             },
-            formatDate (input) {
-                var datePart = input.match(/\d+/g),
-                    year = datePart[0],//.substring(2), // get only two digits
-                    month = datePart[1], day = datePart[2];
-                     input=day+'/'+month+'/'+year;
-                return input;
+            convertDate(dateString) {
+                // dateString = ""+dateString;//.toString();
+                var p = dateString.split(/\D+/g)
+                return [p[2],p[1],p[0] ].join("/")
             },
+            // timeChangeHandler(){
+            //     // ...
+            // },
             timeRange: function(range) {
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
                     this.isHiddenCalendar = true;
@@ -146,20 +179,19 @@
                         this.range = '48h';
                     }
                     else if (range == 'showRangeSelector') {
-
                         this.isHiddenCalendar = false;
-                        // while(this.dataRange.start != undefined && this.dataRange.end != undefined){
-                        //     this.range = 'selectRange';
-                        // }
-                        // this.draw(url + this.dataRange.start + '&to='+ this.dataRange.end);
-                        // this.range = 'showRangeSelector';
-                        //this.draw(url + this.dataRange.start + '&to='+ this.dataRange.end);
-                        //alert('TODO select range!');
                     }//selectRange
                     else if (range == 'selectRange') {
-                        this.range = 'showRangeSelector';
-                        this.draw(url + this.dataRange.start);
+                        var _start = "" + this.dataRange.start;
+                        var _end = "" + this.dataRange.end;
+                        _start = this.convertDate(_start);
+                        _end = this.convertDate(_end);
+                        _start = _start + " 00:00:00";
+                        _end = _end + " 00:00:00";
+                        this.range = 'selectRange';
+                        this.draw(url + _start + '&to=' + _end);
                         this.isHiddenCalendar = true;
+                        this.range = 'showRangeSelector';
                     }
                     else if (range == 'cancle') {
                         this.isHiddenCalendar = true;
@@ -312,7 +344,9 @@
                     dataRange: {},
                     date: null,
                     isHiddenCalendar: true,
-                    swag: [],
+                    // defaultHour:new Date().getHours(),
+                    // defaultMinute:new Date().getMinutes(),
+                    pickerTime: new Date(),
                     mounted: function () {
                         this.onChange(event)
                         this.getMetrics()
@@ -325,6 +359,9 @@
 </script>
 
 <style>
+    .max_z_index{
+        z-index: 100000;
+    }
     .metricsAlerts{
         text-align: center;
         margin-top: 25px;
