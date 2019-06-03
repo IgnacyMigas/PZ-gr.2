@@ -72,7 +72,7 @@
 <script>
     import VueApexCharts from 'vue-apexcharts'
     import VRangeSelector from 'vuelendar/components/vl-range-selector';
-    import Buefy from 'buefy'
+    // import Buefy from 'buefy'
     import Vue from 'vue'
 
     import { Field } from 'buefy/dist/components/field'
@@ -83,7 +83,7 @@
     Vue.component('b-timepicker', Timepicker)
     Vue.component('b-icon', Icon)
 
-    //
+    //TODO: limit ?n=30 and add old-data-picker
 
     var host = 'http://localhost:8080'
     var version = 'v1'
@@ -134,21 +134,21 @@
                     var hour
                     if (range == '15m') {
                         var _15min = new Date(Date.now() - 1000 * 60 * 15);
-                        hour = _15min.getHours();
+                        hour  = ("0" + _15min.getHours()).slice(-2);
                         _15min = dateFormat(_15min, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _15min);
                         this.range = '15m';
                     }
                     else if (range == '30m') {
                         var _30min = new Date(Date.now() - 1000 * 60 * 30);
-                        hour = _30min.getHours();
+                        hour  = ("0" + _30min.getHours()).slice(-2);
                         _30min = dateFormat(_30min, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _30min);
                         this.range = '30m';
                     }
                     else if (range == '1h') {
                         var _1h = new Date(Date.now() - 1000 * 60 * 60 * 1);
-                        hour = _1h.getHours();
+                        hour  = ("0" + _1h.getHours()).slice(-2);
                         _1h = dateFormat(_1h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _1h);
                         this.range = '1h';
@@ -156,14 +156,14 @@
                     }
                     else if (range == '24h') {
                         var _24h = new Date(Date.now() - 1000 * 60 * 60 * 24);
-                        hour = _24h.getHours();
+                        hour  = ("0" + _24h.getHours()).slice(-2);
                         _24h = dateFormat(_24h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _24h);
                         this.range = '24h';
                     }
                     else if (range == '48h') {
                         var _48h = new Date(Date.now() - 1000 * 60 * 60 * 48);
-                        hour = _48h.getHours();
+                        hour  = ("0" + _48h.getHours()).slice(-2);
                         _48h = dateFormat(_48h, "dd/mm/yyyy "+ hour +":MM:ss");
                         this.draw(url + _48h);
                         this.range = '48h';
@@ -176,8 +176,14 @@
                         var _end = "" + this.dataRange.end;
                         _start = this.convertDate(_start);
                         _end = this.convertDate(_end);
-                        _start = _start + " 00:00:00";
-                        _end = _end + " 00:00:00";
+                        _start = _start + " "+ this.pickerTime.getHours() + ":" + this.pickerTime.getMinutes()+":00";//+ this.pickerTime.getSeconds();//" 00:00:00";
+                        _end = _end + " "+ this.pickerTime.getHours() + ":" + this.pickerTime.getMinutes()+":00";//+ this.pickerTime.getSeconds();
+
+                        //data format from 19:42:5 to 19:42:05, hours (AM <-> PM)
+                        hour  = ("0" + this.pickerTime.getHours()).slice(-2);
+                        _start = dateFormat(_start, "dd/mm/yyyy "+ hour +":MM:ss");
+                        _end = dateFormat(_end, "dd/mm/yyyy "+ hour +":MM:ss");
+
                         this.range = 'selectRange';
                         this.draw(url + _start + '&to=' + _end);
                         this.isHiddenCalendar = true;
