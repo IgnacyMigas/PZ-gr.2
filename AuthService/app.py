@@ -20,12 +20,15 @@ def create_tables():
     db.create_all()
 
 
-app.config['JWT_TOKEN_LOCATION'] = 'json'
+app.config['JWT_TOKEN_LOCATION'] = ('headers', 'json')
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
-jwt = JWTManager(app)
-
+app.config['PROPAGATE_EXCEPTIONS'] = True
 app.config['JWT_BLACKLIST_ENABLED'] = True
 app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+jwt = JWTManager(app)
+
+
+
 
 
 @jwt.token_in_blacklist_loader
@@ -37,7 +40,8 @@ def check_if_token_in_blacklist(decrypted_token):
 import models, resources
 
 
-api.add_resource(resources.UserRegistration, '/v1/user')
+
+api.add_resource(resources.UserRegistration, '/v1/users')
 api.add_resource(resources.UserLogin, '/v1/login')
 api.add_resource(resources.TokenOperations, '/v1/token')
 api.add_resource(resources.TokenVerification, '/v1/protected')
