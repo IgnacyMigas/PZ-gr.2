@@ -1,23 +1,7 @@
 <template>
     <div>
         <h2>Wybierz metrykę:  </h2>
-        <b-field label="Select time" class="max_z_index">
-            <b-timepicker v-model="pickerTime"
-                          placeholder="Click to select...">
 
-                <button class="button is-primary"
-                        @click="pickerTime = new Date()">
-                    <b-icon icon="clock"></b-icon>
-                    <span>Now</span>
-                </button>
-
-                <button class="button is-danger"
-                        @click="pickerTime = null">
-                    <b-icon icon="close"></b-icon>
-                    <span>Clear</span>
-                </button>
-            </b-timepicker>
-        </b-field>
         <select  @change="onChange($event)" class="t2e-select-metric" v-model="selected">
             <option disabled value=""> Przoszę wybrać metrykę</option>
             <option v-for="(metric, index) in metrics_keys"  v-bind:value="metric" >
@@ -55,9 +39,24 @@
                         :end-date.sync="dataRange.end"
                                    onclick="if(true){}"
                 />
-                                   <!--onclick="if(true){this.isHiddenCalendar = true;}"-->
-                                   <!--onclick="if(true){alert(dataRange.start);}"-->
 
+                <b-field v-if="!isHiddenCalendar" label="Select time" class="hh-mm-picker max-z-index">
+                    <b-timepicker v-model="pickerTime" class="timepicker"
+                                  placeholder="Click to select...">
+
+                        <button class="button is-primary"
+                                @click="pickerTime = new Date()">
+                            <b-icon icon="clock"></b-icon>
+                            <span>Now</span>
+                        </button>
+
+                        <button class="button is-danger"
+                                @click="pickerTime = null">
+                            <b-icon icon="close"></b-icon>
+                            <span>Clear</span>
+                        </button>
+                    </b-timepicker>
+                </b-field>
 
             </div>
 
@@ -350,8 +349,20 @@
 </script>
 
 <style>
-    .max_z_index{
-        z-index: 100000;
+    .max-z-index{
+        z-index: 10000000;
+    }
+
+    .hh-mm-picker{
+        height: 20px;
+        width: 200px;
+        margin-top: 0px;
+        line-height: 0px;
+        /*height: 40%;*/
+    }
+    .timepicker{
+        height: 20px;
+        z-index: 10000000;
     }
     .metricsAlerts{
         text-align: center;
