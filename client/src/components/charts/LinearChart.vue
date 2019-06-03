@@ -64,7 +64,7 @@
             <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
             <div id="page-navigation">
                 <button @click=movePages(-1)>Back</button>
-                <p>{{this.startRow / this.rowsPerPage + 1}} out of {{this.blob_samples.length / this.rowsPerPage}}</p>
+                <p>{{Math.floor(this.startRow / this.rowsPerPage) + 1}} z {{Math.ceil(this.blob_samples.length / this.rowsPerPage)}}</p>
                 <button @click=movePages(1)>Next</button>
             </div>
           </div>
@@ -108,7 +108,7 @@
         },
         methods: {
             movePages: function(amount) {
-                var newStartRow = this.startRow + (amount * 5);
+                var newStartRow = this.startRow + (amount * this.rowsPerPage);
                 if (newStartRow >= 0 && newStartRow < this.blob_samples.length) {
                     this.startRow = newStartRow;
                 }
@@ -357,7 +357,8 @@
 <style>
     #page-navigation {
         display: flex;
-        margin-top: 5px;
+        margin-top: 0px;
+        margin-left: 40px;
     }
 
     #page-navigation p {
@@ -366,8 +367,8 @@
     }
 
     #page-navigation button {
-        background-color: #42b983;
-        border-color: #42b983;
+        background-color: #faaf40;
+        border-color: #faaf40;
         color: rgba(255, 255, 255, 0.66);
     }
 
