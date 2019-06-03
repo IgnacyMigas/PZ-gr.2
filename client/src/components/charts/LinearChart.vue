@@ -59,13 +59,6 @@
                                    <!--onclick="if(true){alert(dataRange.start);}"-->
 
 
-                <!--<vue-clock-picker-->
-                        <!--mode="24" :defaultHour="defaultHour"-->
-                        <!--:defaultMinute="defaultMinute"-->
-                        <!--:onTimeChange="timeChangeHandler"-->
-                <!--&gt;-->
-                <!--</vue-clock-picker>-->
-
             </div>
 
             <span class="metricsAlerts">{{noDataInfo}}</span>
@@ -80,7 +73,6 @@
 <script>
     import VueApexCharts from 'vue-apexcharts'
     import VRangeSelector from 'vuelendar/components/vl-range-selector';
-    // import VueClockPicker from 'vue-clock-picker'
     import Buefy from 'buefy'
     import Vue from 'vue'
 
@@ -107,7 +99,6 @@
         components: {
             apexcharts: VueApexCharts,
             VRangeSelector,
-            // VueClockPicker,
         },
         mounted:function(){
             this.getMetrics() //method will execute at pageload
