@@ -62,15 +62,22 @@
 
             <span class="metricsAlerts">{{noDataInfo}}</span>
             <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
-        </div>
+            <div id="page-navigation">
+                <button @click=movePages(-1)>Back</button>
+                <p>{{this.startRow / this.rowsPerPage + 1}} out of {{this.blob_samples.length / this.rowsPerPage}}</p>
+                <button @click=movePages(1)>Next</button>
+            </div>
+          </div>
+
         <h5>{{metrics}}</h5>
     </div>
 </template>
 
 <script>
+    import Vue from 'vue'
     import VueApexCharts from 'vue-apexcharts'
     import VRangeSelector from 'vuelendar/components/vl-range-selector';
-    import Vue from 'vue'
+    //import VueResource from 'vue-resource'
 
     import { Field } from 'buefy/dist/components/field'
     import { Timepicker } from 'buefy/dist/components/timepicker'
@@ -79,7 +86,7 @@
     Vue.component('b-field', Field)
     Vue.component('b-timepicker', Timepicker)
     Vue.component('b-icon', Icon)
-
+    //Vue.use(VueResource)
     //TODO: limit ?n=20 and add old-data-picker
 
     var host = 'http://localhost:8080'
@@ -100,6 +107,12 @@
             this.getMetrics() //method will execute at pageload
         },
         methods: {
+            movePages: function(amount) {
+                var newStartRow = this.startRow + (amount * 5);
+                if (newStartRow >= 0 && newStartRow < this.blob_samples.length) {
+                    this.startRow = newStartRow;
+                }
+            },
             setActiveTab(){
                 let _this = this;
                 _this.activeTab = 1;
@@ -113,7 +126,7 @@
                 this.beforeDestroy();
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
                     this.isHiddenCalendar = true;
-                    var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n='+ n +'&from='
+                    var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?from=';  //+ '+'&n='+ n
                     var dateFormat = require('dateformat');
                     var now = new Date();
                     dateFormat(now, "DD/mm/YYYY HH:MM:SS");
@@ -168,17 +181,10 @@
                         this.isHiddenCalendar = false;
                     }//selectRange
                     else if (range == 'selectRange') {
-                        var _start = "" + this.dataRange.start;
-                        var _end = "" + this.dataRange.end;
-                        _start = this.convertDate(_start);
-                        _end = this.convertDate(_end);
-                        _start = _start + " "+ this.pickerTime.getHours() + ":" + this.pickerTime.getMinutes()+":00";//+ this.pickerTime.getSeconds();//" 00:00:00";
-                        _end = _end + " "+ this.pickerTime.getHours() + ":" + this.pickerTime.getMinutes()+":00";//+ this.pickerTime.getSeconds();
-
-                        //data format from 19:42:5 to 19:42:05, hours (AM <-> PM)
                         hour  = ("0" + this.pickerTime.getHours()).slice(-2);
-                        _start = dateFormat(_start, "dd/mm/yyyy "+ hour +":MM:ss");
-                        _end = dateFormat(_end, "dd/mm/yyyy "+ hour +":MM:ss");
+                        // this.yolo_4 = hour;
+                        var _start = this.convertDate("" + this.dataRange.start) + " "+ hour + ":" + this.pickerTime.getMinutes()+":00";//+ this.pickerTime.getSeconds();//" 00:00:00";
+                        var _end = this.convertDate("" + this.dataRange.end) + " "+ this.pickerTime.getHours() + ":" + this.pickerTime.getMinutes()+":00";//+ this.pickerTime.getSeconds();
 
                         this.range = 'selectRange';
                         this.draw(url + _start + '&to=' + _end);
@@ -335,6 +341,8 @@
                     // defaultHour:new Date().getHours(),
                     // defaultMinute:new Date().getMinutes(),
                     pickerTime: new Date(),
+                    rowsPerPage: n,
+                    startRow: 0,
                     mounted: function () {
                         this.onChange(event)
                         this.getMetrics()
@@ -347,6 +355,22 @@
 </script>
 
 <style>
+    #page-navigation {
+        display: flex;
+        margin-top: 5px;
+    }
+
+    #page-navigation p {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    #page-navigation button {
+        background-color: #42b983;
+        border-color: #42b983;
+        color: rgba(255, 255, 255, 0.66);
+    }
+
     .max-z-index{
         z-index: 10000000;
     }
