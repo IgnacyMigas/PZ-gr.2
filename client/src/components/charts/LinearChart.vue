@@ -2,7 +2,7 @@
     <div>
         <h2>Wybierz metrykę:  </h2>
 
-        <select  @change="onChange($event)" class="t2e-select-metric" v-model="selected" >
+        <select  @change="onChange($event)" class="t2e-select-metric" v-model="selected">
             <option disabled value=""> Przoszę wybrać metrykę</option>
             <option v-for="(metric, index) in metrics_keys"  v-bind:value="metric" >
                 Metryka: '{{ metric }}' , Monitor: '{{monitor_keys[index]}}'
@@ -12,18 +12,39 @@
 
         <div>
             <div class="actions">
-                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-15m" :class="{'btn-primary': range == '15m', 'btn-white': range != '15m'}" type="button"  v-on:click="timeRange('15m')"> 15 min </button>
-                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-30m" :class="{'btn-primary': range == '30m', 'btn-white': range != '30m'}" type="button" v-on:click="timeRange('30m')"> 30 min </button>
-                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-1h"  :class="{'btn-primary': range == '1h', 'btn-white': range != '1h'}" type="button" v-on:click="timeRange('1h')"> 1 h </button>
-                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-24h" :class="{'btn-primary': range == '24h', 'btn-white': range != '24h'}" type="button" v-on:click="timeRange('24h')"> 24 h </button>
-                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-48h" :class="{'btn-primary': range == '48h', 'btn-white': range != '48h'}" type="button" v-on:click="timeRange('48h')"> 48 h </button>
-                <button @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-range" :class="{'btn-primary': range == 'selectRange', 'btn-white': range != 'selectRange'}" type="button" v-on:click="timeRange('selectRange')"> Zakres </button>
+                <button v-if="isHiddenCalendar" @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-15m" :class="{'btn-primary': range == '15m', 'btn-white': range != '15m'}" type="button"  v-on:click="timeRange('15m')"> 15 min </button>
+                <button v-if="isHiddenCalendar" @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-30m" :class="{'btn-primary': range == '30m', 'btn-white': range != '30m'}" type="button" v-on:click="timeRange('30m')"> 30 min </button>
+                <button v-if="isHiddenCalendar" @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-1h"  :class="{'btn-primary': range == '1h', 'btn-white': range != '1h'}" type="button" v-on:click="timeRange('1h')"> 1 h </button>
+                <button v-if="isHiddenCalendar" @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-24h" :class="{'btn-primary': range == '24h', 'btn-white': range != '24h'}" type="button" v-on:click="timeRange('24h')"> 24 h </button>
+                <button v-if="isHiddenCalendar" @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-48h" :class="{'btn-primary': range == '48h', 'btn-white': range != '48h'}" type="button" v-on:click="timeRange('48h')"> 48 h </button>
+                <button v-if="isHiddenCalendar" @click="setActiveTab" class="btn btn-xs t2e-btn-select-time-range" :class="{'btn-primary': range == 'showRangeSelector', 'btn-white': range != 'showRangeSelector'}" type="button" v-on:click="timeRange('showRangeSelector')"> Zakres </button>
 
-                <v-range-selector  @click="yolo()" v-if="!isHiddenCalendar"
+                <input v-if="!isHiddenCalendar"
+                       name="range_from"
+                        type="text"
+                       :placeholder="'Od: ' + [[ dataRange.start ]]"
+                        v-model="message"
+                       class="input_data_range"
+                       :readonly=true
+                />
+                <input v-if="!isHiddenCalendar"
+                       name="range_to"
+                        type="text"
+                       :placeholder="'Do: ' + [[ dataRange.end ]]"
+                       v-model="message"
+                       class="input_data_range"
+                       :readonly=true
+                />
+                <button  :disabled="clickable" v-if="!isHiddenCalendar" class="btn btn-xs t2e-btn-select-ok btn-white" type="button" v-on:click="timeRange('selectRange')" > Ok </button>
+                <button v-if="!isHiddenCalendar" class="btn btn-xs t2e-btn-select-cancle btn-white" type="button" v-on:click="timeRange('cancle')"> Anuluj </button>
+                <v-range-selector  v-if="!isHiddenCalendar"
                                   :start-date.sync="dataRange.start"
                         :end-date.sync="dataRange.end"
+                                   onclick="if(true){}"
                 />
-                <!--v-on:click="yolo('dataRange.start', 'dataRange.end')"-->
+                                   <!--onclick="if(true){this.isHiddenCalendar = true;}"-->
+                                   <!--onclick="if(true){alert(dataRange.start);}"-->
+
             </div>
             <h1>{{dataRange.start}}</h1>
             <h1>{{dataRange.end}}</h1>
@@ -49,7 +70,6 @@
 
      var time= []
      var value = []
-
     export default {
         name: 'LinearChart',
         props: ['metric'],
@@ -60,19 +80,23 @@
         mounted:function(){
             this.getMetrics() //method will execute at pageload
         },
+        computed: {
+            clickable() {
+                // if something
+                return true;
+            }
+        },
         methods: {
             setActiveTab(){
                 let _this = this;
                 _this.activeTab = 1;
             },
-            yolo(){
-                 var url = host + '/' + version + '/metrics/' + this.selectedMetric + '/measurements?n=30&from='
-                // this.$http.get(url + start + '&to='+ end, {useCredentails: true}).then(function (data) {
-                // });
-               //if(this.dataRange.start != undefined && this.dataRange.end != undefined){
-                    this.draw(url + this.dataRange.start + '&to='+ this.dataRange.end);
-               // }
-
+            formatDate (input) {
+                var datePart = input.match(/\d+/g),
+                    year = datePart[0],//.substring(2), // get only two digits
+                    month = datePart[1], day = datePart[2];
+                     input=day+'/'+month+'/'+year;
+                return input;
             },
             timeRange: function(range) {
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
@@ -121,19 +145,29 @@
                         this.draw(url + _48h);
                         this.range = '48h';
                     }
-                    else if (range == 'selectRange') {
+                    else if (range == 'showRangeSelector') {
 
                         this.isHiddenCalendar = false;
                         // while(this.dataRange.start != undefined && this.dataRange.end != undefined){
                         //     this.range = 'selectRange';
                         // }
                         // this.draw(url + this.dataRange.start + '&to='+ this.dataRange.end);
-                        this.range = 'selectRange';
+                        // this.range = 'showRangeSelector';
                         //this.draw(url + this.dataRange.start + '&to='+ this.dataRange.end);
                         //alert('TODO select range!');
+                    }//selectRange
+                    else if (range == 'selectRange') {
+                        this.range = 'showRangeSelector';
+                        this.draw(url + this.dataRange.start);
+                        this.isHiddenCalendar = true;
+                    }
+                    else if (range == 'cancle') {
+                        this.isHiddenCalendar = true;
+                        //default: nothing
+                        // this.range = 'other';
                     }
                     else {
-                        this.noDataInfo = 'Niepoprawny zakres czasu'
+                        this.noDataInfo = 'Wybierz zakres czasu'
                     }
             }
                 else{
@@ -278,6 +312,7 @@
                     dataRange: {},
                     date: null,
                     isHiddenCalendar: true,
+                    swag: [],
                     mounted: function () {
                         this.onChange(event)
                         this.getMetrics()
@@ -308,6 +343,19 @@
         font-size: 14px;
     }
 
+
+    .input_data_range{
+        width: 20%;
+        height: 40%;
+        background: #fff;
+        font-size: 12px;
+        line-height: 1.5;
+        margin-right: 10px;
+        padding-left: 6px;
+        padding-right: 10px;
+        padding-top: 13px;
+        text-align: left;
+    }
     .actions{
         text-align: left;
         box-sizing: border-box;
@@ -324,7 +372,6 @@
     }
 
     .btn-white {
-        color: inherit;
         background: #fff;
         border: 1px solid #e7eaec;
     }
@@ -419,6 +466,15 @@
     }
     div {
         display: block;
+    }
+
+    div:after, .actions:after, .btn:after,
+    div:before, .actions:before, .btn:before {
+        content: none;
+    }
+
+    *, ::before, ::after {
+        -webkit-box-sizing: unset;
     }
 </style>
 
