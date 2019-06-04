@@ -7,7 +7,7 @@ matrix:
         - python -m pip install --upgrade pip
         - pip install -r APIGateway/requirements.txt
       script:
-        - python APIGateway/manage.py test
+        - python APIGateway/manage.py test gateway
 
     - language: java
       before_install:
