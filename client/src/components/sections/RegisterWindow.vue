@@ -6,7 +6,12 @@
           <form @submit.prevent='trylogin()'>
             <v-card-text>
               <p class='log'>{{log}}</p>
-              <p class='error'>{{error}}</p>
+              <p class='error'
+               v-for='error in errors'
+               v-bind:key='error'
+              >
+                {{error}}
+              </p>
               <v-text-field
                 prepend-icon="person"
                 label='Nazwa'
@@ -47,7 +52,7 @@ export default {
         username: '',
         password: ''
       },
-      error: '',
+      errors: [],
       log: ''
     }
   },
@@ -59,9 +64,9 @@ export default {
 
       this.items = data || [];
       this.log = log
-      this.error = error ? error.split('\n') : ''
+      this.errors = error ? error.split('\n') : ''
 
-      if (!this.error) {
+      if (!this.errors && !this.log) {
         this.log = 'Zarejestrowano pomyślnie!\n'
       }
     }
