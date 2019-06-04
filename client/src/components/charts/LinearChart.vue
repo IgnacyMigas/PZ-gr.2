@@ -62,9 +62,9 @@
 
             <span class="metricsAlerts">{{noDataInfo}}</span>
             <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
-            <div id="page-navigation">
+            <div id="page-navigation" v-if="isHiddenPagination">
                 <button @click=movePages(-1)>Back</button>
-                <p>{{Math.floor(this.startRow / this.rowsPerPage) + 1}} z {{Math.ceil(this.blob_samples.length / this.rowsPerPage)}}</p>
+                <p>{{Math.floor(this.startRow / this.rowsPerPage) + 1}} z {{Math.ceil(this.blob_samples.length / this.rowsPerPage)}} </p>
                 <button @click=movePages(1)>Next</button>
             </div>
           </div>
@@ -107,6 +107,11 @@
             this.getMetrics() //method will execute at pageload
         },
         methods: {
+            showPagination: function(){
+                if(Math.ceil(this.blob_samples.length / this.rowsPerPage) > 1){
+                    this.isHiddenPagination = false;
+                }
+            },
             movePages: function(amount) {
                 var newStartRow = this.startRow + (amount * this.rowsPerPage);
                 if (newStartRow >= 0 && newStartRow < this.blob_samples.length) {
@@ -338,6 +343,7 @@
                     dataRange: {},
                     date: null,
                     isHiddenCalendar: true,
+                    isHiddenPagination: true,
                     // defaultHour:new Date().getHours(),
                     // defaultMinute:new Date().getMinutes(),
                     pickerTime: new Date(),
