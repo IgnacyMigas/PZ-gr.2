@@ -2,10 +2,10 @@
     <div>
         <h2>Wybierz metrykę:  </h2>
 
-        <select  @change="onChange($event)" class="t2e-select-metric" v-model="selected">
+        <select  @change="onChange($event)" class="t2e-select-metric" v-model="selected" >
             <option value="" selected disabled> Przoszę wybrać metrykę</option>
-            <option v-for="(metric, index) in metrics_keys"  v-bind:value="metric">
-                Metryka: '{{ metric }}' , Monitor: '{{monitor_keys[index]}}'
+            <option v-for="metric in metrics"  v-bind:value="metric">
+                Metryka: '{{ metric['metric-id']  }}' , Monitor: '{{ metric['monitor-id'] }}'
             </option>
         </select>
         v
@@ -61,15 +61,16 @@
             </div>
 
             <span class="metricsAlerts">{{noDataInfo}}</span>
-            <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
-            <div id="page-navigation" v-if="isHiddenPagination">
+            <div id="page-navigation" v-if="!isHiddenPagination">
                 <button @click=movePages(-1)>Back</button>
                 <p>{{Math.floor(this.startRow / this.rowsPerPage) + 1}} z {{Math.ceil(this.blob_samples.length / this.rowsPerPage)}} </p>
                 <button @click=movePages(1)>Next</button>
             </div>
+
+            <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
+
           </div>
 
-        <h5>{{metrics}}</h5>
     </div>
 </template>
 
@@ -108,7 +109,10 @@
         },
         methods: {
             showPagination: function(){
-                if(Math.ceil(this.blob_samples.length / this.rowsPerPage) > 1){
+                if(Math.ceil(this.blob_samples.length / this.rowsPerPage) < 1){
+                    this.isHiddenPagination = true;
+                }
+                else{
                     this.isHiddenPagination = false;
                 }
             },
@@ -116,6 +120,36 @@
                 var newStartRow = this.startRow + (amount * this.rowsPerPage);
                 if (newStartRow >= 0 && newStartRow < this.blob_samples.length) {
                     this.startRow = newStartRow;
+                    if(this.rowsPerPage < this.time.length && (this.startRow + this.rowsPerPage)  <= this.time.length) {
+                        this.$refs.updateChart.updateOptions({
+                            xaxis: {
+                                categories: this.time.slice(this.startRow, this.startRow + this.rowsPerPage),
+                            },
+                            series: [{
+                                data: this.value.slice(this.startRow, this.startRow + this.rowsPerPage),
+                            }],
+                        });
+                    }
+                    else if(this.rowsPerPage < this.time.length && (this.startRow + this.rowsPerPage) > this.time.length){
+                        this.$refs.updateChart.updateOptions({
+                        xaxis: {
+                            categories: this.time.slice(this.startRow, this.time.length),
+                        },
+                        series: [{
+                            data: this.value.slice(this.startRow, this.value.length),
+                        }],
+                    });
+                    }
+                    else{
+                        this.$refs.updateChart.updateOptions({
+                            xaxis: {
+                                categories: this.time,
+                            },
+                            series: [{
+                                data: this.value,
+                            }],
+                        });
+                    }
                 }
             },
             setActiveTab(){
@@ -215,7 +249,7 @@
                     this.isHiddenCalendar = true;
                     this.$http.get(url, {useCredentails: true}).then(function (data) {
                         this.blob_samples = data.body;//.slice(0, 10);
-
+                        this.showPagination();
                         if (data.body == '' || data.body == '[]' || data.body == null || data.body == []) {
                             this.value = [];
                             this.time = [];
@@ -228,14 +262,26 @@
                             }
                             this.noDataInfo = ''
                         }
-                        this.$refs.updateChart.updateOptions({
-                            xaxis: {
-                                categories: this.time,
-                            },
+                        if(this.rowsPerPage < this.time.length) {
+                            this.$refs.updateChart.updateOptions({
+                                xaxis: {
+                                    categories: this.time.slice(0, this.rowsPerPage),
+                        },
                             series: [{
-                                data: this.value,
+                                data: this.value.slice(0, this.rowsPerPage),
                             }],
-                        })
+                        });
+                        }
+                        else{
+                            this.$refs.updateChart.updateOptions({
+                                xaxis: {
+                                    categories: this.time,
+                                },
+                                series: [{
+                                    data: this.value,
+                                }],
+                            });
+                        }
                     });
                 }
             },
@@ -267,7 +313,10 @@
                 return {
                     chartOptions: {
                         chart: {
-                            id: 'basic-bar'
+                            id: 'basic-bar',
+                            toolbar: {
+                                show: false,
+                            },
                         },
                         markers: {
                             colors: ['#F44336'],
@@ -353,6 +402,7 @@
                         this.onChange(event)
                         this.getMetrics()
                         this.created()
+                        this.showPagination()
                     },
                 }
             }
