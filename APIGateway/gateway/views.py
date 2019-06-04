@@ -9,8 +9,10 @@ import requests
 
 @csrf_exempt
 def metrics(request, metrics_id=None):
-    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
+    if 'access_token' not in request.headers or not authentication.authorize(request.headers['access_token']):
         return HttpResponse(status=401)
+
+    headers = {'content-type': 'application/json', 'access_token': request.headers['access_token']}
 
     metrics_dict = {"metrics": [], "meta": {"types": set()}}
     if metrics_id is None:
@@ -20,8 +22,7 @@ def metrics(request, metrics_id=None):
                 meta = request.GET['meta']
             for m in models.Monitor.objects.all():
                 try:
-                    monitor_response = requests.get(m.endpoint + '/metrics', headers=request.headers,
-                                                    params=request.GET)
+                    monitor_response = requests.get(m.endpoint + '/metrics', headers=headers, params=request.GET)
                     if monitor_response.status_code == 200:
                         body = monitor_response.json()
                         if meta != 'only':
@@ -46,8 +47,7 @@ def metrics(request, metrics_id=None):
                 for m in models.Monitor.objects.all():
                     if body['monitor-id'] == m.id:
                         try:
-                            response = requests.post(m.endpoint + '/v1/metrics', data=request.body,
-                                                     headers=request.headers)
+                            response = requests.post(m.endpoint + '/metrics', data=request.body, headers=headers)
                             return HttpResponse(response.content, status=response.status_code)
                         except requests.ConnectionError:
                             print("Delete monitor %s" % m.id)
@@ -62,7 +62,7 @@ def metrics(request, metrics_id=None):
                 if 'monitor-id' in request.GET and request.GET['monitor-id'] != m.id:
                     continue
                 try:
-                    monitor_response = requests.get(m.endpoint + '/metrics/' + metrics_id, headers=request.headers)
+                    monitor_response = requests.get(m.endpoint + '/metrics/' + metrics_id, headers=headers)
                     if monitor_response.status_code == 200:
                         return HttpResponse(monitor_response.content, status=200)
                 except requests.ConnectionError:
@@ -74,7 +74,7 @@ def metrics(request, metrics_id=None):
         elif request.method == 'DELETE':
             for m in models.Monitor.objects.all():
                 try:
-                    response = requests.delete(m.endpoint + '/metrics/' + metrics_id, headers=request.headers)
+                    response = requests.delete(m.endpoint + '/metrics/' + metrics_id, headers=headers)
                     if response.status_code == 200:
                         return HttpResponse(status=200)
                 except requests.ConnectionError:
@@ -88,8 +88,10 @@ def metrics(request, metrics_id=None):
 
 
 def metrics_measurements(request, metrics_id):
-    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
+    if 'access_token' not in request.headers or not authentication.authorize(request.headers['access_token']):
         return HttpResponse(status=401)
+
+    headers = {'content-type': 'application/json', 'access_token': request.headers['access_token']}
 
     if request.method == 'GET':
         measurements_list = []
@@ -100,7 +102,7 @@ def metrics_measurements(request, metrics_id):
                 continue
             try:
                 monitor_response = requests.get(m.endpoint + '/metrics/' + metrics_id + '/measurements',
-                                                headers=request.headers, params=params)
+                                                headers=headers, params=params)
                 if monitor_response.status_code == 200:
                     body = monitor_response.json()
                     measurements_list.extend(body)
@@ -115,15 +117,17 @@ def metrics_measurements(request, metrics_id):
 
 
 def hosts(request, hosts_id=None):
-    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
+    if 'access_token' not in request.headers or not authentication.authorize(request.headers['access_token']):
         return HttpResponse(status=401)
+
+    headers = {'content-type': 'application/json', 'access_token': request.headers['access_token']}
 
     if request.method == 'GET':
         monitors_list = []
         if hosts_id is None:
             for m in models.Monitor.objects.all():
                 try:
-                    monitor_response = requests.get(m.endpoint + '/hosts', headers=request.headers, params=request.GET)
+                    monitor_response = requests.get(m.endpoint + '/hosts', headers=headers, params=request.GET)
                     if monitor_response.status_code == 200:
                         body = monitor_response.json()
                         monitors_list.extend(body)
@@ -138,7 +142,7 @@ def hosts(request, hosts_id=None):
                 if 'monitor-id' in request.GET and request.GET['monitor-id'] != m.id:
                     continue
                 try:
-                    monitor_response = requests.get(m.endpoint + '/hosts/' + hosts_id, headers=request.headers)
+                    monitor_response = requests.get(m.endpoint + '/hosts/' + hosts_id, headers=headers)
                     if monitor_response.status_code == 200:
                         body = monitor_response.json()
                         monitors_list.append(body)
@@ -154,7 +158,7 @@ def hosts(request, hosts_id=None):
 
 @csrf_exempt
 def monitors(request):
-    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
+    if 'access_token' not in request.headers or not authentication.authorize(request.headers['access_token']):
         return HttpResponse(status=401)
 
     if request.method == 'POST':
