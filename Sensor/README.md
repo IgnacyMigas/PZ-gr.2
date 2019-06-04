@@ -17,7 +17,7 @@
 - pip install -r requirements.txt 
 
 ######## Tests: 
-- python tests.py
+- python -m unittest test.tests
 
 ######## Working with project:      
 
