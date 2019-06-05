@@ -1,6 +1,17 @@
 package com.wfiis.pz.project.monitor;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -29,6 +40,52 @@ public class MonitorApplication {
 	@EventListener(ApplicationReadyEvent.class)
 	public void doSomethingAfterStartup() {
 		
+		JSONObject reply = new JSONObject();
+		
+		try {
+
+			String httpurl = env.getProperty("AUTH_SERVICE_URL")+"login";
+
+			URL url = new URL(httpurl);
+			HttpURLConnection con = (HttpURLConnection) url.openConnection();
+			con.setRequestMethod("POST");
+			con.setRequestProperty("Content-Type", "application/json");
+			
+			JSONObject body = new JSONObject();
+			body.put("username",env.getProperty("username"));
+			body.put("password",env.getProperty("pass"));
+			
+			
+
+			OutputStream os = con.getOutputStream();
+			BufferedWriter writer = new BufferedWriter(
+			        new OutputStreamWriter(os, "UTF-8"));
+			writer.write(body.toString());
+			writer.flush();
+			writer.close();
+			os.close();
+			
+			int responseCode = con.getResponseCode();
+			if (responseCode == 200) {
+				BufferedReader br = new BufferedReader(new InputStreamReader((con.getInputStream())));
+				StringBuilder sb = new StringBuilder();
+				String output;
+				while ((output = br.readLine()) != null) {
+				  sb.append(output);
+				}
+				
+				
+				reply = new JSONObject(sb.toString());
+				//return sb.toString();
+			}else {
+				System.out.println("Brak odpowiedzi na url /login");
+			}
+
+		} catch (Exception e) {
+			System.out.println("Błąd wysyłu danych na url /login");
+			e.printStackTrace();
+		}
+		
 		JSONObject json = new JSONObject();
 		try {
 			json.put("monitor-id", env.getProperty("MONITORID"));
@@ -44,7 +101,7 @@ public class MonitorApplication {
 		    HttpPost request = new HttpPost(env.getProperty("API_GATEWAY_URL"));
 		    StringEntity params = new StringEntity(json.toString());
 			request.addHeader("content-type", "application/json");
-			request.addHeader("access-token", "1234");
+			request.addHeader("access-token", reply.getString("access-token"));
 		    request.setEntity(params);
 		    httpClient.execute(request);
 		// handle response here...
