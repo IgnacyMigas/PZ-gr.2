@@ -338,6 +338,7 @@
                         },
                     },
                     yaxis: {
+                        decimalsInFloat: 2,
                         labels: {
                             style: {
                                 color: '#efefef',
