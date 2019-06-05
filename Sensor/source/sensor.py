@@ -4,12 +4,13 @@ from tools import SensorTools
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--reg',                 '-r',  help="registration flag. Options:yes or no. Default: yes",             type=str,   default="yes")
-parser.add_argument('--name',                '-n',  help="sensor name",                                                    type=str,   default="pokojXXX")
-parser.add_argument('--interval',            '-i',  help="measurements interval. Min: 1.0. Max: 30.0",                     type=float, default=1.0)
-parser.add_argument('--measurements_amount', '-ma', help="number of measurements sended in one package. Min: 5. Max: 100", type=int,   default=10)
-parser.add_argument('--metrics',             '-m',  help="metrics flag. Options: CPU, Battery or Both, Default: Both",     type=str,   default="Both")
-parser.add_argument('--url',                 '-u',  help="url to monitor instance. Default: http://localhost:8080/v1/",    type=str,   default="http://localhost:8080/v1/")
+parser.add_argument('--reg',                 '-r',   help="registration flag. Options:yes or no. Default: yes",             type=str,   default="yes")
+parser.add_argument('--name',                '-n',   help="sensor name",                                                    type=str,   default="pokojXXX")
+parser.add_argument('--interval',            '-i',   help="measurements interval. Min: 1.0. Max: 30.0",                     type=float, default=1.0)
+parser.add_argument('--measurements_amount', '-ma',  help="number of measurements sended in one package. Min: 5. Max: 100", type=int,   default=10)
+parser.add_argument('--metrics',             '-m',   help="metrics flag. Options: CPU, Battery or Both, Default: Both",     type=str,   default="Both")
+parser.add_argument('--url',                 '-u',   help="url to monitor instance. Default: http://localhost:8080/v1/",    type=str,   default="http://localhost:8080/v1/")
+parser.add_argument('--urlAS',               '-uAS', help="url to AS instance. Default: http://127.0.0.1:8000/v1/",         type=str,   default="http://127.0.0.1:8000/v1/")
 
 def check_starting_arguments(args):
     args.reg                 = check_reg_argument(args.reg)
@@ -49,13 +50,15 @@ def check_metrics_argument(metrics):
     return metrics
         
 def sensor_main(args):
-    tool = SensorTools(args.metrics, args.name, args.url)
+    tool = SensorTools(args.metrics, args.name, args.url, args.urlAS)
     if args.reg == "yes":
         tool.register_sensor()
-    
+
     timer = ti.Timer(interval=args.interval, function=tool.colect_data)
+    timer_to_refresh_token = ti.Timer(interval=271.0, function=tool.refresh_token)
     
     timer.start()
+    timer_to_refresh_token.start()
     while True:
         if args.measurements_amount == tool.data_amount():
             tool.send_data()

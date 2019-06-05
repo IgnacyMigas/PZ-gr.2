@@ -5,17 +5,23 @@ import time
 import platform
 
 class SensorTools:
-    token = "xxxxxxxx"
-    register_header = { "access-token":token }
 
-    def __init__(self, metric, sensor_name, url):
-        self.set_variables(metric, sensor_name, url)
+    def __init__(self, metric, sensor_name, url, urlAS):
+        self.set_variables(metric, sensor_name, url, urlAS)
     
-    def set_variables(self, metric, sensor_name, url):
+    def set_variables(self, metric, sensor_name, url, urlAS):
         self.API_REGISTER_ENDPOINT             = url + "hosts"
         self.API_CPU_MEASUREMENTS_ENDPOINT     = url + "metrics/" + sensor_name + "_CPU_Host/measurements"
         self.API_BATTERY_MEASUREMENTS_ENDPOINT = url + "metrics/" + sensor_name + "_Battery_Host/measurements"
+        self.API_AUTH_SERVICE_LOGIN_ENDPOINT   = urlAS + "login"
+        self.API_AUTH_SERVICE_REFRESH_ENDPOINT = urlAS + "token"
         
+        self.LOGIN_NAME     = "sensor"
+        self.LOGIN_PASSWORD = "sensor"
+        while self.log_in():
+            pass
+        print(self.ACCESS_TOKEN)
+        print(self.REFRESH_TOKEN)
         self.metric = metric
         self.hostID = sensor_name
         self.os     = platform.system()
@@ -169,10 +175,12 @@ class SensorTools:
     
     def post(self, endpoint, data):
         result = False
+        headers = {'content-type': 'application/json', 'access-token': self.ACCESS_TOKEN}
+        
         if endpoint == self.API_REGISTER_ENDPOINT:
             try:
-                r = requests.post(url = endpoint, json = data)#, params = register_header) 
-                #print(r)
+                r = requests.post(url = endpoint, json = data, headers=headers) 
+                #print(r.json())
                 print(r.status_code, r.reason)
                 if r.status_code == 201:
                     print("Sensor registration complete")
@@ -191,7 +199,7 @@ class SensorTools:
                 result = False
         else:
             try:
-                r = requests.post(url = endpoint, json = data)#, params = register_header) 
+                r = requests.post(url = endpoint, json = data, headers=headers) 
                 #print(r)
                 print(r.status_code, r.reason)
                 if r.status_code == 201:
@@ -201,4 +209,35 @@ class SensorTools:
                 result = False
         
         return result
-         
+    
+    def login_json_data(self):
+        data             = {}
+        data["username"] = self.LOGIN_NAME
+        data["password"] = self.LOGIN_PASSWORD    
+        return data
+    
+    def log_in(self):
+        try:
+            r = requests.post(url = self.API_AUTH_SERVICE_LOGIN_ENDPOINT, json = self.login_json_data()) 
+            if r.status_code == 200:
+                self.ACCESS_TOKEN  = r.json()['access_token']
+                self.REFRESH_TOKEN = r.json()['refresh_token']
+                result = True
+            print(r.status_code)
+        except requests.exceptions.RequestException as e:
+            print("During data send error: {0} occurred.".format(e))
+            return False
+     
+    def refresh_token(self):
+        data                  = {}
+        data["refresh_token"] = self.REFRESH_TOKEN
+        try:
+            r = requests.post(self.API_AUTH_SERVICE_REFRESH_ENDPOINT, json = data) 
+            if r.status_code == 200:
+                self.ACCESS_TOKEN  = r.json()['access_token']
+            print("New token")
+            print(r.status_code)
+            print("____________________")
+        except requests.exceptions.RequestException as e:
+            print("During data send error: {0} occurred.".format(e))
+            return False
