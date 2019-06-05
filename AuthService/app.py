@@ -60,3 +60,17 @@ if not models.UserModel.find_by_username('admin'):
                 password=models.UserModel.generate_hash('admin')
             )
     new_user.save_to_db()
+
+if not models.UserModel.find_by_username('sensor'):
+    new_user = models.UserModel(
+                username='sensor',
+                password=models.UserModel.generate_hash('sensor')
+            )
+    new_user.save_to_db()
+
+if not models.UserModel.find_by_username('monitor'):
+    new_user = models.UserModel(
+                username='monitor',
+                password=models.UserModel.generate_hash('monitor')
+            )
+    new_user.save_to_db()
