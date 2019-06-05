@@ -12,13 +12,13 @@
               >
                 {{error}}
               </p>
-              <v-text-field
+              <v-text-field class="t2e-v-text-field"
                 prepend-icon="person"
                 label='Nazwa'
                 placeholder='Nazwa'
                 v-model='user.username'
                 required />
-              <v-text-field
+              <v-text-field class="t2e-v-text-field"
                 prepend-icon="lock"
                 type='password'
                 label='Hasło'
@@ -28,7 +28,7 @@
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn type='submit'>Zarejestruj</v-btn>
+              <v-btn class="t2e-log" type='submit'>Zarejestruj</v-btn>
             </v-card-actions>
           </form>
         </v-card>
@@ -73,3 +73,5 @@ export default {
   }
 }
 </script>
+
+<style src="../style/buttons.css"></style>
