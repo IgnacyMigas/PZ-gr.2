@@ -116,11 +116,21 @@ const actions = {
     if (n && n > 0) {
       params.n = n
     }
+
+    const formatDate = (val) => {
+      const yyyy = val.getFullYear()
+      const mm = ('0' + (val.getMonth() + 1)).slice(-2)
+      const dd = ('0' + val.getDate()).slice(-2)
+      const date = dd + '/' + mm + '/' + yyyy
+      const time = val.toLocaleTimeString('pl-PL')
+      return (date + ' ' + time)
+    }
+
     if (from && from !== '') {
-      params.from = from
+      params.from = formatDate(from)
     }
     if (to && to !== '') {
-      params.to = to
+      params.to = formatDate(to)
     }
 
     const res = await state.api.get(`/v1/metrics/${id}/measurements`,

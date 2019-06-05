@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     v-model="isActive"
-    width=500
+    width=700
   >
     <v-toolbar dark>
       <v-toolbar-title>
@@ -49,10 +49,12 @@
           <v-card flat>
             <v-card-text>
               <!-- Od której daty. -->
-              <v-text-field
+              <v-datetime-picker
                 v-model="options.from"
-                label="od"
-                hide-details
+                name='od'
+                label='od'
+                locale='pl'
+                format='YYYY.MM.DD HH:mm:ss'
               />
             </v-card-text>
           </v-card>
@@ -61,10 +63,12 @@
           <v-card flat>
             <v-card-text>
               <!-- Do której daty. -->
-              <v-text-field
+              <v-datetime-picker
                 v-model="options.to"
-                label="do"
-                hide-details
+                name='do'
+                label='do'
+                locale='pl'
+                format='YYYY.MM.DD HH:mm:ss'
               />
             </v-card-text>
           </v-card>
@@ -147,10 +151,9 @@ export default {
   data () {
     return {
       options: {
-        n: 0
-              
-        //TODO: add 'to' and 'from' when
-        // the format is known / feature is fixed
+        n: 0,
+        from: null,
+        to: null
       }
     }
   },
