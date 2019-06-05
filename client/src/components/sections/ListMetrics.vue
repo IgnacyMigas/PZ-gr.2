@@ -60,6 +60,10 @@
         v-model="records_dialog.active"
         :metric="records_dialog.item"
       />
+      <dialog-compound-metric
+        v-model="compound_metric_dialog.active"
+        :metric="compound_metric_dialog.item"
+      />
     </template>
   </get-table>
 </template>
@@ -68,6 +72,7 @@
 import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
 import DialogRecords from '@/components/dialogs/DialogRecords'
+import DialogCompoundMetric from '@/components/dialogs/DialogCompoundMetric'
 
 /**@group Sekcje
  * Sekcja pobierająca dane metryk.
@@ -76,7 +81,8 @@ export default {
   name: 'list-metrics',
   components: {
     'get-table': GetTable,
-    'dialog-records': DialogRecords
+    'dialog-records': DialogRecords,
+    'dialog-compound-metric': DialogCompoundMetric
   },
   props: {
     /** Fragment nazwy do znalezienia. */
@@ -127,6 +133,10 @@ export default {
       records_dialog: {
         item: { 'metric-id': null },
         active: false
+      },
+      compound_metric_dialog: {
+        item: { 'metric-id': null },
+        active: false
       }
     }
   },
@@ -165,8 +175,8 @@ export default {
 
     /** Dodaje metrykę pochodną */
     addMetricBy (item) {
-      item
-      //TODO
+      this.compound_metric_dialog.item = item
+      this.compound_metric_dialog.active = true
     },
 
     /** Dodaje do wykresu */

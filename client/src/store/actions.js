@@ -99,6 +99,25 @@ const actions = {
     return res
   },
 
+  /** Pend new compound metric request. */
+  postNewMetric: async function ({ state }, options) {
+    const body = options
+
+    if (!body.time || body.time <= 0) {
+      body.time = undefined
+    }
+
+    //TODO: remove when Monitor's bug is fixed
+    body['metric-ids'] = body['metric-ids'][0]
+
+    // eslint-disable-next-line
+    console.log('body: ' + JSON.stringify(body))
+    const res = await state.api.post('/v1/metrics', body)
+    // eslint-disable-next-line
+    console.log('res: ' + JSON.stringify(res))
+    return res
+  },
+
   /** Pend list of metrics' meta. */
   listTypes: async function ({ state }) {
     const params = {

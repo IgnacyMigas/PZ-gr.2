@@ -6,11 +6,8 @@ export const newAxios = (basepath, access_token) => {
     baseURL: basepath
   })
   a.defaults.headers.common['Content-Type'] = 'application/json; charset=UTF-8'
-  if (access_token !== undefined) {
+  if (access_token) {
     a.defaults.headers.common['access-token'] = access_token
-    a.defaults.headers.common['access_token'] = access_token
-    a.defaults.headers.common.Authorization = access_token
-    a.defaults.headers.Authorization = access_token
   }
   return a
 }
