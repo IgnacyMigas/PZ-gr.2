@@ -41,10 +41,10 @@ public class MonitorApplication {
 	public void doSomethingAfterStartup() {
 		
 		JSONObject reply = new JSONObject();
-		
+		String httpurl = env.getProperty("AUTH_SERVICE_URL")+"login";
 		try {
 
-			String httpurl = env.getProperty("AUTH_SERVICE_URL")+"login";
+			
 
 			URL url = new URL(httpurl);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -52,10 +52,10 @@ public class MonitorApplication {
 			con.setRequestProperty("Content-Type", "application/json");
 			
 			JSONObject body = new JSONObject();
-			body.put("username",env.getProperty("username"));
+			body.put("username",env.getProperty("auth_username"));
 			body.put("password",env.getProperty("pass"));
 			
-			
+			con.setDoOutput(true);
 
 			OutputStream os = con.getOutputStream();
 			BufferedWriter writer = new BufferedWriter(
@@ -66,6 +66,7 @@ public class MonitorApplication {
 			os.close();
 			
 			int responseCode = con.getResponseCode();
+			// System.out.println(responseCode);
 			if (responseCode == 200) {
 				BufferedReader br = new BufferedReader(new InputStreamReader((con.getInputStream())));
 				StringBuilder sb = new StringBuilder();
@@ -76,16 +77,21 @@ public class MonitorApplication {
 				
 				
 				reply = new JSONObject(sb.toString());
+				// System.out.println("Logged in");
+				// System.out.println(reply.toString());
 				//return sb.toString();
 			}else {
 				System.out.println("Brak odpowiedzi na url /login");
 			}
 
 		} catch (Exception e) {
+			System.out.println(httpurl);
 			System.out.println("Błąd wysyłu danych na url /login");
 			e.printStackTrace();
 		}
 		
+		// System.out.println("Json");
+		// System.out.println(reply.toString());
 		JSONObject json = new JSONObject();
 		try {
 			json.put("monitor-id", env.getProperty("MONITORID"));
@@ -94,18 +100,23 @@ public class MonitorApplication {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}    
-
+		// System.out.println("Register http client");
 		CloseableHttpClient httpClient = HttpClientBuilder.create().build();
 
 		try {
-		    HttpPost request = new HttpPost(env.getProperty("API_GATEWAY_URL"));
+			// System.out.println("Before Registering");
+			HttpPost request = new HttpPost(env.getProperty("API_GATEWAY_URL"));
+			// System.out.println(env.getProperty("API_GATEWAY_URL"));
 		    StringEntity params = new StringEntity(json.toString());
 			request.addHeader("content-type", "application/json");
-			request.addHeader("access-token", reply.getString("access-token"));
-		    request.setEntity(params);
-		    httpClient.execute(request);
+			request.addHeader("access-token", reply.getString("access_token"));
+			request.setEntity(params);
+			// System.out.println("Registering");
+			httpClient.execute(request);
+			// System.out.println("Registered");
 		// handle response here...
 		} catch (Exception ex) {
+			ex.printStackTrace();
 		    // handle exception here
 		} finally {
 		    try {
