@@ -6,15 +6,15 @@ import platform
 
 class SensorTools:
 
-    def __init__(self, metric, sensor_name, url):
-        self.set_variables(metric, sensor_name, url)
+    def __init__(self, metric, sensor_name, url, urlAS):
+        self.set_variables(metric, sensor_name, url, urlAS)
     
-    def set_variables(self, metric, sensor_name, url):
+    def set_variables(self, metric, sensor_name, url, urlAS):
         self.API_REGISTER_ENDPOINT             = url + "hosts"
         self.API_CPU_MEASUREMENTS_ENDPOINT     = url + "metrics/" + sensor_name + "_CPU_Host/measurements"
         self.API_BATTERY_MEASUREMENTS_ENDPOINT = url + "metrics/" + sensor_name + "_Battery_Host/measurements"
-        self.API_AUTH_SERVICE_LOGIN_ENDPOINT   = "http://127.0.0.1:8000/v1/login"
-        self.API_AUTH_SERVICE_REFRESH_ENDPOINT = "http://127.0.0.1:8000/v1/token"
+        self.API_AUTH_SERVICE_LOGIN_ENDPOINT   = urlAS + "login"
+        self.API_AUTH_SERVICE_REFRESH_ENDPOINT = urlAS + "token"
         
         self.LOGIN_NAME     = "sensor"
         self.LOGIN_PASSWORD = "sensor"
