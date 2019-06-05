@@ -2,6 +2,12 @@ package com.wfiis.pz.project.monitor.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 public class MetricView {
 	String type;
 	String unit;

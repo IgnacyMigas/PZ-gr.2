@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 import com.wfiis.pz.project.monitor.dao.MetricDao;
 import com.wfiis.pz.project.monitor.entity.Metric;
 
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 @Component
 public class MetricServiceImpl implements MetricService{
 	@Resource 

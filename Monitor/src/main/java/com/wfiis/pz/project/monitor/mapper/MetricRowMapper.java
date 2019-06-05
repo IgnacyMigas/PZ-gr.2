@@ -8,7 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.wfiis.pz.project.monitor.entity.Metric;
 
 
-
+/**
+ * 
+ * @author Mateusz Papież
+ * 
+ * Class mapper for metrisc
+ *
+ */
 public class MetricRowMapper implements RowMapper<Metric> {
 
 	@Override

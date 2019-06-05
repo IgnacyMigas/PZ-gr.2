@@ -21,7 +21,11 @@ import com.wfiis.pz.project.monitor.entity.Metric;
 import com.wfiis.pz.project.monitor.mapper.HostRowMapper;
 import com.wfiis.pz.project.monitor.mapper.MetricRowMapper;
 
-
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 @Repository
 public class HostDaoImpl implements HostDao{
 	

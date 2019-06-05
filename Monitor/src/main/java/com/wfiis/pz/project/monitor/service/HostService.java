@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.wfiis.pz.project.monitor.entity.Host;
 
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 public interface HostService {
 
 	List<Host> findAll();

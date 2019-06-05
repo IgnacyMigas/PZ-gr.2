@@ -52,6 +52,13 @@ import com.wfiis.pz.project.monitor.utils.MetricPresenter;
 import com.wfiis.pz.project.monitor.utils.MetricPresenterReqursive;
 import com.wfiis.pz.project.monitor.utils.MetricPreview;
 
+/**
+ * 
+ * @author Mateusz Papież
+ * 
+ * Main controller to Monitor api
+ *
+ */
 @RestController
 @RequestMapping("/${MONITORID}")
 public class ApplicationController {
@@ -86,6 +93,12 @@ public class ApplicationController {
 		return new ResponseEntity<Object>(map, responseHeaders, HttpStatus.OK);
 	}
 
+	/**
+	 * Function checking if the operation is authorized
+	 * 
+	 * @param token encoded token value
+	 * @return returns true if operation is allowed
+	 */
 	public boolean checkIfProtected(String token) {
 
 		try {
@@ -125,6 +138,12 @@ public class ApplicationController {
 		return new ResponseEntity<Object>(getHosts(recursive), responseHeaders, HttpStatus.OK);
 	}
 
+	/** 
+	 * Function that get all hosts
+	 * 
+	 * @param recursive If true the result list is recursive
+	 * @return Required list of views of hosts
+	 */
 	public List<HostAbstractView> getHosts(Boolean recursive) {
 		List<Host> hosts;
 		hosts = hostService.findAll();
@@ -162,6 +181,12 @@ public class ApplicationController {
 
 	}
 
+	/**
+	 * Returns list of hosts with specific name
+	 * @param name Name of host (it is also host id)
+	 * @param recursive Changing the presented view
+	 * @return Required list of views of hosts
+	 */
 	public List<HostAbstractView> getHostsWithName(String name, Boolean recursive) {
 		List<Host> hosts;
 		hosts = hostService.findAllByName(name);
@@ -200,6 +225,13 @@ public class ApplicationController {
 
 	}
 
+	/**
+	 * Returns list of hosts with name_like pattern
+	 * 
+	 * @param name_like Part of name of host (it is also host id)
+	 * @param recursive Changing the presented view
+	 * @return Required list of views of hosts
+	 */
 	public List<HostAbstractView> getHostsWithNameLike(String name_like, Boolean recursive) {
 		List<Host> hosts;
 		hosts = hostService.findAllByNameLike(name_like);
@@ -238,6 +270,14 @@ public class ApplicationController {
 
 	}
 
+	/**
+	 * Returns list of hosts (views) with specific type.
+	 * 
+	 * @param top number of returned hosts
+	 * @param metric_type type of metrics
+	 * @param recursive change view
+	 * @return list of required views of hosts 
+	 */
 	public List<HostAbstractView> getHostsWithMetricType(Integer top, String metric_type, Boolean recursive) {
 		List<Host> hosts;
 		hosts = hostService.findTopByMetricType(top, metric_type);
@@ -281,6 +321,11 @@ public class ApplicationController {
 
 	}
 
+	/**
+	 * Adding new host
+	 * 
+	 * @param hd host details passed in body
+	 */
 	public void postHost(HostDetails hd) {
 		Host h = hd.extractHost();
 		h.setMonitorId(env.getProperty("MONITORID"));
@@ -309,6 +354,11 @@ public class ApplicationController {
 		return new ResponseEntity<Object>(getHost(id), responseHeaders, HttpStatus.OK);
 	}
 
+	/**
+	 *  Getting specific host
+	 * @param id host name (id)
+	 * @return view of this host
+	 */
 	public HostDetailsView getHost(String id) {
 		HostDetailsView hdv = new HostDetailsView();
 
@@ -342,6 +392,11 @@ public class ApplicationController {
 		return new ResponseEntity<Object>(null, responseHeaders, HttpStatus.OK);
 	}
 
+	/**
+	 * Deleting specific host
+	 * 
+	 * @param id host id (name)
+	 */
 	public void deleteHost(String id) {
 		hostService.deleteHostById(id);
 	}
@@ -366,6 +421,15 @@ public class ApplicationController {
 
 	}
 
+	/**
+	 * Getting all metrics depending of the param values. 
+	 * 
+	 * @param name_like part of metric name
+	 * @param type type of metrics
+	 * @param meta parameter that defines if meta data should be presented
+	 * @param recursive parameter that defines how to present metrics
+	 * @return wrapped list of metrics
+	 */
 	public MetricAbstractPresenter getMetrics(String name_like, String type, String meta, Boolean recursive) {
 
 		List<Metric> metrics = new ArrayList<Metric>();
@@ -434,6 +498,10 @@ public class ApplicationController {
 
 	}
 
+	/**
+	 * helping function that gains all metrics
+	 * @return wrapped list of metrics
+	 */
 	public MetricPresenter getMetrics() {
 		try {
 			MetricPresenter mp = (MetricPresenter) getMetrics("", "", "", false);
@@ -443,6 +511,11 @@ public class ApplicationController {
 		}
 	}
 
+	/**
+	 * helping function that gains all metrics by part of their name
+	 * @param name_like part of the metric's name
+	 * @return wrapped list of metrics
+	 */
 	public MetricPresenter getMetrics(String name_like) {
 		try {
 			MetricPresenter mp = (MetricPresenter) getMetrics(name_like, "", "", false);
@@ -452,6 +525,11 @@ public class ApplicationController {
 		}
 	}
 
+	/**
+	 * helping function that gains all metrics
+	 * @param meta check if there sould be meta data printed
+	 * @return wrapped list of metrics
+	 */
 	public MetricPresenter getMetricsWithMetas(String meta) {
 		try {
 			MetricPresenter mp = (MetricPresenter) getMetrics("", "", "true", false);
@@ -478,10 +556,21 @@ public class ApplicationController {
 			HashMap<String, String> map = new HashMap<>();
 			return new ResponseEntity<Object>(map, responseHeaders, HttpStatus.UNAUTHORIZED);
 		}
+		
+		Metric m = metricService.findMetricById(cm.getMetricIds());
+		
+		if (m == null){
+			return new ResponseEntity<Object>(new HashMap<>(), responseHeaders, HttpStatus.BAD_REQUEST);
+		}
 
 		return new ResponseEntity<Object>(postMetric(cm), responseHeaders, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Adding new compound metric to database
+	 * @param cm Compound metric to insert
+	 * @return preview of created metric
+	 */
 	public MetricPreview postMetric(CompoundMetric cm) {
 
 		Metric simple = metricService.findAllByNameLike(cm.getMetricIds()).get(0);
@@ -525,6 +614,11 @@ public class ApplicationController {
 		return new ResponseEntity<Object>(getMetricDetails(id), responseHeaders, HttpStatus.OK);
 	}
 
+	/**
+	 * Getting metric details by it's id
+	 * @param id id of the metric (also name)
+	 * @return metric 
+	 */
 	public Metric getMetricDetails(String id) {
 		Metric m = metricService.findMetricById(id);
 		return m;
@@ -550,6 +644,10 @@ public class ApplicationController {
 
 	}
 
+	/**
+	 * Deleting metric by it's id (name)
+	 * @param id name of metric
+	 */
 	public void deleteMetric(String id) {
 		metricService.deleteMetricById(id);
 		return;
@@ -660,6 +758,15 @@ public class ApplicationController {
 
 	}
 
+	/**
+	 * Return list of measurements of specific metric
+	 * @param id name of metric
+	 * @param from date in format string (oldest) 
+	 * @param to date in format string (newest)
+	 * @param n number of returned measurements
+	 * @param all parameter that set if all measurements should be returned
+	 * @return list of measurements
+	 */
 	public List<MeasurementView> getMeasurementsFromRangeForMetric(String id, String from, String to, Integer n,
 			Boolean all) {
 		List<Measurement> measurements;
@@ -753,6 +860,11 @@ public class ApplicationController {
 		return new ResponseEntity<Object>(null, responseHeaders, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Adding new measurements to specific metric
+	 * @param id metric name
+	 * @param views measurements to add
+	 */
 	public void postMeasurementsForMetric(String id, List<MeasurementView> views) {
 
 		for (MeasurementView mv : views) {
