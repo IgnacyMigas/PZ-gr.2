@@ -12,18 +12,15 @@ parser.add_argument('password', help='This field cannot be blank', required=True
 
 class UserRegistration(Resource):
     def post(self):
-        try:
-            data = parser.parse_args()
+        data = parser.parse_args()
 
-            if UserModel.find_by_username(data['username']):
-                return {'log': 'User {} already exists'.format(data['username'])}, 409
+        if UserModel.find_by_username(data['username']):
+            return {'log': 'User {} already exists'.format(data['username'])}, 409
 
-            new_user = UserModel(
-                username=data['username'],
-                password=UserModel.generate_hash(data['password'])
-            )
-        except:
-            return {'log': 'Something went wrong'}, 500
+        new_user = UserModel(
+            username=data['username'],
+            password=UserModel.generate_hash(data['password'])
+        )
         try:
             new_user.save_to_db()
             return {
@@ -35,24 +32,22 @@ class UserRegistration(Resource):
 
 class UserLogin(Resource):
     def post(self):
-        try:
-            data = parser.parse_args()
-            current_user = UserModel.find_by_username(data['username'])
+        data = parser.parse_args()
+        current_user = UserModel.find_by_username(data['username'])
 
-            if not current_user:
-                return {'log': 'User {} doesn\'t exist'.format(data['username'])}, 401
+        if not current_user:
+            return {'log': 'User {} doesn\'t exist'.format(data['username'])}, 401
 
-            if UserModel.verify_hash(data['password'], current_user.password):
-                access_token = create_access_token(identity=data['username'])
-                refresh_token = create_refresh_token(identity=data['username'])
-                return {
-                    'access_token': access_token,
-                    'refresh_token': refresh_token
-                    }, 200
-            else:
-                return {'log': 'Wrong credentials'}, 401
-        except:
-            return {'log': 'Something went wrong'}, 500
+        if UserModel.verify_hash(data['password'], current_user.password):
+            access_token = create_access_token(identity=data['username'])
+            refresh_token = create_refresh_token(identity=data['username'])
+            return {
+                'access_token': access_token,
+                'refresh_token': refresh_token
+                }, 200
+        else:
+            return {'log': 'Wrong credentials'}, 401
+
 
 class TokenOperations(Resource):
     @jwt_refresh_token_required

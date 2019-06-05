@@ -9,10 +9,10 @@ import requests
 
 @csrf_exempt
 def metrics(request, metrics_id=None):
-    if 'access_token' not in request.headers or not authentication.authorize(request.headers['access_token']):
+    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
         return HttpResponse(status=401)
 
-    headers = {'content-type': 'application/json', 'access_token': request.headers['access_token']}
+    headers = {'content-type': 'application/json', 'access-token': request.headers['access-token']}
 
     metrics_dict = {"metrics": [], "meta": {"types": set()}}
     if metrics_id is None:
@@ -88,10 +88,10 @@ def metrics(request, metrics_id=None):
 
 
 def metrics_measurements(request, metrics_id):
-    if 'access_token' not in request.headers or not authentication.authorize(request.headers['access_token']):
+    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
         return HttpResponse(status=401)
 
-    headers = {'content-type': 'application/json', 'access_token': request.headers['access_token']}
+    headers = {'content-type': 'application/json', 'access-token': request.headers['access-token']}
 
     if request.method == 'GET':
         measurements_list = []
@@ -117,10 +117,10 @@ def metrics_measurements(request, metrics_id):
 
 
 def hosts(request, hosts_id=None):
-    if 'access_token' not in request.headers or not authentication.authorize(request.headers['access_token']):
+    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
         return HttpResponse(status=401)
 
-    headers = {'content-type': 'application/json', 'access_token': request.headers['access_token']}
+    headers = {'content-type': 'application/json', 'access-token': request.headers['access-token']}
 
     if request.method == 'GET':
         monitors_list = []
@@ -158,7 +158,7 @@ def hosts(request, hosts_id=None):
 
 @csrf_exempt
 def monitors(request):
-    if 'access_token' not in request.headers or not authentication.authorize(request.headers['access_token']):
+    if 'access-token' not in request.headers or not authentication.authorize(request.headers['access-token']):
         return HttpResponse(status=401)
 
     if request.method == 'POST':

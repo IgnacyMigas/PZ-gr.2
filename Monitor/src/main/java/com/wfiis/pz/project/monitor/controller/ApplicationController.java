@@ -103,7 +103,7 @@ public class ApplicationController {
 
 		try {
 
-			String httpurl = env.getProperty("AUTH_SERVICE_URL");
+			String httpurl = env.getProperty("AUTH_SERVICE_URL")+"protected";
 
 			URL url = new URL(httpurl);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();

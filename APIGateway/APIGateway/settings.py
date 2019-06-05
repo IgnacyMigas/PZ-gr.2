@@ -128,5 +128,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CORS_ALLOW_HEADERS = default_headers + (
-    'access_token',
+    'access-token',
 )
