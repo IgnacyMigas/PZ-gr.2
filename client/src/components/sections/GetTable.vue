@@ -144,6 +144,12 @@ export default {
       }
       return value
     }
+  },
+  methods: {
+    /** Wymusza przeładowanie tabeli. */
+    forceReload: async function () {
+      await this.$refs.list.forceReload()
+    }
   }
 }
 </script>

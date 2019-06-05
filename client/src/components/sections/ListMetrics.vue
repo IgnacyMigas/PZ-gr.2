@@ -63,6 +63,7 @@
       <dialog-compound-metric
         v-model="compound_metric_dialog.active"
         :metric="compound_metric_dialog.item"
+        :handler="forceReload"
       />
     </template>
   </get-table>
@@ -190,6 +191,11 @@ export default {
     /** Pobiera dane do wylistowania metryk. */
     reloadList: async function (options = {}) {
       return await this.listMetrics(options)
+    },
+
+    /** Wymusza przeładowanie listy. */
+    forceReload: async function () {
+      await this.$refs.table.forceReload()
     }
   }
 }

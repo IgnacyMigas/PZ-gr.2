@@ -63,6 +63,11 @@ export default {
       this.items = data || [];
       this.log = log
       this.error = error ? error.split('\n') : ''
+    },
+
+    /** Wymusza przeładowanie listy. */
+    forceReload: async function () {
+      await this.reload()
     }
   },
   computed: {

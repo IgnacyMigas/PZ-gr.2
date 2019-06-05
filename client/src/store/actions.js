@@ -110,11 +110,7 @@ const actions = {
     //TODO: remove when Monitor's bug is fixed
     body['metric-ids'] = body['metric-ids'][0]
 
-    // eslint-disable-next-line
-    console.log('body: ' + JSON.stringify(body))
     const res = await state.api.post('/v1/metrics', body)
-    // eslint-disable-next-line
-    console.log('res: ' + JSON.stringify(res))
     return res
   },
 
