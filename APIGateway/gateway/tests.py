@@ -18,7 +18,7 @@ class MetricsTestCase(TestCase):
         "meta": {"types": ['123', '234', '345']}
     }
 
-    access_headers = {'access_token': '1234'}
+    access_headers = {'access-token': '1234'}
     no_access_headers = {}
 
     @patch('gateway.models.Monitor.objects.all', side_effect=mocked_monitor)
