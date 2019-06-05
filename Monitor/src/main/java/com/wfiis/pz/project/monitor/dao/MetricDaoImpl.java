@@ -21,7 +21,11 @@ import com.wfiis.pz.project.monitor.entity.Metric;
 import com.wfiis.pz.project.monitor.mapper.HostRowMapper;
 import com.wfiis.pz.project.monitor.mapper.MetricRowMapper;
 
-
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 @Repository
 public class MetricDaoImpl implements MetricDao{
 	
@@ -72,6 +76,10 @@ public class MetricDaoImpl implements MetricDao{
 		SqlParameterSource param = new MapSqlParameterSource()
 				.addValue("id", id);
 		List<Metric> list = template.query(sql, param, new MetricRowMapper());
+		
+		if (list.isEmpty()){
+			return null;
+		}
 		return list.get(0);
 	}
 

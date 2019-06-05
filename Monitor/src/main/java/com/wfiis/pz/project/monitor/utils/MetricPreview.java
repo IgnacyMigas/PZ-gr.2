@@ -3,6 +3,12 @@ package com.wfiis.pz.project.monitor.utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wfiis.pz.project.monitor.entity.Metric;
 
+
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 public class MetricPreview {
 	@JsonProperty("metric-id")
 	String metricId;

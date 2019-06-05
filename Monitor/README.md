@@ -84,7 +84,6 @@ To be able to run your Spring Boot app you will need to first build it. To build
 use the below command. You will need to run it from the project folder which contains the pom.xml file:
 
 	mvn install
-	or
 	mvn install -DskipTests
 
 Run Spring Boot app using Maven:

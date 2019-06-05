@@ -2,6 +2,11 @@ package com.wfiis.pz.project.monitor.utils;
 
 import com.wfiis.pz.project.monitor.entity.Measurement;
 
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 public class MeasurementView {
 	String val;
 	String ts;

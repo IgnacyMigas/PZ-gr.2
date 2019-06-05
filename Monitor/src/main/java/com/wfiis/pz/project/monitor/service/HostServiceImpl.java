@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 import com.wfiis.pz.project.monitor.dao.HostDao;
 import com.wfiis.pz.project.monitor.entity.Host;
 
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 @Component
 public class HostServiceImpl implements HostService{
 	@Resource 

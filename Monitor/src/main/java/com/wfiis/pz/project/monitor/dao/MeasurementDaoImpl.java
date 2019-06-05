@@ -20,7 +20,11 @@ import com.wfiis.pz.project.monitor.entity.Measurement;
 import com.wfiis.pz.project.monitor.mapper.MeasurementRowMapper;
 import com.wfiis.pz.project.monitor.utils.Util;
 
-
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 @Repository
 public class MeasurementDaoImpl implements MeasurementDao{
 	

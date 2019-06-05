@@ -2,6 +2,13 @@ package com.wfiis.pz.project.monitor.utils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * 
+ * @author Mateusz Papież
+ * 
+ * Compound metric with the set of fields that are required in post procedure on metrics dataset
+ *
+ */
 public class CompoundMetric {
 	String kind;
 	@JsonProperty("metric-ids")

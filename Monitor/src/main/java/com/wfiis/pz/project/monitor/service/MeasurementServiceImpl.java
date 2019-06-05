@@ -9,6 +9,11 @@ import org.springframework.stereotype.Component;
 import com.wfiis.pz.project.monitor.dao.MeasurementDao;
 import com.wfiis.pz.project.monitor.entity.Measurement;
 
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 @Component
 public class MeasurementServiceImpl implements MeasurementService{
 	@Resource 

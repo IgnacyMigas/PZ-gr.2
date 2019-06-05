@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.wfiis.pz.project.monitor.entity.Metric;
 
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 public class MetricPresenterReqursive extends MetricAbstractPresenter {
 	List<Metric> metrics;
 	MetaDataForMetric meta;

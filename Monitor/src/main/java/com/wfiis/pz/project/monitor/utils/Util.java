@@ -6,7 +6,21 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
  
+/**
+ * 
+ * @author Mateusz Papież
+ * 
+ * Class that contains helping functions
+ *
+ */
 public class Util{
+	
+	/**
+	 * Converting string to timestamp
+	 * 
+	 * @param str_date date in format string to convert
+	 * @return date in timestamp format
+	 */
   public static Timestamp convertStringToTimestamp(String str_date) {
     try {
       DateFormat formatter;
@@ -20,4 +34,21 @@ public class Util{
       return null;
     }
   }
+  
+  /**
+   * 
+   * Converting timestamp to string
+   * 
+   * @param ts date in timestamp format
+   * @return date in string format
+   */
+  public static String convertTimestampToString(Timestamp ts){
+	  
+	  SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	  String string  = dateFormat.format(ts);
+	  
+	  return string;
+	  
+  }
+  
 }

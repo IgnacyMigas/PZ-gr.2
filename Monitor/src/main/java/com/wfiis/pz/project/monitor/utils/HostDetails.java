@@ -8,7 +8,13 @@ import com.wfiis.pz.project.monitor.entity.Host;
 import com.wfiis.pz.project.monitor.entity.Metric;
 
 
-// class of body object in host adding
+/**
+ * 
+ * @author Mateusz Papież
+ * 
+ * Class of body object in host adding
+ *
+ */
 public class HostDetails {
 	@JsonProperty("host-id")
 	String hostId;

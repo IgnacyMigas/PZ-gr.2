@@ -5,6 +5,12 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wfiis.pz.project.monitor.entity.Metric;
 
+
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 public class HostDetailsView extends HostAbstractView {
 	@JsonProperty("host-id")
 	String hostId;

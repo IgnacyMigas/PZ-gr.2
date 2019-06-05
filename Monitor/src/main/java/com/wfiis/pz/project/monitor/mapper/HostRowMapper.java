@@ -8,7 +8,13 @@ import org.springframework.jdbc.core.RowMapper;
 import com.wfiis.pz.project.monitor.entity.Host;
 
 
-
+/**
+ * 
+ * @author Mateusz Papież
+ * 
+ * Class mapper for hosts
+ *
+ */
 public class HostRowMapper implements RowMapper<Host> {
 
 	@Override

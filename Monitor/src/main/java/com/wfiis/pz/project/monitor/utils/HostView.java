@@ -3,6 +3,11 @@ package com.wfiis.pz.project.monitor.utils;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.wfiis.pz.project.monitor.entity.Host;
 
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 public class HostView extends HostAbstractView {
 	@JsonProperty("host-id")
 	String hostId;

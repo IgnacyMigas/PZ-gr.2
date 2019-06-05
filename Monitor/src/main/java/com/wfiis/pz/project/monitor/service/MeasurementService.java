@@ -4,7 +4,11 @@ import java.util.List;
 
 import com.wfiis.pz.project.monitor.entity.Measurement;
 
-
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 public interface MeasurementService {
 
 	List<Measurement> findAll();

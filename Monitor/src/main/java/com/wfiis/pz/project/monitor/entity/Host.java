@@ -2,6 +2,11 @@ package com.wfiis.pz.project.monitor.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 public class Host {
 
 	@JsonProperty("host-id")

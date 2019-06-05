@@ -15,6 +15,11 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.env.Environment;
 
+/**
+ * 
+ * @author Mateusz Papież
+ *
+ */
 @SpringBootApplication(scanBasePackages="com.wfiis")
 public class MonitorApplication {
 	
