@@ -90,7 +90,7 @@
 
     //TODO: GET TOKEN, add limit ?n=1000 for ./measurements?
     //var TOKEN = auth.access_token;
-    var TOKEN = 'SET TOKEN';
+    var TOKEN = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NTk4MDM4NjEsIm5iZiI6MTU1OTgwMzg2MSwianRpIjoiZTg2OWNlNDYtZTIwNS00YjBjLWJjY2EtMDZjOGQyZWI0YjdhIiwiaWRlbnRpdHkiOiJ0ZXN0IiwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.rQyN_5WPJHOKpKfCsX-sQki8rIoevcLK188TEIiUQyw';
     var host = 'http://localhost:8080'
     var version = 'v1'
     var n = 20
