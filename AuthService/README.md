@@ -56,8 +56,8 @@ Response
 Success: 200
 
 {
-   "access-token":"<access-token>",
-   "refresh-token":"<refresh-token>"
+   "access_token":"<access_token>",
+   "refresh_token":"<refresh_token>"
 }
 
 Failure: 400, 401
@@ -71,7 +71,7 @@ Token refresh:
 Body:
 
 {
-   "refresh-token":"<refresh-token>"
+   "refresh_token":"<refresh_token>"
 }
 
 Response
@@ -79,10 +79,10 @@ Response
 Success: 200
 
 {
-   "access-token":"<access-token>"
+   "access_token":"<access_token>"
 }
 
-Failure: 400, 401
+Failure: 400, 401, 422
 ```
 #### DELETE
 ```
@@ -91,10 +91,10 @@ Invalidates refresh token.
 Body:
 
 {
-   "refresh-token":"<refresh-token>"
+   "refresh_token":"<refresh_token>"
 }
 
-Success: 200 Failure: 400
+Success: 200 Failure: 400, 401, 422
 ```
 
 ### v1/protected
@@ -106,12 +106,12 @@ Token refresh:
 Body:
 
 {
-   "access-token":"<access-token>"
+   "access_token":"<access_token>"
 }
 
 Response
 
-Success: 200
+Success: 200 Failure: 401, 422
 
 { 
    "logged_in_as": "<username>"

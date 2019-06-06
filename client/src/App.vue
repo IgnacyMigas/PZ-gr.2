@@ -10,10 +10,11 @@ export default {
 }
 </script>
 
-<style>
+<style  lang="scss">
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
 }
+@import 'components/vuelendar/scss/vuelendar.scss';
 </style>

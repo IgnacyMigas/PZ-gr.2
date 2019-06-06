@@ -8,26 +8,7 @@ https://apexcharts.com/vue-chart-demos/line-charts/realtime/
 </template>
 
 <script>
-    /*
-npm install --save apexcharts
-npm install --save vue-apexcharts
-*/
     import VueApexCharts from 'vue-apexcharts'
-
-
-    /*
-    import Vue from 'vue'
-        export default {}
-
-        export default {
-            data: function () {
-                return {
-                    appChart}
-            }
-        }
-
-              var appChart =
-    */
 
     var lastDate = 0;
     var data = []
@@ -66,19 +47,15 @@ npm install --save vue-apexcharts
         data = data.slice(data.length - 10, data.length);
     }
 
-    /*
-    var app =
-
-    window.addEventListener('load', function () {
-               */
-    new Vue({
-            el: '#chart',
-            name: 'realTimeChart',
-            components: {
-                apexchart: VueApexCharts,
-            },
-            data:{
+    export default {
+        name: 'realtimeChart',
+        components: {
+            apexchart: VueApexCharts,
+        },
+        data: function () {
+            return {
                 series: [{
+                    name: 'value',
                     data: data.slice()
                 }],
                 chartOptions: {
@@ -91,7 +68,7 @@ npm install --save vue-apexcharts
                             }
                         },
                         toolbar: {
-                            show: false
+                            show: true
                         },
                         zoom: {
                             enabled: false
@@ -106,50 +83,82 @@ npm install --save vue-apexcharts
 
                     title: {
                         text: 'Dynamic Updating Chart',
-                        align: 'left'
+                        align: 'center',
+                        style: {
+                            color: '#dedede',
+                            fontSize: '12px'
+                        },
                     },
-                    markers: {
-                        size: 0
+                    grid: {
+                        row: {
+                            colors: ['#dedede', 'transparent'], // takes an array which will be repeated on columns
+                            opacity: 0.1
+                        },
+                        column: {
+                            colors: ['#dedede']
+                        }
                     },
+
                     xaxis: {
                         type: 'datetime',
                         range: 777600000,
+                        labels: {
+                            style: {
+                                colors: '#efefef',
+                            },
+                        },
                     },
                     yaxis: {
-                        max: 100
+                        max: 100,
+                        labels: {
+                            style: {
+                                color: '#efefef',
+                            },
+                        },
+                    },
+                    tooltip: {
+                        followCursor: false,
+                        theme: 'dark',
+                        x: {
+                            show: true
+                        },
+                        marker: {
+                            show: true
+                        }
                     },
                     legend: {
-                        show: false
+                        show: true
                     }
-                }
-            },
-            mounted: function () {
-                this.intervals()
-            },
-            methods: {
-                intervals: function () {
-                    var me = this
-                    window.setInterval(function () {
-                        getNewSeries(lastDate, {
-                            min: 10,
-                            max: 90
-                        })
+                },
+                mounted: function () {
+                    this.intervals()
+                },
+                methods: {
+                    intervals: function () {
+                        var me = this
+                        window.setInterval(function () {
+                            getNewSeries(lastDate, {
+                                min: 10,
+                                max: 90
+                            })
 
-                        me.$refs.realtimeChart.updateSeries([{
-                            data: data
-                        }])
-                    }, 1000)
+                            me.$refs.realtimeChart.updateSeries([{
+                                data: data
+                            }])
+                        }, 1000)
 
-                    // every 60 seconds, we reset the data to prevent memory leaks
-                    window.setInterval(function () {
-                        resetData()
-                        me.$refs.realtimeChart.updateSeries([{
-                            data
-                        }], false, true)
-                    }, 60000)
+                        // every 1 seconds, we reset the data to prevent memory leaks
+                        window.setInterval(function () {
+                            resetData()
+                            me.$refs.realtimeChart.updateSeries([{
+                                data
+                            }], false, true)
+                        }, 1000)
+                    }
                 }
             }
         }
+    }
 </script>
 
 <style scoped>
