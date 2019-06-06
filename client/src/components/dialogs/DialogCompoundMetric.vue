@@ -58,7 +58,6 @@
 <script>
 import Vuex from 'vuex'
 import ButtonBar from '@/components/elements/ButtonBar'
-import ButtonText from '@/components/elements/ButtonText'
 
 /**@group Okienka
  * Dialog recordów metryki.
@@ -73,8 +72,7 @@ import ButtonText from '@/components/elements/ButtonText'
 export default {
   name: 'dialog-compound-metric',
   components: {
-    'button-bar': ButtonBar,
-    'button-text': ButtonText
+    'button-bar': ButtonBar
   },
   props: {
     /** Czy dialog ma być aktywny.
