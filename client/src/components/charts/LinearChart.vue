@@ -82,12 +82,15 @@
     import { Timepicker } from 'buefy/dist/components/timepicker'
     import { Icon } from 'buefy/dist/components/icon'
     import 'buefy/dist/buefy.css'
+    //import auth from '../../store/getters'
 
     Vue.component('b-field', Field)
     Vue.component('b-timepicker', Timepicker)
     Vue.component('b-icon', Icon)
 
-    //TODO: limit ?n=20
+    //TODO: GET TOKEN, add limit ?n=1000 for ./measurements?
+    //var TOKEN = auth.access_token;
+    var TOKEN = 'SET TOKEN';
     var host = 'http://localhost:8080'
     var version = 'v1'
     var n = 20
@@ -243,7 +246,7 @@
                 if(!(this.selectedMetric == '' || this.selectedMetric == null || this.selectedMetric == undefined)) {
                     this.range = '15m';//default
                     this.isHiddenCalendar = true;
-                    this.$http.get(url, {useCredentails: true}).then(function (data) {
+                    this.$http.get(url, {headers: {'access-token': TOKEN}}).then(function (data) {
                         this.blob_samples = data.body;//.slice(0, 10);
                         this.showPagination();
                         if (data.body == '' || data.body == '[]' || data.body == null || data.body == []) {
@@ -288,7 +291,7 @@
             getMetrics: function(){
                 this.value = [];
                 this.time = [];
-                this.$http.get(url_metrics , {useCredentails: true}).then(function (data) {
+                this.$http.get(url_metrics ,  { headers: {'access-token': TOKEN}}).then(function (data) {
                     this.metrics= data.body.metrics;
                     var index;
                     for (index = 0; index < this.metrics.length; ++index) {
