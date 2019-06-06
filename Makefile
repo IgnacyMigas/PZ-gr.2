@@ -1,10 +1,14 @@
 docker_build:
-	docker build --tag=monitor:km2 ./Monitor  
-	docker build --tag=sensor:km2 ./Sensor
-	docker build --tag=gateway:km2 ./APIGateway
-	docker build --tag=client:km2 ./client
+	docker build --tag=pzgr2/pz-gr2:auth-km3 AuthService/ 
+	docker build --tag=pzgr2/pz-gr2:monitor-km3 ./Monitor  
+	docker build --tag=pzgr2/pz-gr2:sensor-km3 ./Sensor
+	docker build --tag=pzgr2/pz-gr2:gateway-km3 ./APIGateway
+	docker build --tag=pzgr2/pz-gr2:client-km3 ./client
+	docker build --tag=pzgr2/pz-gr2:autoclient-km3 AutomaticClient/
+
 docker_run:
-	docker run -d --network host -it gateway:km2
-	docker run -d --network host -it monitor:km2
-	docker run -d --network host -it sensor:km2
-	docker run -d --network host -it client:km2
+	docker run -d --network host -it pzgr2/pz-gr2:auth-km3
+	docker run -d --network host -it pzgr2/pz-gr2:gateway-km3
+	docker run -d --network host -it pzgr2/pz-gr2:monitor-km3
+	docker run -d --network host -it pzgr2/pz-gr2:sensor-km3
+	docker run -d --network host -it pzgr2/pz-gr2:client-km3
