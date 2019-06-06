@@ -1,11 +1,10 @@
-FROM python:3.6-slim
+FROM ubuntu:latest
 
 WORKDIR /app
 
 COPY . /app
 
-RUN apt-get update && apt-get -y install gcc && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get -y install gcc && apt-get -y install python3.6  python3-pip  && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir --trusted-host pypi.python.org -r requirements.txt
+RUN pip3 install --no-cache-dir --trusted-host pypi.python.org -r requirements.txt
 
-CMD ["python", "source/sensor.py"]
