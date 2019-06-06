@@ -1,6 +1,8 @@
 #!/bin/bash
 
-url="http://ec2-18-221-159-205.us-east-2.compute.amazonaws.com:8081/v1"
+url2="http://ec2-18-221-159-205.us-east-2.compute.amazonaws.com"
+auth_port=8000;
+api_port=8081;
 access_token="xxxxxxx"
 box="+ --------------------------------------- +"
 FAILED=1
@@ -18,13 +20,21 @@ usage() {
 }
 
 update_access_token() {
-	access_token=`curl -sH '$url/login' | sed -n 's/^.*access_token\":\"<//p' | sed -n 's/>\".*//p'`;
+	access_token=`curl -s --data "username=test&password=test" "$url:$auth_port/v1/login" | sed -n 's/^.*access_token\"...//p' | sed -n 's/\".*//p'`;
 }
 
 while getopts ":u:m:lh" o
 do
 	case $o in
 	u) url=$OPTARG;
+<<<<<<< HEAD
+	   echo $url;
+	   ;;
+	m) metric=$OPTARG;
+	   update_access_token;
+	   ;;
+	l) update_access_token;
+	   curl -sH "access-token: $access_token" "$url2:$api_port/v1/metrics?meta=true" | sed -n 's/^.*types\"..\[//p'| sed -n 's/\]}}/\n/p';
 	   ;;
 	m) metric=$OPTARG;
 	   ;;
@@ -42,6 +52,5 @@ if [ -z "$metric" ]; then
 fi
 
 #print top 10, refresh 1s
-watch -n1 -td "update_access_token ; echo $box ; curl -sH 'access-token: $access_token' '$url/hosts?metric_type=$metric&top=10' | sed 's/,/\n$box/g' | sed 's/.*host-id\":\s\"/\t\t/' | sed 's/\".*//' ";
-
+watch -n1 -td "curl -sH 'access-token: $access_token' '$url2:$api_port/v1/hosts?metric_type=$metric&top=10' | sed 's/,/\n$box/g' | sed 's/.*host-id..../\t\t/' | sed 's/.monitor.*//' ";
 exit $SUCCESS;
