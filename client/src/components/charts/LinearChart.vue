@@ -4,8 +4,8 @@
 
         <select  @change="onChange($event)" class="t2e-select-metric" v-model="selected" >
             <option value="" selected disabled> Przoszę wybrać metrykę</option>
-            <option v-for="metric in metrics"  v-bind:value="metric">
-                Metryka: '{{ metric['metric-id']  }}' , Monitor: '{{ metric['monitor-id'] }}'
+            <option v-for="(metric) in metrics_keys"  v-bind:value="metric">
+                Metryka: '{{ metric  }}'
             </option>
         </select>
         v
@@ -69,6 +69,7 @@
 
             <apexcharts ref="updateChart" height=350 align="left" type="line" :options="chartOptions" :series="series"></apexcharts>
 
+            <h8>{{metrics}}</h8>
         </div>
 
     </div>
