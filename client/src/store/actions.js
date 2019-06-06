@@ -27,7 +27,7 @@ const get_error = (e)  => {
         break
     }
   }
-  return response
+  return '' + response
 }
 
 
@@ -46,8 +46,8 @@ const actions = {
     let [log, error, data] = ['', '', null]
     try {
       const response = await promise()
-      data = (response && response.data) || response
-      log = response && response.log
+      data = response && response.data
+      log  = response && response.log
     } catch (e) {
       error = get_error(e)
     }
@@ -55,7 +55,6 @@ const actions = {
   },
 
   /** Pend list of hosts. */
-  // eslint-disable-next-line
   listHosts: async function ({ state }, options) {
     const params = {
       recursive: true
@@ -111,6 +110,12 @@ const actions = {
     body['metric-ids'] = body['metric-ids'][0]
 
     const res = await state.api.post('/v1/metrics', body)
+    return res
+  },
+
+  /** Pend deleting compound metric request. */
+  deleteMetric: async function ({ state }, { id }) {
+    const res = await state.api.delete(`/v1/metrics/${id}`)
     return res
   },
 

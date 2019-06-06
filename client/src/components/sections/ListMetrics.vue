@@ -65,6 +65,10 @@
         :metric="compound_metric_dialog.item"
         :handler="forceReload"
       />
+      <dialog-errors
+        v-model="delete_failed_dialog.active"
+        :errors="delete_failed_dialog.errors"
+      />
     </template>
   </get-table>
 </template>
@@ -74,6 +78,7 @@ import Vuex from 'vuex'
 import GetTable from '@/components/sections/GetTable'
 import DialogRecords from '@/components/dialogs/DialogRecords'
 import DialogCompoundMetric from '@/components/dialogs/DialogCompoundMetric'
+import DialogErrors from '@/components/dialogs/DialogErrors'
 
 /**@group Sekcje
  * Sekcja pobierająca dane metryk.
@@ -83,7 +88,8 @@ export default {
   components: {
     'get-table': GetTable,
     'dialog-records': DialogRecords,
-    'dialog-compound-metric': DialogCompoundMetric
+    'dialog-compound-metric': DialogCompoundMetric,
+    'dialog-errors': DialogErrors
   },
   props: {
     /** Fragment nazwy do znalezienia. */
@@ -129,6 +135,11 @@ export default {
           text: 'Dodaj do wykresu',
           icon: 'show_chart',
           handler: this.addToChart
+        },
+        {
+          text: 'Usuń',
+          icon: 'clear',
+          handler: this.tryDeleteMetric
         }
       ],
       records_dialog: {
@@ -137,6 +148,10 @@ export default {
       },
       compound_metric_dialog: {
         item: { 'metric-id': null },
+        active: false
+      },
+      delete_failed_dialog: {
+        errors: [],
         active: false
       }
     }
@@ -166,7 +181,7 @@ export default {
     }
   },
   methods: {
-    ...Vuex.mapActions(['listMetrics']),
+    ...Vuex.mapActions(['listMetrics', 'deleteMetric', 'request']),
 
     /** Pokazuje pomiary danej metryki */
     showRecords (item) {
@@ -183,9 +198,23 @@ export default {
     /** Dodaje do wykresu */
     addToChart (item) {
       // eslint-disable-next-line
-      console.log("item: " + json.stringify(item))
+      console.log("item: " + JSON.stringify(item))
       item
       //TODO
+    },
+
+    /** Usuwa metrykę */
+    tryDeleteMetric: async function (item) {
+      const id = item['metric-id']
+      const { error } = await this.request(() => this.deleteMetric({ id }))
+   
+      if (!error) {
+        await this.forceReload()
+      } else {
+        const errors = error ? error.split('\n') : ''
+        this.delete_failed_dialog.active = true
+        this.delete_failed_dialog.errors = errors
+      }
     },
 
     /** Pobiera dane do wylistowania metryk. */

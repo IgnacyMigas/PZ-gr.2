@@ -105,7 +105,7 @@ export default {
       required: false,
       // nop
       default () {
-        return (_item) => {}
+        return () => {}
       }
     }
   },
@@ -194,8 +194,14 @@ export default {
       const { log, error, data } =
         await this.request(() => this.postNewMetric(this.all_options))
 
+      // a little hack that protects from errors
+      this.options.time += 1
+      this.options.time -= 1
+
       this.items = data || [];
       this.log = log
+      // eslint-disable-next-line
+      console.log("error: " + JSON.stringify(error))
       this.errors = error ? error.split('\n') : ''
 
       if (!this.errors) {
