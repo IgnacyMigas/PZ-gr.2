@@ -15,6 +15,12 @@ npm run serve
 npm run build
 ```
 
+### Runs production version
+```
+serve install -g serve
+serve -l tcp://localhost:8082 -s dist/
+```
+
 ### Run your tests
 ```
 npm run test
